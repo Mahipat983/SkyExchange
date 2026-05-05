@@ -271,24 +271,63 @@ function DesktopHeader() {
             <h1 style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
               <Link to="/">SKYEXCHANGE</Link>
             </h1>
-            <div id="searchWrap" className="search-wrap" style={{ display: 'flex', alignItems: 'center', margin: 0, height: '100%', position: 'relative' }}>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <div id="searchWrap" style={{ display: 'flex', alignItems: 'center', margin: 0, height: '100%', position: 'relative' }}>
+              <div className="custom-search-container" style={{ 
+                position: 'relative', 
+                display: 'flex', 
+                alignItems: 'center',
+                width: '300px',
+                height: '30px',
+                background: '#fff',
+                borderRadius: '4px',
+                border: '1px solid #ccc',
+                padding: '0 8px',
+                boxSizing: 'border-box'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginRight: '8px' }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                </div>
                 <input
-                  id="searchInput"
-                  className="search-input form-control form-control-sm"
                   type="text"
                   placeholder="Search Events"
                   value={searchInput}
                   onChange={(e) => setSearchInput(e.target.value)}
                   onFocus={() => searchInput.length >= 3 && setShowSearchResults(true)}
                   onBlur={() => setTimeout(() => setShowSearchResults(false), 200)}
+                  style={{
+                    flex: 1,
+                    border: 'none',
+                    outline: 'none',
+                    fontSize: '12px',
+                    height: '100%',
+                    background: 'transparent',
+                    padding: 0,
+                    margin: 0,
+                    boxShadow: 'none'
+                  }}
                 />
-                <button
-                  id="searchClear"
-                  className="search-clear"
-                  style={{ display: searchInput ? 'block' : 'none' }}
-                  onClick={() => setSearchInput('')}
-                ></button>
+                {searchInput && (
+                  <button
+                    onClick={() => setSearchInput('')}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      padding: '4px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: '#999'
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                )}
               </div>
               {showSearchResults && searchInput.length > 0 && (
                 <div
@@ -327,7 +366,7 @@ function DesktopHeader() {
                       return (
                         <li key={res.Gid || index} style={{ borderBottom: '1px solid #f0f0f0' }}>
                           <Link
-                            to={`/sports?type=${res.Type.toLowerCase()}&gid=${res.Gid}`}
+                            to={`/${res.Type.toLowerCase()}/${res.Gid}`}
                             style={{
                               display: 'flex',
                               alignItems: 'center',
@@ -528,8 +567,8 @@ function DesktopHeader() {
               <li><Link to="/" className={isActive('/') ? 'active-menu' : ''}>Home</Link></li>
               <li><Link to="/in-play">In-Play</Link></li>
               <li>
-                <Link 
-                  to={isLoggedIn ? "/multi-markets" : "#"} 
+                <Link
+                  to={isLoggedIn ? "/multi-markets" : "#"}
                   className="red-gradient-btn"
                   onClick={(e) => {
                     if (!isLoggedIn) {
@@ -547,9 +586,9 @@ function DesktopHeader() {
               <li><Link to="/horse-racing" className={isActive('/horse-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Horse Racing']}</span>Horse Racing</Link></li>
               <li><Link to="/greyhound-racing" className={isActive('/greyhound-racing') ? 'active-menu' : ''}><span className="tag-live"><strong></strong>{matchCounts['Greyhound Racing']}</span>Greyhound Racing</Link></li>
               <li>
-                <Link 
-                  id="menu_Casino" 
-                  to={isLoggedIn ? "/casino" : "#"} 
+                <Link
+                  id="menu_Casino"
+                  to={isLoggedIn ? "/casino" : "#"}
                   className={`casino tag-new ${isActive('/casino') ? 'active-menu' : ''}`}
                   onClick={(e) => {
                     if (!isLoggedIn) {
@@ -575,9 +614,9 @@ function DesktopHeader() {
         </div>
       </div>
 
-      <EditStakeModal 
-        isOpen={isEditStakeModalOpen} 
-        onClose={() => setIsEditStakeModalOpen(false)} 
+      <EditStakeModal
+        isOpen={isEditStakeModalOpen}
+        onClose={() => setIsEditStakeModalOpen(false)}
       />
       <style>{`
         .red-gradient-btn {

@@ -298,7 +298,6 @@ export default function DepositPage() {
                     <label className="text-[14px] font-black uppercase tracking-wider text-[#444] ml-1">Deposit Amount</label>
                     <div className="flex flex-col md:flex-row gap-4">
                       <div className="relative flex-1 group">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black text-[#ffb400] pointer-events-none group-focus-within:scale-110 transition-transform">₹</span>
                         <input
                           type="number"
                           placeholder="Enter amount"
@@ -307,7 +306,7 @@ export default function DepositPage() {
                             setAmount(e.target.value);
                             if (!e.target.value) setUserHasSelectedManually(false);
                           }}
-                          className="w-full h-16 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl pl-14 pr-5 text-2xl font-black text-[#111] focus:outline-none focus:border-[#ffb400] transition-all placeholder:text-black/10"
+                          className="w-full h-16 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-2xl font-black text-[#111] focus:outline-none focus:border-[#ffb400] transition-all placeholder:text-black/10"
                         />
                       </div>
                       <button
