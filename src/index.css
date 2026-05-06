@@ -203,9 +203,6 @@ body {
   border-bottom: 1px solid #bbb;
 }
 
-.sports-table-head.tennis-grid {
-  grid-template-columns: 1fr 120px 120px;
-}
 
 .sports-row {
   display: grid;
@@ -228,9 +225,6 @@ body {
   }
 }
 
-.sports-row.tennis-grid {
-  grid-template-columns: 1fr 120px 120px;
-}
 
 
 /* ODDS BOXES */

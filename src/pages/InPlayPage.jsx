@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useUIStore } from '../store/uiStore';
+import RacingPanel from '../components/RacingPanel';
 import Layout from '../components/Layout';
 import BetSlip from '../components/BetSlip';
+import { useNavigate } from 'react-router-dom';
 import { marketController } from '../controllers';
 
 const extractOdd = (runner) => {
@@ -135,7 +137,14 @@ function InPlayPage() {
   const [matches, setMatches] = useState([]);
   const [odds, setOdds] = useState({});
   const [loading, setLoading] = useState(false);
+  const [collapsedSports, setCollapsedSports] = useState([]);
   const pollingRef = useRef(null);
+
+  const toggleSport = (sport) => {
+    setCollapsedSports(prev => 
+      prev.includes(sport) ? prev.filter(s => s !== sport) : [...prev, sport]
+    );
+  };
 
   useEffect(() => {
     const fetchMatches = async () => {
@@ -297,29 +306,43 @@ function InPlayPage() {
 
     return sports.map((sport) => (
       <div key={sport} className="sport-block">
-        <div className="sport-head">
+        <div 
+          className="sport-head" 
+          onClick={() => toggleSport(sport)} 
+          style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
           <span>{sport} ({groupMap[sport].length})</span>
-          <span className="sport-toggle">▢</span>
+          <span className="sport-toggle" style={{ fontSize: '16px', fontWeight: 'bold' }}>
+            {collapsedSports.includes(sport) ? '+' : '-'}
+          </span>
         </div>
-        <table className="inplay-table">
-          <thead>
-            <tr>
-              <th className="col-event custom-pl">Event</th>
-              <th className="col-odds-header">
-                  <div className="odds-grid-header">
-                      <span>1</span>
-                      <span>X</span>
-                      <span>2</span>
-                  </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {groupMap[sport].map((evt) => (
-              <EventRow key={evt.id} evt={evt} odds={odds} sportName={sport} />
-            ))}
-          </tbody>
-        </table>
+        {!collapsedSports.includes(sport) && (
+          <>
+            {sport === 'Horse Racing' || sport === 'Greyhound Racing' ? (
+              <RacingPanel sportType={sport} />
+            ) : (
+              <table className="inplay-table">
+                <thead>
+                  <tr>
+                    <th className="col-event custom-pl">Event</th>
+                    <th className="col-odds-header">
+                        <div className="odds-grid-header">
+                            <span>1</span>
+                            <span>X</span>
+                            <span>2</span>
+                        </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {groupMap[sport].map((evt) => (
+                    <EventRow key={evt.id} evt={evt} odds={odds} sportName={sport} />
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </>
+        )}
       </div>
     ));
   };

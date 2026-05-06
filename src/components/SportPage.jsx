@@ -48,7 +48,7 @@ function MatchRow({ match, odds, sport }) {
   const prices = rowOdds.map(o => o || { back: '--', lay: '--' });
 
   return (
-    <div className={`sports-row desktop-grid ${sport === 'Tennis' ? 'tennis-grid' : ''}`} style={{ position: 'relative', opacity: isSuspended ? 0.7 : 1 }}>
+    <div className="sports-row desktop-grid" style={{ position: 'relative', opacity: isSuspended ? 0.7 : 1 }}>
       <div className="col-event">
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
           <span className="green-dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
@@ -113,13 +113,11 @@ function MatchRow({ match, odds, sport }) {
           {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
       </div>
 
-      {sport !== 'Tennis' && (
-        <div className="col-odds" style={{ position: 'relative' }}>
-          <div className="odds-box back">{prices[1].back}</div>
-          <div className="odds-box lay">{prices[1].lay}</div>
-          {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
-        </div>
-      )}
+      <div className="col-odds" style={{ position: 'relative' }}>
+        <div className="odds-box back">{prices[1].back}</div>
+        <div className="odds-box lay">{prices[1].lay}</div>
+        {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
+      </div>
 
       <div className="col-odds" style={{ position: 'relative' }}>
         <div className="odds-box back">{prices[2].back}</div>
@@ -294,10 +292,10 @@ function SportPageWithLayout({
               </div>
 
               {sport !== 'Horse Racing' && sport !== 'Greyhound Racing' && (
-                <div className={`sports-table-head desktop-grid ${sport === 'Tennis' ? 'tennis-grid' : ''}`}>
+                <div className="sports-table-head desktop-grid">
                   <div className="col-event">Event</div>
                   <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>1</div>
-                  {sport !== 'Tennis' && <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>X</div>}
+                  <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>X</div>
                   <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>2</div>
                 </div>
               )}
