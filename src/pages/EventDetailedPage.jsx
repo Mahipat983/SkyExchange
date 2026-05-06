@@ -14,6 +14,27 @@ import { useUIStore } from '../store/uiStore';
 import { useRatePolling } from '../hooks/useRatePolling';
 import { useSnackbarStore } from '../store/snackbarStore';
 
+const parseDate = (str) => {
+  if (!str) return null;
+  const dateVal = str.includes('T') ? str : str.replace(' ', 'T');
+  let d = new Date(dateVal);
+  if (isNaN(d.getTime())) {
+    const parts = str.split(/[-/ :]/);
+    if (parts.length >= 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      if (day <= 31 && month <= 11) {
+        const hour = parseInt(parts[3] || '0', 10);
+        const minute = parseInt(parts[4] || '0', 10);
+        const second = parseInt(parts[5] || '0', 10);
+        d = new Date(year, month, day, hour, minute, second);
+      }
+    }
+  }
+  return d && !isNaN(d.getTime()) ? d : null;
+};
+
 const EventDetailedPage = () => {
   const { sport, matchId, eventId } = useParams();
   const navigate = useNavigate();
@@ -213,6 +234,16 @@ const EventDetailedPage = () => {
               if (isRacing && eventId) {
                 eventList = eventList.filter(e => e.eid?.toString() === eventId.toString());
               }
+
+              // Determine if match is In-Play
+              const startTimeStr = gameData?.DateTime || gameData?.dateTime || gameData?.Datetime || gameData?.staredtime || gameData?.StartTime || '';
+              const startTime = parseDate(startTimeStr);
+              const isWinnerMarket = (gameData?.Game_Type || gameData?.GameType || '').toLowerCase() === 'winner' ||
+                (gameData?.Team2 || '').includes('TOURNAMENT_WINNER');
+              const now = new Date();
+              const isInPlay = gameData?.Inplay === 'true' || gameData?.Inplay === 'Y' || gameData?.Inplay === true ||
+                gameData?.inplay === 'true' || gameData?.inplay === 'Y' || gameData?.inplay === true ||
+                (startTime && startTime <= now) || isWinnerMarket;
               
               // Group Fancy markets to show them together at the bottom or top
               const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');
@@ -236,6 +267,7 @@ const EventDetailedPage = () => {
                           onCancelBet={() => setSelectedBet(null)}
                           onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
                           sport={sport}
+                          isInPlay={isInPlay}
                         />
                       );
                     }
@@ -265,6 +297,7 @@ const EventDetailedPage = () => {
                         onCancelBet={() => setSelectedBet(null)}
                         onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
                         sport={sport}
+                        isInPlay={isInPlay}
                       />
                     );
                   })}
