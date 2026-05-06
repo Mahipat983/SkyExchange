@@ -126,8 +126,6 @@ function EventRow({ evt, odds, sportName }) {
             </div>
         )}
       </td>
-
-      <td className="col-plus"><span className="plus-btn">+</span></td>
     </tr>
   );
 }
@@ -314,7 +312,6 @@ function InPlayPage() {
                       <span>2</span>
                   </div>
               </th>
-              <th className="col-plus"></th>
             </tr>
           </thead>
           <tbody>

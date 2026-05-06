@@ -81,8 +81,7 @@ function DesktopHeader() {
   }, [searchInput]);
 
   const performSearch = async (val) => {
-    const token = useAuthStore.getState().getToken();
-    if (!isLoggedIn || !token) return;
+    const token = useAuthStore.getState().getToken() || '';
 
     try {
       setSearchLoading(true);

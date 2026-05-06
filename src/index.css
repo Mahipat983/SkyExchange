@@ -195,7 +195,7 @@ body {
 
 .sports-table-head {
   display: grid;
-  grid-template-columns: 1fr 110px 120px 120px 120px 40px;
+  grid-template-columns: 1fr 120px 120px 120px;
   background: #ddd;
   padding: 4px 0 2px 0;
   font-size: 13px;
@@ -204,12 +204,12 @@ body {
 }
 
 .sports-table-head.tennis-grid {
-  grid-template-columns: 1fr 110px 120px 120px 40px;
+  grid-template-columns: 1fr 120px 120px;
 }
 
 .sports-row {
   display: grid;
-  grid-template-columns: 1fr 110px 120px 120px 120px 40px;
+  grid-template-columns: 1fr 120px 120px 120px;
   padding: 8px 8px;
   border-bottom: 1px solid #e1e1e1;
   font-size: 12px;
@@ -229,7 +229,7 @@ body {
 }
 
 .sports-row.tennis-grid {
-  grid-template-columns: 1fr 110px 120px 120px 40px;
+  grid-template-columns: 1fr 120px 120px;
 }
 
 

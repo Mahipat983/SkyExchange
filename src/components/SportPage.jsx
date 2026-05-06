@@ -126,10 +126,6 @@ function MatchRow({ match, odds, sport }) {
         <div className="odds-box lay">{prices[2].lay}</div>
         {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
       </div>
-
-      <div className="col-expand">
-        <button className="expand-btn">+</button>
-      </div>
     </div>
   );
 }
@@ -295,13 +291,6 @@ function SportPageWithLayout({
             <div id="sportEvent" className="sports-highlights">
               <div className="sports-header">
                 <span className="sports-title">{sport} Highlights</span>
-                <div className="viewby-box">
-                  <span className="viewby-text">View by</span>
-                  <select value={viewBy} onChange={(e) => setViewBy(e.target.value)} className="viewby-select">
-                    <option value="Time">Time</option>
-                    <option value="Competition">Competition</option>
-                  </select>
-                </div>
               </div>
 
               {sport !== 'Horse Racing' && sport !== 'Greyhound Racing' && (
@@ -310,7 +299,6 @@ function SportPageWithLayout({
                   <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>1</div>
                   {sport !== 'Tennis' && <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>X</div>}
                   <div className="col-odds-1" style={{ justifyContent: 'center', fontWeight: 'bold' }}>2</div>
-                  <div className="col-expand"></div>
                 </div>
               )}
 
