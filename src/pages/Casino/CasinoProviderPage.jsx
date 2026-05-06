@@ -164,9 +164,9 @@ const GameCard = ({ game, onLaunch }) => (
         Play Now
       </button>
     </div>
-    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-2 pointer-events-none">
-      <p className="text-[9px] md:text-[10px] font-bold text-white truncate leading-tight">{game.name}</p>
-      <p className="text-[7px] md:text-[8px] font-medium text-white/60 uppercase tracking-tighter">{game.provider}</p>
+    <div className="absolute inset-x-0 bottom-0 bg-white p-1.5 md:p-2 pointer-events-none border-t border-black/5">
+      <p className="text-[9px] md:text-[10px] font-black text-black truncate leading-tight uppercase">{game.name}</p>
+      <p className="text-[7px] md:text-[8px] font-bold text-gray-500 uppercase tracking-tighter">{game.provider}</p>
     </div>
   </div>
 );
