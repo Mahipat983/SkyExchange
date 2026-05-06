@@ -72,7 +72,7 @@ export default function PopupModal() {
         onClick={() => setIsOpen(false)}
       />
       
-      <div className="relative max-w-[90vw] max-h-[90vh] pointer-events-auto animate-popup" style={{ position: 'relative', zIndex: 10001 }}>
+      <div className="relative max-w-[90vw] lg:max-w-[800px] max-h-[85vh] pointer-events-auto animate-popup" style={{ position: 'relative', zIndex: 10001 }}>
         <button 
           onClick={() => setIsOpen(false)}
           className="absolute -top-4 -right-4 z-10 w-10 h-10 rounded-full bg-black text-white flex items-center justify-center hover:bg-[#ffb400] transition-all shadow-xl border-2 border-white"
@@ -80,8 +80,8 @@ export default function PopupModal() {
             position: 'absolute', 
             top: '-15px', 
             right: '-15px', 
-            width: '32px', 
-            height: '32px', 
+            width: '30px', 
+            height: '30px', 
             borderRadius: '50%', 
             backgroundColor: '#000', 
             color: '#fff', 
@@ -90,8 +90,9 @@ export default function PopupModal() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '20px',
-            fontWeight: 'bold'
+            fontSize: '18px',
+            fontWeight: 'bold',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.5)'
           }}
         >
           ×
@@ -99,16 +100,16 @@ export default function PopupModal() {
 
         {isHtml ? (
           <div 
-            className="bg-white p-6 rounded-lg shadow-2xl overflow-auto max-w-md"
-            style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,0.4)', color: '#333' }}
+            className="bg-white p-6 rounded-lg shadow-2xl overflow-auto max-w-[85vw] lg:max-w-[600px]"
+            style={{ backgroundColor: '#fff', padding: '24px', borderRadius: '12px', boxShadow: '0 25px 50px rgba(0,0,0,0.5)', color: '#333' }}
             dangerouslySetInnerHTML={{ __html: content }}
           />
         ) : (
           <img 
             src={content} 
             alt="Promotion" 
-            className="w-full h-auto max-h-[85vh] object-contain rounded-lg shadow-2xl block border-2 border-white/20"
-            style={{ maxWidth: '100%', height: 'auto', maxHeight: '85vh', borderRadius: '8px', boxShadow: '0 20px 40px rgba(0,0,0,0.5)', display: 'block' }}
+            className="w-full h-auto max-h-[80vh] object-contain rounded-lg shadow-2xl block border-2 border-white/20"
+            style={{ maxWidth: '100%', height: 'auto', maxHeight: '80vh', borderRadius: '12px', boxShadow: '0 25px 50px rgba(0,0,0,0.6)', display: 'block' }}
           />
         )}
       </div>
