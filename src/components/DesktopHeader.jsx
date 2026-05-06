@@ -630,6 +630,29 @@ function DesktopHeader() {
           opacity: 0.9;
           color: #fff !important;
         }
+        .login-wrap {
+          display: flex !important;
+          align-items: center !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          list-style: none !important;
+        }
+        .login-wrap li {
+          margin: 0 5px 0 0 !important;
+          display: flex !important;
+          align-items: center !important;
+          float: none !important;
+          height: 30px !important;
+        }
+        .login-wrap li.user {
+          padding-left: 22px !important;
+          position: relative !important;
+        }
+        .login-wrap input {
+          margin: 0 !important;
+          vertical-align: middle !important;
+          color: #000 !important;
+        }
         .btn-login, .btn-signup {
           display: flex !important;
           align-items: center;
@@ -640,6 +663,8 @@ function DesktopHeader() {
           padding: 0 8px !important;
           box-sizing: border-box !important;
           overflow: hidden !important;
+          text-decoration: none !important;
+          margin: 0 !important;
         }
         .icon-login {
           width: 10px !important;
