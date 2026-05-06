@@ -21,7 +21,7 @@ const DEMO_MARKETS = [
   { id: 3, name: '6 Over Run UAE', no: 42, noRate: 100, yes: 44, yesRate: 100, min: '1.00', max: '300.00' },
 ];
 
-const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet }) => {
+const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId }) => {
   const [activeTab, setActiveTab] = useState('All');
 
   const allMarkets = fancyData && fancyData.length > 0
@@ -40,6 +40,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         min: m.min,
         max: m.max,
         subType: m.SubType,
+        Type: m.Type,
         msg: combinedMsg,
       };
     })
@@ -354,7 +355,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                 <div style={{ padding: 0 }}>
                   <InlineBetBox 
                     selection={selectedBet}
-                    matchId={marketId}
+                    matchId={matchId}
                     onCancel={onCancelBet}
                   />
                 </div>

@@ -277,6 +277,7 @@ const EventDetailedPage = () => {
                       selectedBet={selectedBet}
                       onCancelBet={() => setSelectedBet(null)}
                       onBetClick={(bet) => handleBetClick(bet.name, bet.side, bet.price, 'Fancy Bet', bet.runnerIndex, bet.marketData)}
+                      matchId={matchId}
                     />
                   )}
                 </>
