@@ -299,7 +299,17 @@ function InPlayPage() {
   const groupedMatches = useMemo(() => getTimeGroups(), [matches]);
 
   const renderGroup = (groupMap) => {
-    const sports = Object.keys(groupMap);
+    const sportPriority = ['Cricket', 'Football', 'Tennis', 'Horse Racing', 'Greyhound Racing'];
+    
+    // Sort sports based on priority
+    const sports = Object.keys(groupMap).sort((a, b) => {
+      let idxA = sportPriority.indexOf(a);
+      let idxB = sportPriority.indexOf(b);
+      if (idxA === -1) idxA = 99;
+      if (idxB === -1) idxB = 99;
+      return idxA - idxB;
+    });
+
     if (sports.length === 0) {
       return <div style={{ padding: '20px', fontWeight: '800' }}>No {loading ? 'events loading...' : 'events found'}</div>;
     }
