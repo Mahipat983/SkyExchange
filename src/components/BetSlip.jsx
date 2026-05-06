@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { bettingController } from '../controllers';
 
-const BetSlip = () => {
+const BetSlip = ({ sport }) => {
   const { matchId } = useParams();
   const { loginToken, isLoggedIn } = useAuthStore();
   const [bets, setBets] = useState([]);
@@ -13,26 +13,38 @@ const BetSlip = () => {
     if (isLoggedIn && loginToken) {
       fetchBets();
     }
-  }, [isLoggedIn, loginToken, matchId]);
+  }, [isLoggedIn, loginToken, matchId, sport]);
 
   const fetchBets = async () => {
     try {
       setIsLoading(true);
       const res = await bettingController.getMyBets(loginToken);
       if (res && typeof res === 'object' && !res.error) {
-        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null);
+        let betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null);
         
         if (matchId) {
           // Filter bets for the current match if matchId is present in URL
-          const eventBets = betArray.filter(b => {
+          betArray = betArray.filter(b => {
             const gid = b.gid || b.Gid || b.eventId || b.matchId || b.MatchId || b.Eid || b.eid;
             return gid && gid.toString() === matchId.toString();
           });
-          setBets(eventBets);
-        } else {
-          // Show all bets on pages without a specific match context (e.g. In-Play)
-          setBets(betArray);
+        } else if (sport) {
+          // Filter bets by sport if on a sport page (e.g. /football)
+          const targetSport = sport.toLowerCase();
+          betArray = betArray.filter(b => {
+            // Check Type and Sport fields first as they usually contain the sport name
+            const bSport = (b.Type || b.Sport || b.sport || b.SportName || b.sportName || '').toLowerCase();
+            const bGameType = (b.Game_Type || '').toLowerCase();
+            const bGame = (b.Game || '').toLowerCase();
+            
+            return bSport.includes(targetSport) || 
+                   targetSport.includes(bSport) || 
+                   bGameType.includes(targetSport) ||
+                   bGame.includes(targetSport);
+          });
         }
+        
+        setBets(betArray);
       }
     } catch (err) {
       console.error('Failed to fetch bets:', err);

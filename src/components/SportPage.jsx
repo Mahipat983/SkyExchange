@@ -358,7 +358,7 @@ function SportPageWithLayout({
           </div>
         </div>
         <div className="betslip">
-          <BetSlip />
+          <BetSlip sport={sport} />
         </div>
       </main>
     </Layout>
