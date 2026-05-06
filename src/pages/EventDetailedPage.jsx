@@ -35,6 +35,21 @@ const parseDate = (str) => {
   return d && !isNaN(d.getTime()) ? d : null;
 };
 
+const formatDateTime = (dateStr) => {
+  const d = parseDate(dateStr);
+  if (!d) return dateStr || '';
+
+  const options = {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true
+  };
+  return d.toLocaleString('en-GB', options).replace(',', '');
+};
+
 const EventDetailedPage = () => {
   const { sport, matchId, eventId } = useParams();
   const navigate = useNavigate();
@@ -188,8 +203,25 @@ const EventDetailedPage = () => {
     );
   }
 
+  // Determine if match is In-Play for the header and tables
+  const startTimeStr = gameData?.DateTime || gameData?.dateTime || gameData?.Datetime || gameData?.staredtime || gameData?.StartTime || '';
+  const startTime = parseDate(startTimeStr);
+  const isWinnerMarket = (gameData?.Game_Type || gameData?.GameType || '').toLowerCase() === 'winner' ||
+    (gameData?.Team2 || '').includes('TOURNAMENT_WINNER');
+  const now = new Date();
+  const isInPlay = gameData?.Inplay === 'true' || gameData?.Inplay === 'Y' || gameData?.Inplay === true ||
+    gameData?.inplay === 'true' || gameData?.inplay === 'Y' || gameData?.inplay === true ||
+    (startTime && startTime <= now) || isWinnerMarket;
+
   return (
     <Layout>
+      <style>{`
+        @keyframes pulse {
+          0% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.7; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
       <EventLayout
         left={
           <SportCompetition
@@ -209,6 +241,90 @@ const EventDetailedPage = () => {
       >
         {/* Middle Main Content */}
         <div className="flex flex-col h-full">
+          {/* Top Event Header: Back, Name, Time */}
+          <div className="event-header-top" style={{
+            background: '#253845',
+            color: '#fff',
+            padding: '12px 15px',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '15px',
+
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+          }}>
+            <button
+              onClick={() => navigate(-1)}
+              style={{
+                background: '#ffb400',
+                border: 'none',
+                borderRadius: '4px',
+                padding: '6px 14px',
+                cursor: 'pointer',
+                color: '#000',
+                fontWeight: '900',
+                fontSize: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                textTransform: 'uppercase',
+                transition: 'all 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#e5a200'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#ffb400'}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              Back
+            </button>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <h2 style={{
+                  margin: 0,
+                  fontSize: '18px',
+                  fontWeight: '900',
+                  color: '#fff',
+                  letterSpacing: '0.5px',
+                  lineHeight: '1.2'
+                }}>
+                  {gameData?.Game_name || `${gameData?.Team1} v ${gameData?.Team2}`}
+                </h2>
+                {isInPlay && (
+                  <span style={{ 
+                    background: '#2aa84a', 
+                    color: '#fff', 
+                    fontSize: '10px', 
+                    fontWeight: '800', 
+                    padding: '2px 8px', 
+                    borderRadius: '4px',
+                    textTransform: 'uppercase',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}>
+                    <span style={{ width: '6px', height: '6px', background: '#fff', borderRadius: '50%', display: 'inline-block', animation: 'pulse 1.5s infinite' }}></span>
+                    In-Play
+                  </span>
+                )}
+              </div>
+              <div style={{
+                fontSize: '12px',
+                color: '#ffb400',
+                fontWeight: 'bold',
+                marginTop: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                {formatDateTime(gameData?.DateTime || gameData?.dateTime || gameData?.Datetime || gameData?.staredtime || gameData?.StartTime || '')}
+              </div>
+            </div>
+          </div>
+
           {/* Scoreboard Section with integrated controls */}
           <ScoreboardRender
             html={scoreboardHtml}
@@ -241,7 +357,7 @@ const EventDetailedPage = () => {
             {(() => {
               const isRacing = sport === 'horse-racing' || sport === 'greyhound-racing';
               let eventList = Object.values(gameData?.events || {});
-              
+
               if (isRacing && eventId) {
                 eventList = eventList.filter(e => e.eid?.toString() === eventId.toString());
               }
@@ -255,7 +371,7 @@ const EventDetailedPage = () => {
               const isInPlay = gameData?.Inplay === 'true' || gameData?.Inplay === 'Y' || gameData?.Inplay === true ||
                 gameData?.inplay === 'true' || gameData?.inplay === 'Y' || gameData?.inplay === true ||
                 (startTime && startTime <= now) || isWinnerMarket;
-              
+
               // Group Fancy markets to show them together at the bottom or top
               const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');
               // Other markets to render individually
@@ -315,7 +431,7 @@ const EventDetailedPage = () => {
 
                   {/* Grouped Fancy Markets */}
                   {fancyMarkets.length > 0 && (
-                    <FancyTable 
+                    <FancyTable
                       fancyData={fancyMarkets}
                       liveRates={liveRates}
                       selectedBet={selectedBet}

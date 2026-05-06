@@ -106,22 +106,6 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             }}>
               {displayName}
             </div>
-
-            {isInPlay && (
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                color: '#2aa84a',
-                fontWeight: '600',
-                marginLeft: '15px'
-              }}>
-                <span style={{ width: '12px', height: '12px' }}>
-                  <img src="/icons/in-play.svg" alt="" style={{ width: '100%' }} />
-                </span>
-                In-Play
-              </div>
-            )}
           </div>
 
           {/* Right Section */}
