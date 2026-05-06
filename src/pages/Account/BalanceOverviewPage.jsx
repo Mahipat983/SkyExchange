@@ -4,9 +4,8 @@ import { userController } from '../../controllers';
 import { useAuthStore } from '../../store/authStore';
 
 function BalanceOverviewPage() {
-  const { loginToken, isLoggedIn, username } = useAuthStore();
-  const [balanceData, setBalanceData] = useState({ balance: '0', exposure: '0', available_balance: 0 });
-  const [loading, setLoading] = useState(true);
+  const { loginToken, isLoggedIn, username, balance, exposure, updateBalance } = useAuthStore();
+  const [loading, setLoading] = useState(false);
 
   const fetchBalance = async () => {
     if (!isLoggedIn || !loginToken) return;
@@ -14,11 +13,7 @@ function BalanceOverviewPage() {
       setLoading(true);
       const res = await userController.getBalance(loginToken);
       if (res && res.error === '0') {
-        setBalanceData({
-          balance: res.balance || '0',
-          exposure: res.exposure || '0',
-          available_balance: res.available_balance || 0
-        });
+        updateBalance(res.balance, res.exposure);
       }
     } catch (err) {
       console.error('Failed to fetch balance:', err);
@@ -51,19 +46,19 @@ function BalanceOverviewPage() {
                   <p style={{ margin: 0, fontSize: '12px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase' }}>Main Balance</p>
                   <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: '900', color: '#ffb400', letterSpacing: '-1px' }}>
                     <span style={{ fontSize: '14px', color: '#7e97a7', marginRight: '5px', fontWeight: 'bold' }}>PTH</span>
-                    {parseFloat(balanceData.balance).toLocaleString()}
+                    {parseFloat(balance).toLocaleString()}
                   </p>
                 </div>
                 <div style={{ position: 'relative' }}>
                   <p style={{ margin: 0, fontSize: '12px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase' }}>Total Exposure</p>
                   <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: '900', color: '#ff4444', letterSpacing: '-1px' }}>
-                    {parseFloat(balanceData.exposure).toLocaleString()}
+                    {parseFloat(exposure).toLocaleString()}
                   </p>
                 </div>
                 <div style={{ position: 'relative' }}>
                   <p style={{ margin: 0, fontSize: '12px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase' }}>Available Funds</p>
                   <p style={{ margin: '8px 0 0 0', fontSize: '36px', fontWeight: '900', color: '#4caf50', letterSpacing: '-1px' }}>
-                    {parseFloat(balanceData.available_balance || (parseFloat(balanceData.balance) - parseFloat(balanceData.exposure))).toLocaleString()}
+                    {(parseFloat(balance) - parseFloat(exposure)).toLocaleString()}
                   </p>
                 </div>
               </div>

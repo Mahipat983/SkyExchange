@@ -13,7 +13,6 @@ function DesktopHeader() {
   const [password, setPassword] = useState('');
   const [validationInput, setValidationInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [balanceData, setBalanceData] = useState({ balance: '0', exposure: '0' });
   const [searchInput, setSearchInput] = useState('');
   const [searchResults, setSearchResults] = useState([]);
   const [searchLoading, setSearchLoading] = useState(false);
@@ -31,7 +30,7 @@ function DesktopHeader() {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoggedIn, username, loginToken, logout } = useAuthStore();
+  const { isLoggedIn, username, loginToken, logout, balance, exposure } = useAuthStore();
   const loginAction = useAuthStore((state) => state.login);
   const showSnackbar = useSnackbarStore(state => state.show);
 
@@ -39,20 +38,9 @@ function DesktopHeader() {
     return String(Math.floor(1000 + Math.random() * 9000));
   };
 
-  const refreshBalance = async () => {
-    const token = useAuthStore.getState().getToken();
-    if (!isLoggedIn || !token) return;
-    try {
-      const response = await userController.getBalance(token);
-      if (response.error === '0') {
-        setBalanceData({
-          balance: response.balance || '0',
-          exposure: response.exposure || '0'
-        });
-      }
-    } catch (error) {
-      console.error('Balance refresh error:', error);
-    }
+  // refreshBalance is now handled by SessionWatchdog
+  const refreshBalance = () => {
+    // No-op or trigger watchdog if needed, but watchdog is automatic
   };
 
   useEffect(() => {
@@ -103,13 +91,7 @@ function DesktopHeader() {
     setValidationCode(generateCode());
   }, []);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      refreshBalance();
-      const timer = setInterval(refreshBalance, 30000);
-      return () => clearInterval(timer);
-    }
-  }, [isLoggedIn, loginToken]);
+  // Polling removed here as it is handled by SessionWatchdog
 
   const validateLogin = async (e) => {
     e.preventDefault();
@@ -497,11 +479,11 @@ function DesktopHeader() {
                   onClick={() => setIsBalanceModalOpen(!isBalanceModalOpen)}
                 >
                   <div className="balance-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 10px', borderRight: '1px solid #555' }}>
-                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Main Balance <strong style={{ color: '#ffb400' }}>PTH {balanceData.balance}</strong></span>
-                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Exposure <strong style={{ color: '#ffb400' }}>{balanceData.exposure}</strong></span>
+                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Main Balance <strong style={{ color: '#ffb400' }}>PTH {balance}</strong></span>
+                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Exposure <strong style={{ color: '#ffb400' }}>{exposure}</strong></span>
                     <div style={{ border: '1px solid #ffb400', color: '#ffb400', fontSize: '11px', padding: '0 4px', borderRadius: '3px' }}>+3</div>
                   </div>
-                  <button onClick={(e) => { e.stopPropagation(); refreshBalance(); }} style={{ background: 'none', border: 'none', color: '#ffb400', width: '30px', cursor: 'pointer' }}>
+                  <button onClick={(e) => { e.stopPropagation(); /* Refresh handled by watchdog */ }} style={{ background: 'none', border: 'none', color: '#ffb400', width: '30px', cursor: 'pointer' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path></svg>
                   </button>
                 </div>
@@ -510,10 +492,10 @@ function DesktopHeader() {
                     <div style={{ padding: '15px' }}>
                       <div style={{ background: '#fff', borderRadius: '4px', padding: '12px', marginBottom: '10px', border: '1px solid #ddd' }}>
                         <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>Main Balance</p>
-                        <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}><span style={{ color: '#7f8c8d', fontSize: '14px', marginRight: '5px' }}>PTH</span> {balanceData.balance}</p>
+                        <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}><span style={{ color: '#7f8c8d', fontSize: '14px', marginRight: '5px' }}>PTH</span> {balance}</p>
                         <div style={{ borderTop: '1px solid #eee', marginTop: '10px', paddingTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
                           <span style={{ fontSize: '13px', color: '#666' }}>Exposure</span>
-                          <span style={{ fontSize: '13px', color: '#333' }}>{balanceData.exposure}</span>
+                          <span style={{ fontSize: '13px', color: '#333' }}>{exposure}</span>
                         </div>
                       </div>
                     </div>

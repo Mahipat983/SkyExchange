@@ -5,8 +5,7 @@ import { userController } from '../controllers';
 
 function MobileHeader() {
   const location = useLocation();
-  const { isLoggedIn, username, loginToken, logout } = useAuthStore();
-  const [balanceData, setBalanceData] = useState({ balance: '0', exposure: '0' });
+  const { isLoggedIn, username, loginToken, logout, balance, exposure } = useAuthStore();
 
   const getActive = (href) => {
     const path = location.pathname;
@@ -15,29 +14,10 @@ function MobileHeader() {
     return '';
   };
 
-  const refreshBalance = async () => {
-    const token = useAuthStore.getState().getToken();
-    if (!isLoggedIn || !token) return;
-    try {
-      const response = await userController.getBalance(token);
-      if (response.error === '0') {
-        setBalanceData({
-          balance: response.balance || '0',
-          exposure: response.exposure || '0'
-        });
-      }
-    } catch (error) {
-      console.error('Mobile Balance refresh error:', error);
-    }
-  };
+  // refreshBalance is now handled by SessionWatchdog
+  const refreshBalance = () => {};
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      refreshBalance();
-      const timer = setInterval(refreshBalance, 30000);
-      return () => clearInterval(timer);
-    }
-  }, [isLoggedIn, loginToken]);
+  // Polling removed here as it is handled by SessionWatchdog
 
   return (
     <>
@@ -54,7 +34,7 @@ function MobileHeader() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <Link to="/balance-overview" className="account-number">{username}</Link>
               <div className="account-balance">
-                  <span id="mainBalance"><span className="badge-currency">USD</span> {balanceData.balance}</span>
+                  <span id="mainBalance"><span className="badge-currency">USD</span> {balance}</span>
               </div>
             </div>
             <div className="mobile-action-buttons" style={{ display: 'flex', gap: '4px' }}>
@@ -129,9 +109,9 @@ function MobileHeader() {
                 <dt>Main Balance</dt>
                 <dd className="wallet-balance-num">
                   <span className="badge-currency" id="currency">USD</span>
-                  <span id="mainBalance">$ 0.00</span>
+                  <span id="mainBalance">$ {balance}</span>
                 </dd>
-                <dd className="wallet-exposure">Exposure <span id="mainExposure">$ 0.00</span></dd>
+                <dd className="wallet-exposure">Exposure <span id="mainExposure">$ {exposure}</span></dd>
               </dl>
             </div>
             <div id="walletContent" className="wallet-detail-group"></div>

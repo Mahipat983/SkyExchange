@@ -34,6 +34,7 @@ import './App.css';
 
 import Snackbar from './components/Snackbar';
 import PopupModal from './components/PopupModal';
+import SessionWatchdog from './components/SessionWatchdog';
 
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
       </Routes>
       <Snackbar />
       <PopupModal />
+      <SessionWatchdog />
     </Router>
   );
 }

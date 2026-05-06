@@ -7,6 +7,8 @@ export const useAuthStore = create(
       username: null,
       loginToken: '',
       isLoggedIn: false,
+      balance: '0',
+      exposure: '0',
 
       // Action to log in a user and save their session
       login: (username, loginToken) => set({
@@ -15,12 +17,20 @@ export const useAuthStore = create(
         isLoggedIn: true
       }),
 
+      // Action to update balance and exposure
+      updateBalance: (balance, exposure) => set({
+        balance: balance || '0',
+        exposure: exposure || '0'
+      }),
+
       // Action to log out and clear the session
       logout: () => {
         set({
           username: null,
           loginToken: '',
-          isLoggedIn: false
+          isLoggedIn: false,
+          balance: '0',
+          exposure: '0'
         });
         localStorage.removeItem('skyexchange-auth-storage');
         window.location.href = '/login';
