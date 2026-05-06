@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { marketController } from '../controllers';
 
 function LeftSidebar({ sport, competitions = [], countries = [] }) {
   const [openAccordions, setOpenAccordions] = useState({});
   const [compMatches, setCompMatches] = useState({});
+  const navigate = useNavigate();
 
   const getDisplayName = (obj) => {
     if (!obj) return 'Unknown';
     if (typeof obj === 'string') return obj;
-    return obj.Competition_Name || obj.CompetitionName || obj.name || obj.ename || obj.Competition || 'Unknown';
+    // Prioritize Game_name for individual matches, then fallback to other common name fields
+    return obj.Game_name || obj.GameName || obj.Competition_Name || obj.CompetitionName || obj.name || obj.ename || obj.Competition || 'Unknown';
   };
 
   const toggleAccordion = async (key, code) => {
@@ -34,81 +36,117 @@ function LeftSidebar({ sport, competitions = [], countries = [] }) {
     }
   };
 
+  const sidebarStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'fit-content',
+    backgroundColor: '#fff',
+    fontFamily: 'Tahoma, Helvetica, sans-serif',
+    position: 'sticky',
+    top: '0px',
+    zIndex: 10,
+    borderRight: '1px solid #ccc'
+  };
+
+  const headerStyle = {
+    backgroundColor: '#2b3a47',
+    color: '#ffb400',
+    padding: '12px 15px',
+    fontWeight: '800',
+    fontSize: '14px',
+    textTransform: 'uppercase',
+    borderBottom: '2px solid #ffb400',
+    letterSpacing: '0.5px'
+  };
+
+  const compLinkStyle = {
+    padding: '10px 15px',
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#333',
+    backgroundColor: '#f8f9fa',
+    borderBottom: '1px solid #eee',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  };
+
+  const matchLinkStyle = {
+    padding: '8px 15px 8px 30px',
+    fontSize: '11px',
+    fontWeight: '600',
+    color: '#4b5965',
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #f1f5f9',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    textDecoration: 'none'
+  };
+
   return (
-    <aside className="sidebar sideNav">
-      <div className="sideNav__head">Sports</div>
-      <div className="sideNav__scroll">
-        <Link className="sideNav__item" to="/in-play">All Sports</Link>
-        <a className="sideNav__item sideNav__item--active" href="#">{sport}</a>
+    <aside style={sidebarStyle} className="sidebar sideNav">
+      <div style={headerStyle}>{sport}</div>
+      
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {competitions.map((comp, idx) => {
+          const compName = getDisplayName(comp);
+          const compCode = comp.Competition_Code || comp.CompetitionCode || comp.code;
+          const keyId = compCode || String(compName).replace(/\s+/g, '-').toLowerCase();
+          const key = `comp-${keyId}-${idx}`;
+          const isOpen = openAccordions[key];
+          const matches = compMatches[key] || [];
 
-        {competitions.length > 0 && (
-          <>
-            <div className="sideNav__section">Top Competitions</div>
-            {competitions.map((comp, idx) => {
-              const compName = getDisplayName(comp);
-              const compCode = comp.Competition_Code || comp.CompetitionCode || comp.code;
-              const keyId = compCode || String(compName).replace(/\s+/g, '-').toLowerCase();
-              const key = `comp-${keyId}-${idx}`;
-              const isOpen = openAccordions[key];
-              const matches = compMatches[key] || [];
-
-              return (
-                <div className="sideNav__acc" key={key}>
-                  <button
-                    className={`sideNav__item sideNav__toggle${isOpen ? ' open' : ''}`}
-                    type="button"
-                    onClick={() => toggleAccordion(key, compCode)}
-                  >
-                    {compName}
-                    <span className="sideNav__arrow">{isOpen ? '▴' : '▾'}</span>
-                  </button>
-                  {isOpen && (
-                    <div className="sideNav__sub">
-                      {matches.length > 0 ? (
-                        matches.map((m, mIdx) => (
-                          <a key={mIdx} className="sideNav__subItem" href="#">
-                            {getDisplayName(m)}
-                          </a>
-                        ))
-                      ) : (
-                        <div className="sideNav__subItem" style={{ opacity: 0.6 }}>Loading games...</div>
-                      )}
+          return (
+            <div key={key}>
+              <div 
+                style={{
+                  ...compLinkStyle,
+                  backgroundColor: isOpen ? '#f1f5f9' : '#f8f9fa'
+                }}
+                onClick={() => toggleAccordion(key, compCode)}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isOpen ? '#f1f5f9' : '#f8f9fa'}
+              >
+                <span>{compName}</span>
+                <span style={{ color: '#ffb400', fontSize: '10px' }}>{isOpen ? '▲' : '▼'}</span>
+              </div>
+              
+              {isOpen && (
+                <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>
+                  {matches.length > 0 ? (
+                    matches.map((m, mIdx) => (
+                      <Link 
+                        key={mIdx} 
+                        to={`/${sport.toLowerCase()}/${m.gid || m.Event_Id || m.MarketId}`}
+                        style={matchLinkStyle}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fafafa';
+                          e.currentTarget.style.color = '#ffb400';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = '#fff';
+                          e.currentTarget.style.color = '#4b5965';
+                        }}
+                      >
+                        <span style={{ color: '#ffb400', fontSize: '8px' }}>●</span>
+                        {getDisplayName(m)}
+                      </Link>
+                    ))
+                  ) : (
+                    <div style={{ ...matchLinkStyle, color: '#999', fontStyle: 'italic' }}>
+                      Loading events...
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </>
-        )}
-
-        {countries.length > 0 && (
-          <>
-            <div className="sideNav__section">Top Countries</div>
-            {countries.map((country, idx) => {
-              const countryName = getDisplayName(country);
-              const keyId = String(countryName).replace(/\s+/g, '-').toLowerCase();
-              const key = `country-${keyId}-${idx}`;
-              const isOpen = openAccordions[key];
-              return (
-                <div className="sideNav__acc" key={key}>
-                  <button
-                    className={`sideNav__item sideNav__toggle${isOpen ? ' open' : ''}`}
-                    type="button"
-                    onClick={() => toggleAccordion(key)}
-                  >
-                    {countryName}
-                    <span className="sideNav__arrow">{isOpen ? '▴' : '▾'}</span>
-                  </button>
-                  {isOpen && (
-                    <div className="sideNav__sub">
-                      <div className="sideNav__subItem" style={{ opacity: 0.6 }}>No events available</div>
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </>
-        )}
+              )}
+            </div>
+          );
+        })}
       </div>
     </aside>
   );
