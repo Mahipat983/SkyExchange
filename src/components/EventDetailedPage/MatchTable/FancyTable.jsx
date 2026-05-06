@@ -203,7 +203,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         fontWeight: 'bold',
         fontSize: '13px',
       }}>
-        <span style={{ fontSize: '14px' }}>📌</span>
+
         <span>Fancy Bet</span>
       </div>
 
@@ -243,39 +243,39 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                 }}
               >
                 {/* Market name */}
-                  <div style={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    padding: '4px 16px',
-                    fontSize: '13px',
-                    fontWeight: '600',
-                    color: '#222',
-                    borderRight: '1px solid #e8e8e8',
-                  }}>
-                    <div>{market.name}</div>
-                    {(() => {
-                      const chartVal = rates?.chart ?? 
-                        (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
-                         market.Chart1 !== undefined && market.Chart1 !== null ? parseFloat(market.Chart1) :
-                         market.Chart2 !== undefined && market.Chart2 !== null ? parseFloat(market.Chart2) : null);
-                      
-                      if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
-                        return (
-                          <div style={{ 
-                            fontSize: '11px', 
-                            fontWeight: '700', 
-                            marginTop: '2px',
-                            color: chartVal < 0 ? '#d0021b' : '#2aa84a'
-                          }}>
-                            {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
-                          </div>
-                        );
-                      }
-                      return null;
-                    })()}
-                  </div>
+                <div style={{
+                  flex: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  padding: '4px 16px',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  color: '#222',
+                  borderRight: '1px solid #e8e8e8',
+                }}>
+                  <div>{market.name}</div>
+                  {(() => {
+                    const chartVal = rates?.chart ??
+                      (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
+                        market.Chart1 !== undefined && market.Chart1 !== null ? parseFloat(market.Chart1) :
+                          market.Chart2 !== undefined && market.Chart2 !== null ? parseFloat(market.Chart2) : null);
+
+                    if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                      return (
+                        <div style={{
+                          fontSize: '11px',
+                          fontWeight: '700',
+                          marginTop: '2px',
+                          color: chartVal < 0 ? '#d0021b' : '#2aa84a'
+                        }}>
+                          {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
 
                 {/* Left spacer for alignment */}
                 <div style={{ width: '229.376px' }} />
@@ -377,7 +377,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
               {/* Render Inline Bet Box if this fancy market is selected */}
               {selectedBet?.runner === market.name && selectedBet?.market === 'Fancy Bet' && (
                 <div style={{ padding: 0 }}>
-                  <InlineBetBox 
+                  <InlineBetBox
                     selection={selectedBet}
                     matchId={matchId}
                     onCancel={onCancelBet}
