@@ -72,7 +72,7 @@ function MatchRow({ match, odds, sport }) {
           <span style={{ color: isLive ? '#008000' : '#333', fontWeight: 'bold' }}>{match.status}</span>
           
           <div className="flex items-center gap-1 ml-1">
-            {match.hasTV && (
+            {isLive && match.hasTV && (
               <div className="w-[18px] h-[15px] bg-[#3498db] rounded-[2px] flex items-center justify-center shadow-sm border border-[#2980b9]" title="Live TV">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
@@ -89,6 +89,16 @@ function MatchRow({ match, odds, sport }) {
             {match.hasF && (
               <div className="w-[15px] h-[15px] bg-[#9b59b6] rounded-[2px] flex items-center justify-center shadow-sm border border-[#8e44ad]" title="Fancy">
                 <span style={{ fontSize: '9px', fontWeight: '900', color: '#fff', lineHeight: 1 }}>F</span>
+              </div>
+            )}
+            {match.hasGoal && (
+              <div className="w-[15px] h-[15px] bg-[#2ecc71] rounded-[2px] flex items-center justify-center shadow-sm border border-[#27ae60]" title="Goal">
+                <span style={{ fontSize: '9px', fontWeight: '900', color: '#fff', lineHeight: 1 }}>G</span>
+              </div>
+            )}
+            {match.hasWset && (
+              <div className="w-[15px] h-[15px] bg-[#f1c40f] rounded-[2px] flex items-center justify-center shadow-sm border border-[#f39c12]" title="Set">
+                <span style={{ fontSize: '9px', fontWeight: '900', color: '#fff', lineHeight: 1 }}>S</span>
               </div>
             )}
           </div>
@@ -190,7 +200,9 @@ function SportPageWithLayout({
                 isWinner: isWinnerMarket,
                 hasBM: !!(m.bm || m.bookmaker || m.BM === 'Y'),
                 hasTV: !!(m.tv || m.TV === 'Y' || m.isTV === 'Y'),
-                hasF: !!(m.f || m.fancy || m.Fancy === 'Y')
+                hasF: !!(m.f || m.fancy || m.Fancy === 'Y'),
+                hasGoal: m.Goal === 'Y' || m.goal === 'Y',
+                hasWset: m.Wset === 'Y' || m.wset === 'Y'
             };
         });
         setMatches(processed);
