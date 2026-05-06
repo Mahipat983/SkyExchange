@@ -23,17 +23,37 @@ const EventLayout = ({ left, children, right }) => {
       className="event-layout-row-container"
     >
       {/* Left Sidebar: Sport/Competition Navigation */}
-      <aside style={{ backgroundColor: '#f7f7f7', borderRight: '1px solid #ccc', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <aside style={{ 
+        backgroundColor: '#f7f7f7', 
+        borderRight: '1px solid #ccc', 
+        overflow: 'hidden', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: 'fit-content',
+        position: 'sticky',
+        top: '0px',
+        zIndex: 10
+      }}>
         {left}
       </aside>
 
       {/* Middle: Main Content Area (Scoreboard, Market Odds) */}
-      <main style={{ backgroundColor: '#fff', overflowY: 'auto', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <main style={{ backgroundColor: '#fff', display: 'flex', flexDirection: 'column', minHeight: '100%' }}>
         {children}
       </main>
 
       {/* Right Sidebar: BetSlip and other actions */}
-      <aside style={{ backgroundColor: '#fff', borderLeft: '1px solid #ccc', overflow: 'hidden', display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <aside style={{ 
+        backgroundColor: '#fff', 
+        borderLeft: '1px solid #ccc', 
+        overflow: 'hidden', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: 'fit-content',
+        position: 'sticky',
+        top: '0px',
+        zIndex: 10
+      }}>
         {right}
       </aside>
     </div>

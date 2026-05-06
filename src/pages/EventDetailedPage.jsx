@@ -228,6 +228,7 @@ const EventDetailedPage = () => {
             sport={sport}
             competition={gameData?.Competition}
             matchName={gameData?.Game_name || `${gameData?.Team1} v ${gameData?.Team2}`}
+            events={gameData?.events}
           />
         }
         right={
@@ -386,8 +387,40 @@ const EventDetailedPage = () => {
                     // Main Match Odds
                     if (type === 'ODDS') {
                       return (
+                        <div key={market.eid || mIdx} id={`market-${name.replace(/\s+/g, '-')}`}>
+                          <OddsTable
+                            marketData={market}
+                            liveRates={liveRates}
+                            selectedBet={selectedBet}
+                            onCancelBet={() => setSelectedBet(null)}
+                            onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
+                            sport={sport}
+                            isInPlay={isInPlay}
+                          />
+                        </div>
+                      );
+                    }
+
+                    // All Bookmaker variations
+                    if (type === 'BOOKMAKER') {
+                      return (
+                        <div key={market.eid || mIdx} id={`market-${name.replace(/\s+/g, '-')}`}>
+                          <BookmakerTable
+                            bookmakerData={market}
+                            liveRates={liveRates}
+                            selectedBet={selectedBet}
+                            onCancelBet={() => setSelectedBet(null)}
+                            onBetClick={(runner, side, price, runnerIndex) => handleBetClick(runner, side, price, market.name, runnerIndex, market)}
+                          />
+                        </div>
+                      );
+                    }
+
+                    // ODDS, EXTRA (Tied Match), and others
+                    return (
+                      <div key={market.eid || mIdx} id={`market-${name.replace(/\s+/g, '-')}`}>
                         <OddsTable
-                          key={market.eid || mIdx}
+                          marketName={market.name}
                           marketData={market}
                           liveRates={liveRates}
                           selectedBet={selectedBet}
@@ -396,49 +429,22 @@ const EventDetailedPage = () => {
                           sport={sport}
                           isInPlay={isInPlay}
                         />
-                      );
-                    }
-
-                    // All Bookmaker variations
-                    if (type === 'BOOKMAKER') {
-                      return (
-                        <BookmakerTable
-                          key={market.eid || mIdx}
-                          bookmakerData={market}
-                          liveRates={liveRates}
-                          selectedBet={selectedBet}
-                          onCancelBet={() => setSelectedBet(null)}
-                          onBetClick={(runner, side, price, runnerIndex) => handleBetClick(runner, side, price, market.name, runnerIndex, market)}
-                        />
-                      );
-                    }
-
-                    // ODDS, EXTRA (Tied Match), and others
-                    return (
-                      <OddsTable
-                        key={market.eid || mIdx}
-                        marketName={market.name}
-                        marketData={market}
-                        liveRates={liveRates}
-                        selectedBet={selectedBet}
-                        onCancelBet={() => setSelectedBet(null)}
-                        onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
-                        sport={sport}
-                        isInPlay={isInPlay}
-                      />
+                      </div>
                     );
                   })}
 
                   {/* Grouped Fancy Markets */}
                   {fancyMarkets.length > 0 && (
-                    <FancyTable
-                      fancyData={fancyMarkets}
-                      liveRates={liveRates}
-                      selectedBet={selectedBet}
-                      onCancelBet={() => setSelectedBet(null)}
-                      onBetClick={(bet) => handleBetClick(bet.name, bet.side, bet.price, 'Fancy Bet', bet.runnerIndex, bet.marketData)}
-                      matchId={matchId}
-                    />
+                    <div id="market-FANCY">
+                      <FancyTable 
+                        fancyData={fancyMarkets}
+                        liveRates={liveRates}
+                        selectedBet={selectedBet}
+                        onCancelBet={() => setSelectedBet(null)}
+                        onBetClick={(bet) => handleBetClick(bet.name, bet.side, bet.price, 'Fancy Bet', bet.runnerIndex, bet.marketData)}
+                        matchId={matchId}
+                      />
+                    </div>
                   )}
                 </>
               );

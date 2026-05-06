@@ -1,0 +1,32 @@
+Sky Exchange Rules and Regulations
+
+NOTE:
+Players using VPN and login from different IP frequently may result to void bets.
+And on the basis of different IP from multiple city we can suspend the account and void bets.
+
+<ul>
+				<li>Selecting the 'SP' button in the market view gives customers two different ways to request an SP bet. These are as follows:</li>
+				<li>The first way to request a bet at SP is by leaving the 'Set SP odds limit' box unticked at the top right of the bet manager. For a
+					back bet you are required to enter the stake you wish to bet on the selection. For a lay bet, you are required to enter the
+					liability you are prepared to risk against the selection – in other words the amount that you are prepared to lose, should the
+					selection win (or be placed as applicable).
+				</li>
+				<li>The second way to request a bet at SP is to select the 'Set SP odds limit' option. Using this you can request a bet at SP
+					conditional upon minimum SP odds in the case of a back bet, or maximum SP odds in the case of a lay bet. If SP is shorter than the
+					minimum price requested by a backer or is longer than the maximum price requested by a layer, then the relevant bet will lapse
+					when the event starts. If SP is longer than the minimum price requested by a backer or is shorter than the maximum price requested
+					by a layer, the bet will be matched at the SP. Where an SP is equal to the price limit specified by customers, those bets will be
+					included based on the time they were submitted, on a first come, first served basis as is the existing convention for other
+					Exchange bets. This means that such bets may be unmatched or partially matched.
+				</li>
+				<li>Please note that if a non-runner cannot be removed from the relevant market until after the completion of the event, the
+					application to all bets matched at or before the "off" (including SP bets) of any reduction factor, may mean that the matched
+					price for an SP back bet with an odds limit requested, is adjusted to a price below the lower limit requested. It may also mean
+					that an SP lay bet request with maximum odds requested, may not be matched even though the odds on the selection, after any
+					post-race adjustment for the late non-runner, is below the maximum odds requested.
+				</li>
+				<li>If an SP bet with an odds limit is requested, the minimum/maximum odds requested can be shortened in the case of a back bet or a
+					lengthened in the case of a lay bet at any time before the event starts. However, as mentioned above, an SP bet request cannot
+					actually be cancelled by a customer once it has been placed. Details of the impact of non-runners on the SP re provided below.
+				</li>
+			</ul>
