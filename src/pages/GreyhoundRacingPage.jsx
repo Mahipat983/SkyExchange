@@ -11,7 +11,7 @@ function GreyhoundRacingPage() {
   return (
     <SportPageWithLayout
       sport="Greyhound Racing"
-      kvImage="/images/banner_horsebook-half.png" // Reusing similar banner if specific one not available
+      kvImage={null}
       competitions={greyhoundCompetitions}
       countries={greyhoundCountries}
     />

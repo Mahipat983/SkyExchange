@@ -11,7 +11,7 @@ function HorseRacingPage() {
   return (
     <SportPageWithLayout
       sport="Horse Racing"
-      kvImage="/images/banner_horsebook-half.png"
+      kvImage={null}
       competitions={racingCompetitions}
       countries={racingCountries}
     />

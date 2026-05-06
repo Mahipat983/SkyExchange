@@ -182,8 +182,10 @@ body {
 
 /* KV Banner */
 .banner1 {
-  height: 185px;
-  background-position: center;
+  min-height: 200px;
+  height: 22vw;
+  max-height: 280px;
+  background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
   border-bottom: 1px solid #d6d6d6;
