@@ -516,15 +516,6 @@ function DesktopHeader() {
                           <span style={{ fontSize: '13px', color: '#333' }}>{balanceData.exposure}</span>
                         </div>
                       </div>
-                      {[{ label: 'Royal Gaming Balance', val: '0', unit: 'PTH' }, { label: 'Casino Balance', val: '0', unit: 'PTH' }, { label: 'BPoker Balance', val: '0 Points', unit: '' }].map((item) => (
-                        <div key={item.label} style={{ background: '#fff', borderRadius: '4px', padding: '10px', marginBottom: '10px', border: '1px solid #ddd', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                          <div><p style={{ margin: '0', fontSize: '12px', color: '#666' }}>{item.label}</p><p style={{ margin: '3px 0 0 0', fontSize: '15px', fontWeight: 'bold', color: '#2c3e50' }}>{item.unit && <span style={{ color: '#7f8c8d', fontSize: '12px', marginRight: '3px' }}>{item.unit}</span>}{item.val}</p></div>
-                          <button style={{ background: '#ecf0f1', border: '1px solid #bdc3c7', padding: '5px 12px', borderRadius: '4px', fontSize: '13px', fontWeight: '600', color: '#333', cursor: 'pointer' }}>Recall</button>
-                        </div>
-                      ))}
-                      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                        <button style={{ background: '#ecf0f1', border: '1px solid #bdc3c7', padding: '8px 15px', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold', cursor: 'pointer' }}>Recall All</button>
-                      </div>
                     </div>
                     <button onClick={() => setIsBalanceModalOpen(false)} style={{ width: '100%', background: '#fff', border: 'none', borderTop: '1px solid #ddd', padding: '12px', fontSize: '15px', fontWeight: 'bold', color: '#333', cursor: 'pointer' }}>Close</button>
                   </div>
