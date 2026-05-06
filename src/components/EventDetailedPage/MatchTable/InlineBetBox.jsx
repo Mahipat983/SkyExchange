@@ -130,9 +130,9 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
           case 'GOAL':
           case 'GOALS':
           case 'WINNETSET':
-            res = await bettingController.placeWinnerBet({ // Assuming winner or goal bet type
+            res = await bettingController.placeGoalBet({
               ...common,
-              SelectionId: selection.selectionId || selection.runnerIndex || '',
+              Team: teamLetter,
               Type: betTypeChar
             });
             break;

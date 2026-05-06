@@ -8,6 +8,7 @@ export const bettingController = {
   getFancyChart: (loginToken, eid) => fetchAPI('/fancychart', { LoginToken: loginToken, Eid: eid }),
   placeLineBet: (data) => fetchAPI('/dealline', data),
   placeExtraBet: (data) => fetchAPI('/dealextra', data),
+  placeGoalBet: (data) => fetchAPI('/dealgoal', data),
   placeWinnerBet: (data) => fetchAPI('/dealwinner', data),
   cashout: (loginToken, eid) => fetchAPI('/cashout', { LoginToken: loginToken, Eid: eid }),
   getMyBets: (loginToken) => fetchAPI('/mybets', { LoginToken: loginToken }),
