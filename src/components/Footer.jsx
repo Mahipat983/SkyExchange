@@ -4,99 +4,83 @@ function Footer() {
   return (
     <>
       {/* Footer */}
-      <div className="footer">
-        {/* Support */}
-        <div className="support-wrap extend-support">
-          <div className="extend-wrap">
-            <div className="extend-btn">
-              <img src="/images/transparent.gif" title="customer" className="support-customer" alt="" />
-              <a href="https://wa.link/skyexchcs" target="_blank" rel="noreferrer">Customer support1</a>
-              <a href="https://wa.link/skyexchcs" target="_blank" rel="noreferrer" className="split-line">support2</a>
-            </div>
-            <div className="extend-btn">
-              <img src="/images/transparent.gif" title="WhatsApp" className="support-whatsapp" alt="" />
-              <a href="https://go.wa.link/skyexchange" target="_blank" rel="noreferrer">WhatsApp 3</a>
-              <a href="https://go.wa.link/skyexchange" target="_blank" rel="noreferrer" className="split-line">WhatsApp 4</a>
-            </div>
+      {/* Footer Content */}
+
+
+      {/* New License and Description Section */}
+      <div style={{
+        margin: '30px auto',
+        maxWidth: '900px',
+        border: '1px solid #d1d1d1',
+        borderRadius: '12px',
+        padding: '25px',
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+        fontFamily: 'Arial, Helvetica, sans-serif'
+      }}>
+        {/* Logos Section */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '15px',
+          borderRight: '1px solid #e0e0e0',
+          paddingRight: '25px',
+          marginRight: '25px',
+          flexShrink: 0
+        }}>
+          <div style={{
+            width: '100px',
+            height: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden'
+          }}>
+            <img
+              src="https://www.gaming-curacao.com/images/gc-logo.png"
+              style={{ width: '100%', objectFit: 'contain' }}
+              alt="GC Logo"
+              onError={(e) => e.target.src = '/images/transparent.gif'}
+            />
           </div>
-          <div className="extend-btn mobile-btn"></div>
-          <div className="extend-wrap mobile-wrap">
-            <div className="support-social">
-              <img src="/images/transparent.gif" title="Skype" className="support-skype" alt="" />
-              <a href="skype:skyexchangeofficial?chat" target="_blank" rel="noreferrer">skyexchangeofficial</a>
-            </div>
-            <div className="support-social">
-              <img src="/images/transparent.gif" title="Email" className="support-mail" alt="" />
-              <a href="mailto:info@skyexchange.com" target="_blank" rel="noreferrer">info@skyexchange.com</a>
-            </div>
-            <div className="support-social">
-              <img src="/images/transparent.gif" title="Instagram" className="support-ig" alt="" />
-              <a href="https://www.instagram.com/skyexchoffficial/" target="_blank" rel="noreferrer">skyexchindia</a>
-            </div>
+          <div style={{
+            width: '140px',
+            height: '60px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '8px',
+            background: '#1a1a1a',
+            borderRadius: '6px'
+          }}>
+            <img
+              src="/images/logo.png"
+              style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+              alt="Skyexch Logo"
+            />
           </div>
         </div>
 
-        {/* Mobile Social Support */}
-        <div className="support-social-mobile">
-          <div className="support-social mobile-item">
-            <img src="/images/transparent.gif" style={{ width: '20px', height: '20px' }} title="Skype" className="support-skype" alt="" />
-            <a href="skype:skyexchangeofficial?chat" target="_blank" rel="noreferrer" style={{ color: '#00000080' }}>Skype</a>
-          </div>
-          <div className="support-social mobile-item">
-            <img src="/images/transparent.gif" style={{ width: '20px', height: '20px' }} title="Email" className="support-mail" alt="" />
-            <a href="mailto:info@skyexchange.com" target="_blank" rel="noreferrer" style={{ color: '#00000080' }}>Email</a>
-          </div>
-          <div className="support-social mobile-item1">
-            <img src="/images/transparent.gif" style={{ width: '20px', height: '20px' }} title="Instagram" className="support-ig" alt="" />
-            <a href="https://www.instagram.com/skyexchoffficial/" target="_blank" rel="noreferrer" style={{ color: '#00000080' }}>skyexchindia</a>
-          </div>
-        </div>
-      </div>
-
-      {/* Power Wrap */}
-      <div className="power-wrap power-wrap_forsky">
-        <h3 id="powerWrapW">
-          <span>Powered by</span><img src="/images/transparent.gif" alt="" />
-        </h3>
-        <div className="licence_embed">
-          <iframe
-            src="https://licensing.gaming-curacao.com/validator/?lh=7a83475c9e54450a218a18bd28e33fad&template=seal"
-            width="150"
-            height="50"
-            style={{ border: 'none' }}
-            title="License"
-          ></iframe>
-        </div>
-        <p>
-          Skyexch.art is operated by Sky Infotech N.V. a limited liability
-          company incorporated under the laws of Curacao with company
-          Registration number 152377 with registered office at Abraham de
-          Veerstraat 9, Curacao P.O Box 3421 and is licensed and regulated
-          by the Curacao authority as the regulatory body responsible
-          holding a (Sub-license with License number 365/JAZ Sub-License
-          GLH- OCCHKTW0707072017 granted on 6.07.2017). <br />
-          Players are requested not to contact any untrusted sources for{' '}
-          <a href="https://www.skyexch.art" target="_blank" rel="noreferrer">https://www.skyexch.art/</a>{' '}
-          accounts as this is an online site and they can only register
-          independently without any agents. Only deposit through the account
-          details generated by the system or provided by our official support team.
-        </p>
-        <div className="footer_info">
-          <p className="icon_phone">
-            <img src="/images/transparent.gif" alt="" />+351926917651 / +351926917279
+        {/* Description Text */}
+        <div style={{ fontSize: '11px', color: '#444', lineHeight: '1.7', textAlign: 'left' }}>
+          <p style={{ marginBottom: '12px' }}>
+            <strong>Skyexch</strong> is your one-stop platform for online sports betting and casino gaming, offering a wide range of games including cricket, football, tennis, and live casino experiences.
           </p>
-          <p>
-            <a href="mailto:support@skyexch.art">
-              <img src="/images/transparent.gif" alt="" />support@skyexch.art
-            </a>
+          <p style={{ marginBottom: '12px' }}>
+            This platform operates under <strong>AllWhiteLabel247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
+          </p>
+          <p style={{ color: '#666' }}>
+            Skyexch promotes responsible gaming and is strictly for users aged 18+. Users must ensure that online gaming is legal in their jurisdiction.
           </p>
         </div>
       </div>
 
       {/* Browser Support */}
-      <div className="browser-wrap">
-        <img src="/images/transparent.gif" alt="" /><br />
-        Our website works best in the newest and last prior version of these browsers: <br />Google Chrome. Firefox
+      <div className="browser-wrap" style={{ textAlign: 'center', color: '#666', fontSize: '11px', marginBottom: '20px' }}>
+        <p>Our website works best in the newest and last prior version of these browsers: <strong>Google Chrome, Firefox</strong></p>
       </div>
 
       {/* Policy Links */}
