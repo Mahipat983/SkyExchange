@@ -7,6 +7,42 @@ import Footer from './Footer';
 import { marketController } from '../controllers';
 import RacingPanel from './RacingPanel';
 
+const parseDate = (str) => {
+  if (!str) return null;
+  const dateVal = str.includes('T') ? str : str.replace(' ', 'T');
+  let d = new Date(dateVal);
+  if (isNaN(d.getTime())) {
+    const parts = str.split(/[-/ :]/);
+    if (parts.length >= 3) {
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+      if (day <= 31 && month <= 11) {
+        const hour = parseInt(parts[3] || '0', 10);
+        const minute = parseInt(parts[4] || '0', 10);
+        const second = parseInt(parts[5] || '0', 10);
+        d = new Date(year, month, day, hour, minute, second);
+      }
+    }
+  }
+  return d && !isNaN(d.getTime()) ? d : null;
+};
+
+const formatDateTime = (date) => {
+  if (!date || isNaN(date.getTime())) return '';
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const strTime = hours + ':' + minutes + ' ' + ampm;
+  const day = date.getDate();
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[date.getMonth()];
+  return `${day} ${month} ${strTime}`;
+};
+
 const extractOdd = (runner) => {
   if (!runner) return { back: '--', lay: '--' };
   const bp = runner.back || runner.availableToBack || (runner.ex && runner.ex.availableToBack);
@@ -52,11 +88,7 @@ function MatchRow({ match, odds, sport }) {
       <div className="col-event">
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
           <span className="green-dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
-          {match.isWinner && (
-            <div style={{ fontSize: '10px', color: '#666', marginBottom: '-2px', fontWeight: 'bold' }}>
-               {match.startTime}
-            </div>
-          )}
+
           <a 
             href="#" 
             onClick={(e) => {
@@ -69,7 +101,6 @@ function MatchRow({ match, odds, sport }) {
           </a>
         </div>
         <div className="event-sub flex items-center gap-1">
-          <span style={{ color: isLive ? '#008000' : '#333', fontWeight: 'bold' }}>{match.status}</span>
           
           <div className="flex items-center gap-1 ml-1">
             {isLive && match.hasTV && (
@@ -102,6 +133,15 @@ function MatchRow({ match, odds, sport }) {
               </div>
             )}
           </div>
+        </div>
+        <div style={{ fontSize: '10px', color: '#666', fontWeight: 'bold', marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+          <span>{formatDateTime(parseDate(match.DateTime || match.dateTime || match.StartTime || match.startTime))}</span>
+          {isLive && (
+            <>
+              <span style={{ color: '#ccc' }}>|</span>
+              <span style={{ color: '#2a9c39' }}>{match.status}</span>
+            </>
+          )}
         </div>
       </div>
 

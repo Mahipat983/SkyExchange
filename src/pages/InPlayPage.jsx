@@ -6,6 +6,21 @@ import BetSlip from '../components/BetSlip';
 import { useNavigate } from 'react-router-dom';
 import { marketController } from '../controllers';
 
+const formatDateTime = (date) => {
+  if (!date || isNaN(date.getTime())) return '';
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  let ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  minutes = minutes < 10 ? '0' + minutes : minutes;
+  const strTime = hours + ':' + minutes + ' ' + ampm;
+  const day = date.getDate();
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const month = monthNames[date.getMonth()];
+  return `${day} ${month} ${strTime}`;
+};
+
 const extractOdd = (runner) => {
   if (!runner) return { back: '--', lay: '--' };
   const bp = runner.back || runner.availableToBack || (runner.ex && runner.ex.availableToBack);
@@ -50,11 +65,7 @@ function EventRow({ evt, odds, sportName }) {
     <tr style={{ position: 'relative', opacity: isSuspended ? 0.7 : 1 }}>
       <td className="col-event custom-pl">
         <span className="dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
-        {evt.isWinner && (
-          <div style={{ fontSize: '10px', color: '#666', marginBottom: '-2px', fontWeight: 'bold' }}>
-            {evt.startTime}
-          </div>
-        )}
+
         <a 
           className="event-name" 
           href="#"
@@ -67,7 +78,13 @@ function EventRow({ evt, odds, sportName }) {
           {evt.name}
         </a>
         <div className="event-meta flex items-center gap-1 mt-0.5">
-          <span style={{color: isLive ? '#2a9c39' : '#333', fontWeight: 'bold', fontSize: '11px'}}>{evt.status}</span>
+          <span style={{ fontSize: '10px', color: '#666', fontWeight: 'bold' }}>{formatDateTime(evt.startTimeRaw)}</span>
+          {isLive && (
+            <>
+              <span className="mx-1">|</span>
+              <span style={{color: '#2a9c39', fontWeight: 'bold', fontSize: '11px'}}>{evt.status}</span>
+            </>
+          )}
           
           <div className="flex items-center gap-1 ml-1">
             {isLive && evt.hasTV && (
@@ -267,6 +284,7 @@ function InPlayPage() {
         marketId: mId,
         name,
         startTime: startTimeStr,
+        startTimeRaw: startTime,
         hasE: false, 
         hasS: !!(m.hasS || m.s || m.isSuspended), 
         hasC: false, 
