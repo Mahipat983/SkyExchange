@@ -605,7 +605,17 @@ function DesktopHeader() {
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>
               <li style={{ display: 'flex', alignItems: 'center' }}>
-                <a className="setting" onClick={() => setIsEditStakeModalOpen(true)} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
+                <a 
+                  className="setting" 
+                  onClick={() => {
+                    if (!isLoggedIn) {
+                      openLoginModal();
+                    } else {
+                      setIsEditStakeModalOpen(true);
+                    }
+                  }} 
+                  style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}
+                >
                   Setting <img src="/images/transparent.gif" alt="" style={{ marginLeft: '5px', display: 'inline-block' }} />
                 </a>
               </li>
