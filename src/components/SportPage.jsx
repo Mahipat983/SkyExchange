@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 import LeftSidebar from './LeftSidebar';
 import BetSlip from './BetSlip';
-import Footer from './Footer';
 import { marketController } from '../controllers';
 import RacingPanel from './RacingPanel';
 
@@ -354,7 +353,6 @@ function SportPageWithLayout({
                 )}
               </div>
             </div>
-            <Footer />
           </div>
         </div>
         <div className="betslip">
