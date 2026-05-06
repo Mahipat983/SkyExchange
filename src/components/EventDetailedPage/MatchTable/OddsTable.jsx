@@ -218,7 +218,27 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
               <React.Fragment key={idx}>
                 <tr style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
                   <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
-                    {runner.RunnerName}
+                    <div>{runner.RunnerName}</div>
+                    {(() => {
+                      const chartVal = rates?.chart ?? 
+                        (runner.Chart !== undefined && runner.Chart !== null ? parseFloat(runner.Chart) :
+                         runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
+                         runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
+                      
+                      if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                        return (
+                          <div style={{ 
+                            fontSize: '11px', 
+                            fontWeight: '700', 
+                            marginTop: '2px',
+                            color: chartVal < 0 ? '#d0021b' : '#2aa84a'
+                          }}>
+                            {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </td>
 
                   <td colSpan={6} style={{ padding: 0, position: 'relative' }}>

@@ -105,6 +105,21 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
                   {/* Runner Name */}
                   <div className="flex-1 px-4 flex flex-col justify-center border-r border-[#e4e7ed]">
                     <span className="font-bold text-sm text-black">{runner.RunnerName}</span>
+                    {(() => {
+                      const chartVal = rates?.chart ?? 
+                        (runner.Chart !== undefined && runner.Chart !== null ? parseFloat(runner.Chart) :
+                         runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
+                         runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
+                      
+                      if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                        return (
+                          <div className={`text-[11px] font-bold mt-0.5 ${chartVal < 0 ? 'text-[#d0021b]' : 'text-[#2aa84a]'}`}>
+                            {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
                   </div>
 
                   {/* Odds Area */}

@@ -158,6 +158,12 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
 
       if (res && (res.status === 'Success' || res.status === 200 || res.success || res.error === '0')) {
         showSnackbar(`Bet placed successfully @ ${selection.price} of ${stake}!`, 'success');
+        
+        // Dispatch event to signal data refresh (for exposure/charts)
+        window.dispatchEvent(new CustomEvent('bet-placed', { 
+          detail: { matchId: market?.eid || matchId || market?.MarketId || market?.marketid } 
+        }));
+
         if (onSuccess) onSuccess();
         onCancel();
       } else {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import BetSlip from '../components/BetSlip';
 import Layout from '../components/Layout';
@@ -62,7 +62,7 @@ const EventDetailedPage = () => {
     }
   }, [liveScoreboardHtml]);
 
-  const fetchGameData = async () => {
+  const fetchGameData = useCallback(async () => {
     try {
       setIsLoading(true);
       let res;
@@ -87,7 +87,18 @@ const EventDetailedPage = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isLoggedIn, loginToken, matchId]);
+
+  // Listen for bet placement to refresh exposure/charts
+  useEffect(() => {
+    const handleBetPlaced = (e) => {
+      if (e.detail?.matchId?.toString() === matchId?.toString()) {
+        fetchGameData();
+      }
+    };
+    window.addEventListener('bet-placed', handleBetPlaced);
+    return () => window.removeEventListener('bet-placed', handleBetPlaced);
+  }, [matchId, fetchGameData]);
 
   const handleToggleFavourite = async () => {
     if (!isLoggedIn || !loginToken) {

@@ -42,6 +42,9 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         subType: m.SubType,
         Type: m.Type,
         msg: combinedMsg,
+        Chart: m.Chart,
+        Chart1: m.Chart1,
+        Chart2: m.Chart2,
       };
     })
     : DEMO_MARKETS;
@@ -240,18 +243,39 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                 }}
               >
                 {/* Market name */}
-                <div style={{
-                  flex: 1,
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '4px 16px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: '#222',
-                  borderRight: '1px solid #e8e8e8',
-                }}>
-                  {market.name}
-                </div>
+                  <div style={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    padding: '4px 16px',
+                    fontSize: '13px',
+                    fontWeight: '600',
+                    color: '#222',
+                    borderRight: '1px solid #e8e8e8',
+                  }}>
+                    <div>{market.name}</div>
+                    {(() => {
+                      const chartVal = rates?.chart ?? 
+                        (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
+                         market.Chart1 !== undefined && market.Chart1 !== null ? parseFloat(market.Chart1) :
+                         market.Chart2 !== undefined && market.Chart2 !== null ? parseFloat(market.Chart2) : null);
+                      
+                      if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                        return (
+                          <div style={{ 
+                            fontSize: '11px', 
+                            fontWeight: '700', 
+                            marginTop: '2px',
+                            color: chartVal < 0 ? '#d0021b' : '#2aa84a'
+                          }}>
+                            {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </div>
 
                 {/* Left spacer for alignment */}
                 <div style={{ width: '229.376px' }} />

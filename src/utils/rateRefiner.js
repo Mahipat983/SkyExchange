@@ -110,11 +110,16 @@ export const getRunnerRates = (rateData, runnerId, rIdx, marketType) => {
     };
   };
 
+  const chartVal = (r.Chart !== undefined && r.Chart !== null) ? parseFloat(r.Chart) :
+    (r.Chart1 !== undefined && r.Chart1 !== null) ? parseFloat(r.Chart1) :
+    (r.Chart2 !== undefined && r.Chart2 !== null) ? parseFloat(r.Chart2) : null;
+
   return {
     back: getPrices(r, 'back'),
     lay: getPrices(r, 'lay'),
     isRunnerSuspended,
-    suspensionMsg: rateData.Msg || (rateData.ball_run === 'Y' ? 'BALL RUNNING' : 'SUSPENDED')
+    suspensionMsg: rateData.Msg || (rateData.ball_run === 'Y' ? 'BALL RUNNING' : 'SUSPENDED'),
+    chart: chartVal
   };
 };
 
