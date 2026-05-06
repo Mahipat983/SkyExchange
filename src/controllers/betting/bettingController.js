@@ -14,4 +14,5 @@ export const bettingController = {
   getMyBets: (loginToken) => fetchAPI('/mybets', { LoginToken: loginToken }),
   getBetsByGame: (loginToken, gid) => fetchAPI('/sidebetlist', { LoginToken: loginToken, gid }),
   getProfitLoss: (loginToken, sdate, edate) => fetchAPI('/pl', { LoginToken: loginToken, sdate, edate }),
+  getBetStatement: (eid, loginToken) => fetchAPI('/statementbet', { Eid: eid, LoginToken: loginToken }),
 };

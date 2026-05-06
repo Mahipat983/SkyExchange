@@ -27,15 +27,16 @@ function AccountLayout({ children, title }) {
                 </NavLink>
               </li>
               <li>
+                <NavLink to="/offers" className={({ isActive }) => (isActive ? 'active' : '')}>
+                  Offers
+                </NavLink>
+              </li>
+              <li>
                 <NavLink to="/bets" className={({ isActive }) => (isActive ? 'active' : '')}>
                   My Bets
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/activity-log" className={({ isActive }) => (isActive ? 'active' : '')}>
-                  Activity Log
-                </NavLink>
-              </li>
+
             </ul>
           </nav>
         </aside>

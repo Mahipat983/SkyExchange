@@ -1,23 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import AccountLayout from './AccountLayout';
 import { useAuthStore } from '../../store/authStore';
 import { bettingController } from '../../controllers';
+import { formatTime12h } from '../../utils/format';
 
 function BetsHistoryPage() {
   const [activeTab, setActiveTab] = useState('Current Bets');
-  const [activeSubTab, setActiveSubTab] = useState('Exchange');
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Profit & Loss States
+  // Profit & Loss / History States
   const [plData, setPlData] = useState([]);
   const [plLoading, setPlLoading] = useState(false);
+  const [collapsedItems, setCollapsedItems] = useState({});
+  
+  // Bet Detail Modal State
+  const [selectedEid, setSelectedEid] = useState(null);
+  const [betDetailData, setBetDetailData] = useState(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
-  // Default dates for P&L
+  // Default dates
   const today = new Date();
-  const yesterday = new Date(today);
-  yesterday.setDate(today.getDate() - 1);
+  const lastWeek = new Date(today);
+  lastWeek.setDate(today.getDate() - 7);
 
   const formatDateForInput = (date) => date.toISOString().split('T')[0];
   const formatDateForApi = (dateStr) => {
@@ -25,7 +31,7 @@ function BetsHistoryPage() {
     return `${d}-${m}-${y}`;
   };
 
-  const [plStartDate, setPlStartDate] = useState(formatDateForInput(yesterday));
+  const [plStartDate, setPlStartDate] = useState(formatDateForInput(lastWeek));
   const [plEndDate, setPlEndDate] = useState(formatDateForInput(today));
 
   const location = useLocation();
@@ -47,29 +53,31 @@ function BetsHistoryPage() {
   useEffect(() => {
     if (isLoggedIn && loginToken) {
       if (activeTab === 'Current Bets') {
-        fetchBets();
-      } else if (activeTab === 'Profit & Loss') {
-        fetchPL();
+        fetchCurrentBets();
+      } else {
+        fetchHistoryAndPL();
       }
     }
-  }, [isLoggedIn, loginToken, activeTab]);
+  }, [isLoggedIn, loginToken, activeTab, plStartDate, plEndDate]);
 
-  const fetchBets = async () => {
+  const fetchCurrentBets = async () => {
     try {
       setLoading(true);
       const res = await bettingController.getMyBets(loginToken);
       if (res && typeof res === 'object' && !res.error) {
-        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null);
+        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null && (item.BetId || item.Id));
         setBets(betArray);
+      } else {
+        setBets([]);
       }
     } catch (err) {
-      console.error('Failed to fetch bets:', err);
+      console.error('Failed to fetch current bets:', err);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchPL = async () => {
+  const fetchHistoryAndPL = async () => {
     try {
       setPlLoading(true);
       const res = await bettingController.getProfitLoss(
@@ -78,283 +86,244 @@ function BetsHistoryPage() {
         formatDateForApi(plEndDate)
       );
       if (res && typeof res === 'object' && !res.error) {
-        const plArray = Object.values(res).filter(item => typeof item === 'object' && item !== null);
+        const plArray = Object.values(res).filter(item => typeof item === 'object' && item !== null && item.DateTime);
         setPlData(plArray);
       } else {
         setPlData([]);
       }
     } catch (err) {
-      console.error('Failed to fetch PL:', err);
+      console.error('Failed to fetch P&L/History:', err);
     } finally {
       setPlLoading(false);
     }
   };
 
-  const matchedBets = bets.filter(b => b.Type?.toLowerCase().includes('match') || String(b.IsMatched) === '1');
-  const unmatchedBets = bets.filter(b => !b.Type?.toLowerCase().includes('match') && String(b.IsMatched) !== '1');
+  const fetchBetDetails = async (eid) => {
+    try {
+      setSelectedEid(eid);
+      setDetailLoading(true);
+      setBetDetailData(null);
+      const res = await bettingController.getBetStatement(eid, loginToken);
+      if (res && !res.error) {
+        setBetDetailData(res);
+      } else {
+        setBetDetailData({ error: '1', msg: res?.msg || 'Details not available' });
+      }
+    } catch (err) {
+      console.error('Failed to fetch bet details:', err);
+    } finally {
+      setDetailLoading(false);
+    }
+  };
+
+  const toggleCollapse = (idx) => {
+    setCollapsedItems(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const currentBetsToday = useMemo(() => {
+    const todayStr = new Date().toLocaleDateString('en-GB').replace(/\//g, '-');
+    return bets; 
+  }, [bets]);
+
+  const totalPL = useMemo(() => {
+    return plData.reduce((acc, curr) => acc + parseFloat(curr.amount || 0), 0);
+  }, [plData]);
+
+  const renderTableHeaders = (type) => (
+    <tr style={{ background: '#3b5160', color: '#fff', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase' }}>
+      <th style={{ padding: '12px', textAlign: 'left' }}>Market / Event</th>
+      <th style={{ padding: '12px', textAlign: 'center' }}>Selection</th>
+      <th style={{ padding: '12px', textAlign: 'center' }}>Type</th>
+      <th style={{ padding: '12px', textAlign: 'center' }}>Rate</th>
+      <th style={{ padding: '12px', textAlign: 'center' }}>Stake</th>
+      <th style={{ padding: '12px', textAlign: 'right' }}>Date</th>
+    </tr>
+  );
 
   const renderCurrentBets = () => (
-    <>
-      <div className="sub-tabs">
-        {['Exchange', 'FancyBet', 'Sportsbook', 'BookMaker'].map(tab => (
-          <button
-            key={tab}
-            className={`sub-tab ${activeSubTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveSubTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="bets-filter-box">
-        <div className="filter-row-simple">
-          <span>Bet Status: </span>
-          <select className="date-input">
-            <option>All</option>
-          </select>
-          <span className="filter-label">Order By: </span>
-          <label><input type="checkbox" checked readOnly /> Bet placed</label>
-          <label><input type="checkbox" /> Market</label>
-        </div>
-      </div>
-
-      <div className="unmatched-section">
-        <div className="section-title">Unmatched {loading && <small>(Loading...)</small>}</div>
-        <div className="data-table-wrapper">
-          <table className="data-table balance-table">
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>Market</th>
-                <th style={{ textAlign: 'right' }}>Selection</th>
-                <th style={{ textAlign: 'center' }}>Type</th>
-                <th style={{ textAlign: 'center' }}>Bet ID</th>
-                <th style={{ textAlign: 'center' }}>Bet placed</th>
-                <th style={{ textAlign: 'center' }}>Odds req.</th>
-                <th style={{ textAlign: 'center' }}>Matched</th>
-                <th style={{ textAlign: 'center' }}>Unmatched</th>
-                <th style={{ textAlign: 'center' }}>Date matched</th>
-              </tr>
-            </thead>
-            <tbody>
-              {unmatchedBets.length > 0 ? (
-                unmatchedBets.map((bet, idx) => (
-                  <tr key={idx}>
-                    <td style={{ textAlign: 'left' }}>{bet.Game || '-'}</td>
-                    <td style={{ textAlign: 'right' }}>{bet.Selection || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Type || bet.Side || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.BetId || bet.Id || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>0</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Stake || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>-</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
+    <div className="bets-container">
+      <div className="data-table-wrapper" style={{ border: '1px solid #7e97a7', borderRadius: '4px', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
+          <thead>{renderTableHeaders('current')}</thead>
+          <tbody>
+            {loading ? (
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#f4f7f9' }}>Loading open bets...</td></tr>
+            ) : currentBetsToday.length > 0 ? (
+              currentBetsToday.map((bet, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid #eee', fontSize: '13px' }}>
+                  <td style={{ padding: '12px', fontWeight: 'bold', color: '#3b5160' }}>{bet.Game || bet.Market || '-'}</td>
+                  <td style={{ padding: '12px', textAlign: 'center' }}>{bet.Selection || '-'}</td>
+                  <td style={{ padding: '12px', textAlign: 'center' }}>
+                    <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', background: (bet.Type || '').toLowerCase() === 'back' ? '#d4eaff' : '#fcd4d4', color: (bet.Type || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545' }}>
+                      {(bet.Type || 'BACK').toUpperCase()}
+                    </span>
+                  </td>
+                  <td style={{ padding: '12px', textAlign: 'center', fontWeight: '900', color: '#ffb400' }}>{bet.Rate}</td>
+                  <td style={{ padding: '12px', textAlign: 'center', fontWeight: 'bold' }}>₹{parseFloat(bet.Stake).toLocaleString()}</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: '#888', fontSize: '11px' }}>{bet.Date || bet.datetime}</td>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+              ))
+            ) : (
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#f4f7f9' }}>No open bets for today.</td></tr>
+            )}
+          </tbody>
+        </table>
       </div>
-
-      <div className="matched-section">
-        <div className="section-title">Matched</div>
-        <div className="data-table-wrapper">
-          <table className="data-table balance-table">
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>Market</th>
-                <th style={{ textAlign: 'right' }}>Selection</th>
-                <th style={{ textAlign: 'center' }}>Type</th>
-                <th style={{ textAlign: 'center' }}>Bet ID</th>
-                <th style={{ textAlign: 'center' }}>Bet placed</th>
-                <th style={{ textAlign: 'center' }}>Odds req.</th>
-                <th style={{ textAlign: 'center' }}>Matched</th>
-                <th style={{ textAlign: 'center' }}>Avg. odds matched</th>
-                <th style={{ textAlign: 'center' }}>Date matched</th>
-              </tr>
-            </thead>
-            <tbody>
-              {matchedBets.length > 0 ? (
-                matchedBets.map((bet, idx) => (
-                  <tr key={idx}>
-                    <td style={{ textAlign: 'left' }}>{bet.Game || '-'}</td>
-                    <td style={{ textAlign: 'right' }}>{bet.Selection || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Type || bet.Side || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.BetId || bet.Id || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Stake || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Rate || '-'}</td>
-                    <td style={{ textAlign: 'center' }}>{bet.Date || '-'}</td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="9" style={{ padding: '15px' }}>You have no bets in this time period.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </>
+    </div>
   );
 
   const renderBetsHistory = () => (
-    <>
-      <div className="sub-tabs">
-        {['Exchange', 'FancyBet', 'Sportsbook', 'BookMaker'].map(tab => (
-          <button
-            key={tab}
-            className={`sub-tab ${activeSubTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveSubTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="bets-container">
+      <div className="filter-bar" style={{ display: 'flex', gap: '15px', marginBottom: '20px', alignItems: 'center', background: '#e4e4e4', padding: '15px', borderRadius: '4px', border: '1px solid #7e97a7' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#333' }}>Period:</span>
+          <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+          <span style={{ color: '#666' }}>to</span>
+          <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+        </div>
+        <button onClick={fetchHistoryAndPL} style={{ background: '#3b5160', border: 'none', color: '#fff', padding: '7px 25px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', textTransform: 'uppercase' }}>Get History</button>
       </div>
 
-      <div className="bets-filter-box">
-        <div className="filter-row-flex">
-          <div className="filter-group">
-            <span>Bet Status:</span>
-            <select className="date-input">
-              <option>Settled</option>
-            </select>
-          </div>
-          <div className="filter-group">
-            <span>Period</span>
-            <input className="date-input date-picker" type="date" value={plStartDate} onChange={(e) => setPlStartDate(e.target.value)} />
-            <span>to</span>
-            <input className="date-input date-picker" type="date" value={plEndDate} onChange={(e) => setPlEndDate(e.target.value)} />
-          </div>
-        </div>
-        <div className="filter-actions">
-          <button className="sub-tab" onClick={() => { setPlStartDate(formatDateForInput(today)); setPlEndDate(formatDateForInput(today)); }}>Just For Today</button>
-          <button className="sub-tab" onClick={() => { setPlStartDate(formatDateForInput(yesterday)); setPlEndDate(formatDateForInput(today)); }}>From Yesterday</button>
-          <button className="btn-submit-bets" onClick={fetchPL}>Get History</button>
-        </div>
+      <div className="data-table-wrapper" style={{ border: '1px solid #7e97a7', borderRadius: '4px', overflow: 'hidden' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', background: '#fff' }}>
+          <thead>
+             <tr style={{ background: '#3b5160', color: '#fff', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase' }}>
+              <th style={{ padding: '12px', textAlign: 'left' }}>Market / Event</th>
+              <th style={{ padding: '12px', textAlign: 'right' }}>Date</th>
+              <th style={{ padding: '12px', textAlign: 'right' }}>Result</th>
+            </tr>
+          </thead>
+          <tbody>
+            {plLoading ? (
+              <tr><td colSpan="3" style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#f4f7f9' }}>Fetching history...</td></tr>
+            ) : plData.length > 0 ? (
+              plData.map((row, i) => {
+                const amt = parseFloat(row.amount);
+                return (
+                  <tr key={i} style={{ borderBottom: '1px solid #eee', fontSize: '13px' }}>
+                    <td style={{ padding: '12px', fontWeight: 'bold', color: '#3b5160' }}>{row.GameName}</td>
+                    <td style={{ padding: '12px', textAlign: 'right', color: '#888', fontSize: '11px' }}>{row.DateTime}</td>
+                    <td style={{ padding: '12px', textAlign: 'right', fontWeight: '900', color: amt >= 0 ? '#508d0e' : '#c0392b' }}>
+                      {amt >= 0 ? '+' : ''}{amt.toFixed(2)}
+                    </td>
+                  </tr>
+                );
+              })
+            ) : (
+              <tr><td colSpan="3" style={{ textAlign: 'center', padding: '40px', color: '#666', background: '#f4f7f9' }}>No history found for this period.</td></tr>
+            )}
+          </tbody>
+        </table>
       </div>
-
-      <div className="disclaimer-text">
-        <p>Betting History enables you to review the bets you have placed.</p>
-        <p>Specify the time period during which your bets were placed, the type of markets on which the bets were placed, and the sport.</p>
-        <p>Betting History is available online for the past 62 days.</p>
-        <p>User can search up to 14 days records per query only.</p>
-      </div>
-    </>
+    </div>
   );
 
   const renderProfitAndLoss = () => (
-    <div className="bets-pnl-wrapper">
-      <div style={{ marginBottom: '15px' }}>
-        <h4 style={{ margin: '0 0 5px 0', fontSize: '15px', color: '#3b5160', fontWeight: '700' }}>Profit & Loss - Main wallet</h4>
-        <div style={{ fontSize: '12px', color: '#666', display: 'flex', gap: '15px' }}>
-          <span>👤 {username || 'User'}</span>
-          <span>📅 {new Date().toLocaleString()}</span>
+    <div className="pnl-container">
+      <div className="filter-bar" style={{ display: 'flex', gap: '20px', marginBottom: '25px', alignItems: 'center', background: '#fff', border: '1px solid #7e97a7', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '20px' }}>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Start Period</span>
+              <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold' }} />
+           </div>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+              <span style={{ fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>End Period</span>
+              <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold' }} />
+           </div>
         </div>
+        <div style={{ textAlign: 'right', padding: '0 20px', borderLeft: '1px solid #eee' }}>
+           <span style={{ display: 'block', fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', marginBottom: '4px', textTransform: 'uppercase' }}>Net Profit/Loss</span>
+           <span style={{ fontSize: '20px', fontWeight: '900', color: totalPL >= 0 ? '#508d0e' : '#c0392b' }}>PTH {totalPL.toLocaleString()}</span>
+        </div>
+        <button onClick={fetchHistoryAndPL} style={{ background: '#3b5160', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', transition: 'all', textTransform: 'uppercase', letterSpacing: '1px' }}>Apply Filter</button>
       </div>
 
-      <div className="sub-tabs" style={{ flexWrap: 'wrap' }}>
-        {['Exchange', 'FancyBet', 'Casino', 'Sportsbook', 'BookMaker', 'BPoker', 'SABA', 'MiniGame', 'Royal'].map(tab => (
-          <button
-            key={tab}
-            className={`sub-tab ${activeSubTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveSubTab(tab)}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <div className="bets-filter-box">
-        <div className="filter-row-flex">
-          <div className="filter-group">
-            <span>Period</span>
-            <input 
-              className="date-input" 
-              type="date" 
-              value={plStartDate} 
-              onChange={(e) => setPlStartDate(e.target.value)}
-            />
-            <span>to</span>
-            <input 
-              className="date-input" 
-              type="date" 
-              value={plEndDate} 
-              onChange={(e) => setPlEndDate(e.target.value)}
-            />
+      <div className="pnl-cards" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+        {plLoading ? (
+          <div style={{ textAlign: 'center', padding: '60px' }}>
+            <div className="animate-spin" style={{ width: '30px', height: '30px', border: '3px solid #ffb400', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto' }}></div>
           </div>
-        </div>
-        <div className="filter-actions">
-          <button className="sub-tab" onClick={() => { setPlStartDate(formatDateForInput(today)); setPlEndDate(formatDateForInput(today)); }}>Just For Today</button>
-          <button className="sub-tab" onClick={() => { setPlStartDate(formatDateForInput(yesterday)); setPlEndDate(formatDateForInput(today)); }}>From Yesterday</button>
-          <button className="btn-submit-bets" onClick={fetchPL} style={{ background: '#3b5160', color: '#fff', border: 'none', padding: '0 20px', cursor: 'pointer' }}>
-            {plLoading ? 'Loading...' : 'Get P & L'}
-          </button>
-        </div>
-      </div>
-
-      <div className="pl-data-section" style={{ marginTop: '20px' }}>
-        <div className="data-table-wrapper">
-          <table className="data-table balance-table">
-            <thead>
-              <tr>
-                <th style={{ textAlign: 'left' }}>Date/Time</th>
-                <th style={{ textAlign: 'left' }}>Market</th>
-                <th style={{ textAlign: 'right' }}>Profit/Loss</th>
-              </tr>
-            </thead>
-            <tbody>
-              {plData.length > 0 ? (
-                plData.map((row, idx) => {
-                  const amt = parseFloat(row.amount);
-                  return (
-                    <tr key={idx}>
-                      <td style={{ textAlign: 'left' }}>{row.DateTime}</td>
-                      <td style={{ textAlign: 'left' }}>{row.GameName}</td>
-                      <td style={{ textAlign: 'right', color: amt >= 0 ? 'green' : 'red', fontWeight: 'bold' }}>
-                        {amt.toFixed(2)}
-                      </td>
-                    </tr>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan="3" style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
-                    {plLoading ? 'Fetching data...' : 'No P&L data found for this period.'}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="disclaimer-text" style={{ marginTop: '20px' }}>
-        <p>Betting Profit & Loss enables you to review the bets you have placed.</p>
-        <p>Specify the time period during which your bets were placed, the type of markets on which the bets were placed, and the sport.</p>
-        <p>Betting Profit & Loss is available online for the past 62 days.</p>
-        <p>User can search up to 14 days records per query only.</p>
+        ) : plData.length > 0 ? (
+          plData.map((item, idx) => {
+            const amount = parseFloat(item.amount || 0);
+            const isPositive = amount >= 0;
+            const isCollapsed = collapsedItems[idx];
+            return (
+              <div key={idx} style={{ background: '#fff', borderRadius: '8px', border: '1px solid #7e97a7', overflow: 'hidden', transition: 'transform 0.2s' }}>
+                <div 
+                  onClick={() => toggleCollapse(idx)}
+                  style={{ background: isCollapsed ? '#f8f9fa' : '#f4f7f9', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', borderBottom: isCollapsed ? 'none' : '1px solid #eee' }}
+                >
+                   <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                      <div style={{ background: isPositive ? '#508d0e' : '#c0392b', color: '#fff', width: '40px', height: '40px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
+                        {isPositive ? '✓' : '✗'}
+                      </div>
+                      <div>
+                        <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 'bold', color: '#3b5160' }}>{item.GameName}</h4>
+                        <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>{item.DateTime}</p>
+                      </div>
+                   </div>
+                   <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '20px' }}>
+                      <div>
+                        <p style={{ margin: 0, fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase' }}>Net Change</p>
+                        <p style={{ margin: 0, fontSize: '16px', fontWeight: '900', color: isPositive ? '#508d0e' : '#c0392b' }}>
+                          {isPositive ? '+' : ''}{amount.toLocaleString()}
+                        </p>
+                      </div>
+                      <span style={{ color: '#3b5160', fontSize: '12px' }}>{isCollapsed ? '▼' : '▲'}</span>
+                   </div>
+                </div>
+                {!isCollapsed && (
+                  <div style={{ padding: '20px', background: '#fff', borderTop: '1px solid #eee' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                       <span style={{ fontSize: '12px', color: '#666' }}>Activity Segment: <strong style={{ color: '#3b5160' }}>{item.Type || 'Market Betting'}</strong></span>
+                       {item.Eid && (
+                         <button 
+                           onClick={() => fetchBetDetails(item.Eid)}
+                           style={{ background: '#ffb400', border: 'none', color: '#000', fontWeight: 'bold', fontSize: '11px', cursor: 'pointer', padding: '6px 15px', borderRadius: '4px', textTransform: 'uppercase' }}
+                         >
+                           View Statement →
+                         </button>
+                       )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div style={{ textAlign: 'center', padding: '60px', background: '#f4f7f9', borderRadius: '8px', border: '1px solid #7e97a7', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>
+            No transaction records found for the selected dates.
+          </div>
+        )}
       </div>
     </div>
   );
 
   return (
-    <AccountLayout title="My Bets">
-      <div className="tabs-container">
+    <AccountLayout title={activeTab}>
+      <div className="tabs-header" style={{ display: 'flex', gap: '2px', marginBottom: '25px', background: '#3b5160', padding: '4px', borderRadius: '6px' }}>
         {['Current Bets', 'Bets History', 'Profit & Loss'].map(tab => (
           <button
             key={tab}
-            className={`tab-btn ${activeTab === tab ? 'active' : ''}`}
             onClick={() => {
+              const param = tab === 'Bets History' ? 'history' : tab === 'Profit & Loss' ? 'pnl' : 'current';
+              window.history.pushState({}, '', `?tab=${param}`);
               setActiveTab(tab);
-              if (tab === 'Profit & Loss') setActiveSubTab('Exchange');
+            }}
+            style={{ 
+              flex: 1, 
+              padding: '12px', 
+              border: 'none', 
+              borderRadius: '4px', 
+              fontSize: '13px', 
+              fontWeight: 'bold', 
+              cursor: 'pointer',
+              transition: 'all',
+              background: activeTab === tab ? '#ffb400' : 'transparent',
+              color: activeTab === tab ? '#000' : '#fff',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
             }}
           >
             {tab}
@@ -362,11 +331,64 @@ function BetsHistoryPage() {
         ))}
       </div>
 
-      <div className="content-area">
+      <div className="tab-content">
         {activeTab === 'Current Bets' && renderCurrentBets()}
         {activeTab === 'Bets History' && renderBetsHistory()}
         {activeTab === 'Profit & Loss' && renderProfitAndLoss()}
       </div>
+
+      {selectedEid && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(5px)' }} onClick={() => setSelectedEid(null)}></div>
+          <div style={{ position: 'relative', background: '#fff', width: '100%', maxWidth: '500px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
+             <div style={{ padding: '15px 20px', borderBottom: '1px solid #7e97a7', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#3b5160' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', color: '#fff', textTransform: 'uppercase', letterSpacing: '1px' }}>Statement Detail</h3>
+                <button onClick={() => setSelectedEid(null)} style={{ background: 'none', border: 'none', fontSize: '28px', cursor: 'pointer', color: '#fff', lineHeight: '1' }}>×</button>
+             </div>
+             <div style={{ padding: '20px', maxHeight: '70vh', overflowY: 'auto', background: '#f4f7f9' }}>
+                {detailLoading ? (
+                  <div style={{ textAlign: 'center', padding: '40px' }}><div className="animate-spin" style={{ width: '30px', height: '30px', border: '3px solid #ffb400', borderTopColor: 'transparent', borderRadius: '50%', margin: '0 auto' }}></div></div>
+                ) : betDetailData?.error === '1' ? (
+                  <div style={{ textAlign: 'center', padding: '40px', color: '#c0392b', fontWeight: 'bold' }}>{betDetailData.msg}</div>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+                    {Object.values(betDetailData || {}).filter(b => typeof b === 'object' && b !== null).map((bet, idx) => (
+                      <div key={idx} style={{ background: '#fff', padding: '20px', borderRadius: '8px', border: '1px solid #7e97a7' }}>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
+                            <span style={{ fontSize: '11px', fontWeight: '900', color: (bet.Type || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545', textTransform: 'uppercase' }}>{bet.Type}</span>
+                            <span style={{ fontSize: '11px', color: '#888', fontWeight: 'bold' }}>{bet.Date}</span>
+                         </div>
+                         <p style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b5160' }}>{bet.Game?.replace(/&nbsp;/g, ' ')}</p>
+                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
+                            <div>
+                               <p style={{ margin: 0, fontSize: '9px', color: '#aaa', fontWeight: 'bold', textTransform: 'uppercase' }}>Selection</p>
+                               <p style={{ margin: 0, fontSize: '13px', fontWeight: 'bold', color: '#333' }}>{bet.Selection}</p>
+                            </div>
+                            <div style={{ textAlign: 'right' }}>
+                               <p style={{ margin: 0, fontSize: '9px', color: '#aaa', fontWeight: 'bold', textTransform: 'uppercase' }}>Stake</p>
+                               <p style={{ margin: 0, fontSize: '14px', fontWeight: '900', color: '#333' }}>₹{parseFloat(bet.Stake).toLocaleString()}</p>
+                            </div>
+                            <div>
+                               <p style={{ margin: 0, fontSize: '9px', color: '#aaa', fontWeight: 'bold', textTransform: 'uppercase' }}>Rate</p>
+                               <p style={{ margin: 0, fontSize: '14px', fontWeight: '900', color: '#ffb400' }}>{bet.Rate}</p>
+                            </div>
+                         </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+             </div>
+             <div style={{ padding: '15px 20px', borderTop: '1px solid #eee', textAlign: 'right', background: '#fff' }}>
+                <button onClick={() => setSelectedEid(null)} style={{ background: '#3b5160', color: '#fff', border: 'none', padding: '10px 30px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', textTransform: 'uppercase', fontSize: '12px' }}>Close</button>
+             </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .animate-spin { animation: spin 1s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+      `}</style>
     </AccountLayout>
   );
 }

@@ -28,6 +28,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import CasinoPage from './pages/Casino/CasinoPage';
 import CasinoProviderPage from './pages/Casino/CasinoProviderPage';
 import CasinoNamePage from './pages/Casino/CasinoNamePage';
+import OffersPage from './pages/OffersPage';
 
 import './App.css';
 
@@ -66,6 +67,7 @@ function App() {
         <Route path="/casino" element={<CasinoPage />} />
         <Route path="/provider/:providerTag" element={<CasinoProviderPage />} />
         <Route path="/title/:titleTag" element={<CasinoNamePage />} />
+        <Route path="/offers" element={<OffersPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
       <Snackbar />

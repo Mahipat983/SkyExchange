@@ -52,7 +52,7 @@ function MobileHeader() {
         ) : (
           <div className="account-wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '4px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Link to="/wallet" className="account-number">{username}</Link>
+              <Link to="/balance-overview" className="account-number">{username}</Link>
               <div className="account-balance">
                   <span id="mainBalance"><span className="badge-currency">USD</span> {balanceData.balance}</span>
               </div>
