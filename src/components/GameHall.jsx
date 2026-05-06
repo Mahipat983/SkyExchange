@@ -336,13 +336,15 @@ function GameHall() {
   const [matchCounts, setMatchCounts] = useState({
     Cricket: 0,
     Football: 0,
-    Tennis: 0
+    Tennis: 0,
+    HorseRacing: 0,
+    GreyhoundRacing: 0
   });
 
   useEffect(() => {
     const fetchMatchCounts = async () => {
       try {
-        const sports = ['Cricket', 'Football', 'Tennis'];
+        const sports = ['Cricket', 'Football', 'Tennis', 'Horse Racing', 'Greyhound Racing'];
         const res = await marketController.getGameList(sports.join(','));
 
         let matchData = [];
@@ -354,7 +356,7 @@ function GameHall() {
           matchData = res;
         }
 
-        const counts = { Cricket: 0, Football: 0, Tennis: 0 };
+        const counts = { Cricket: 0, Football: 0, Tennis: 0, HorseRacing: 0, GreyhoundRacing: 0 };
         const now = new Date();
 
         const parseDate = (str) => {
@@ -389,6 +391,8 @@ function GameHall() {
             if (sport === 'Cricket') counts.Cricket++;
             else if (sport === 'Football' || sport === 'Soccer') counts.Football++;
             else if (sport === 'Tennis') counts.Tennis++;
+            else if (sport === 'Horse Racing') counts.HorseRacing++;
+            else if (sport === 'Greyhound Racing') counts.GreyhoundRacing++;
           }
         });
 
@@ -461,6 +465,14 @@ function GameHall() {
           <dd id="onLiveCount_TENNIS">
             <p>Tennis</p>
             <span id="count">{matchCounts.Tennis}</span>
+          </dd>
+          <dd id="onLiveCount_HORSERACING">
+            <p>Horse Racing</p>
+            <span id="count">{matchCounts.HorseRacing}</span>
+          </dd>
+          <dd id="onLiveCount_GREYHOUNDRACING">
+            <p>Greyhound Racing</p>
+            <span id="count">{matchCounts.GreyhoundRacing}</span>
           </dd>
         </dl>
         <dl className="entrance-title">
