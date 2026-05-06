@@ -604,19 +604,73 @@ export default function DepositPage() {
 
                       return (
                         <div key={i} className={`grid grid-cols-[1.5fr_1fr_1fr_1fr_2fr] items-center px-6 py-4 border-b border-[#eee] transition-all hover:bg-black/[0.02] ${i % 2 === 0 ? 'bg-transparent' : 'bg-[#fcfcfc]'}`}>
-                          <div className="flex flex-col gap-0.5 min-w-0">
-                            <span className="text-[11px] font-black text-black uppercase tracking-tighter truncate">{utr}</span>
-                            <span className="text-[9px] font-bold text-[#888] uppercase">ID: #{i + 1024}</span>
+                          <div className="flex items-center gap-2 min-w-0 group/utr">
+                            <span className="text-[11px] font-black text-black uppercase tracking-tighter break-all">{utr}</span>
+                            <button 
+                              onClick={() => handleCopy(utr)}
+                              className="opacity-0 group-hover/utr:opacity-100 p-1 text-[#ffb400] hover:scale-110 transition-all active:scale-90"
+                              title="Copy UTR"
+                            >
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+                            </button>
                           </div>
                           <span className="text-[12px] font-black text-[#444] uppercase text-center tracking-tighter italic">{method}</span>
                           <span className="text-[15px] font-black text-[#111] text-center tracking-tighter">₹{amt.toLocaleString()}</span>
                           <div className="flex justify-center">
-                            <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${status === 'success' || status === 'approved' ? 'bg-green-500/10 text-green-600 border-green-500/20' : status === 'failed' || status === 'rejected' ? 'bg-red-500/10 text-red-600 border-red-500/20' : 'bg-[#ffb400]/10 text-[#ffb400] border-[#ffb400]/20'}`}>
+                            <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${
+                              status === 'success' || status === 'approved' 
+                                ? 'bg-green-500/10 text-green-600 border-green-500/20' 
+                                : status === 'failed' || status === 'rejected' || status === 'cancel'
+                                  ? 'bg-red-500/10 text-red-600 border-red-500/20' 
+                                  : 'bg-[#ffb400]/10 text-[#ffb400] border-[#ffb400]/20'
+                            }`}>
                               {item.Status || 'Pending'}
                             </span>
                           </div>
                           <div className="text-[11px] font-black text-[#888] text-right leading-tight uppercase tracking-tighter">
-                            {formatTime12h(item.Date || item.date || item.created_at).split(' ').map((p, j) => <span key={j} className={j === 0 ? 'block' : 'text-[#aaa] ml-1'}>{p}</span>)}
+                            {(() => {
+                              const dStr = item.Date || item.date || item.created_at;
+                              if (!dStr) return '---';
+                              
+                              // Manual parse for DD-MM-YYYY HH:mm:ss
+                              let date;
+                              const parts = dStr.split(/[-/ :]/);
+                              if (parts.length >= 3) {
+                                const day = parseInt(parts[0], 10);
+                                const month = parseInt(parts[1], 10) - 1;
+                                const year = parseInt(parts[2], 10);
+                                const hour = parseInt(parts[3] || '0', 10);
+                                const minute = parseInt(parts[4] || '0', 10);
+                                const second = parseInt(parts[5] || '0', 10);
+                                
+                                if (year > 1000) {
+                                  date = new Date(year, month, day, hour, minute, second);
+                                } else {
+                                  date = new Date(dStr);
+                                }
+                              } else {
+                                date = new Date(dStr);
+                              }
+
+                              if (isNaN(date.getTime())) return dStr;
+
+                              const formatted = date.toLocaleString('en-GB', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                              }).toUpperCase();
+
+                              const [d, m, y, time, ampm] = formatted.replace(',', '').split(' ');
+                              return (
+                                <>
+                                  <span className="block text-black">{d} {m} {y}</span>
+                                  <span className="text-[#aaa]">{time} {ampm}</span>
+                                </>
+                              );
+                            })()}
                           </div>
                         </div>
                       );

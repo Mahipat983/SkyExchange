@@ -516,12 +516,60 @@ export default function WithdrawPage() {
                            <div key={i} className={`grid grid-cols-[1fr_1fr_1.5fr_1.2fr_1.5fr] items-center px-6 py-4 border-b border-[#eee] transition-all hover:bg-black/[0.02] ${i % 2 === 0 ? 'bg-transparent' : 'bg-[#fcfcfc]'}`}>
                              <span className="text-[15px] font-black text-[#111] text-center tracking-tighter">₹{parseFloat(amount).toLocaleString()}</span>
                              <div className="flex justify-center">
-                               <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${status === 'success' || status === 'approved' || status === 'completed' ? 'bg-green-500/10 text-green-600 border-green-500/20' : status === 'failed' || status === 'cancel' || status === 'rejected' ? 'bg-red-500/10 text-red-600 border-red-500/20' : 'bg-[#ffb400]/10 text-[#ffb400] border-[#ffb400]/20'}`}>
+                               <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${
+                                 status === 'success' || status === 'approved' || status === 'completed'
+                                   ? 'bg-green-500/10 text-green-600 border-green-500/20' 
+                                   : status === 'failed' || status === 'rejected' || status === 'cancel'
+                                     ? 'bg-red-500/10 text-red-600 border-red-500/20' 
+                                     : 'bg-[#ffb400]/10 text-[#ffb400] border-[#ffb400]/20'
+                               }`}>
                                  {item.Status || 'Pending'}
                                </span>
                              </div>
                              <div className="text-[11px] font-black text-[#888] text-center leading-tight uppercase tracking-tighter">
-                               {formatTime12h(date).split(' ').map((p, j) => <span key={j} className={j === 0 ? 'block' : 'text-[#aaa] ml-1'}>{p}</span>)}
+                               {(() => {
+                                 const dStr = date;
+                                 if (!dStr || dStr === '---') return '---';
+                                 
+                                 // Manual parse for DD-MM-YYYY HH:mm:ss
+                                 let dObj;
+                                 const parts = dStr.split(/[-/ :]/);
+                                 if (parts.length >= 3) {
+                                   const day = parseInt(parts[0], 10);
+                                   const month = parseInt(parts[1], 10) - 1;
+                                   const year = parseInt(parts[2], 10);
+                                   const hour = parseInt(parts[3] || '0', 10);
+                                   const minute = parseInt(parts[4] || '0', 10);
+                                   const second = parseInt(parts[5] || '0', 10);
+                                   
+                                   if (year > 1000) {
+                                     dObj = new Date(year, month, day, hour, minute, second);
+                                   } else {
+                                     dObj = new Date(dStr);
+                                   }
+                                 } else {
+                                   dObj = new Date(dStr);
+                                 }
+
+                                 if (isNaN(dObj.getTime())) return dStr;
+
+                                 const formatted = dObj.toLocaleString('en-GB', {
+                                   day: '2-digit',
+                                   month: 'short',
+                                   year: 'numeric',
+                                   hour: '2-digit',
+                                   minute: '2-digit',
+                                   hour12: true
+                                 }).toUpperCase();
+
+                                 const [dayV, monV, yrV, timeV, ampmV] = formatted.replace(',', '').split(' ');
+                                 return (
+                                   <>
+                                     <span className="block text-black">{dayV} {monV} {yrV}</span>
+                                     <span className="text-[#aaa]">{timeV} {ampmV}</span>
+                                   </>
+                                 );
+                               })()}
                              </div>
                              <span className="text-[12px] font-black text-[#444] uppercase text-center tracking-tighter italic">{method}</span>
                              <span className="text-[10px] text-[#666] text-right leading-snug font-bold italic truncate max-w-full" title={remarks}>
