@@ -13,6 +13,15 @@ const BetSlip = ({ sport }) => {
     if (isLoggedIn && loginToken) {
       fetchBets();
     }
+
+    const handleBetPlaced = () => {
+      if (isLoggedIn && loginToken) {
+        fetchBets();
+      }
+    };
+
+    window.addEventListener('bet-placed', handleBetPlaced);
+    return () => window.removeEventListener('bet-placed', handleBetPlaced);
   }, [isLoggedIn, loginToken, matchId, sport]);
 
   const fetchBets = async () => {
@@ -55,64 +64,74 @@ const BetSlip = ({ sport }) => {
 
   if (!isLoggedIn) return null;
 
+  const groupedBets = bets.reduce((acc, bet) => {
+    const gameName = bet.Game || bet.Market || 'Other Market';
+    if (!acc[gameName]) acc[gameName] = [];
+    acc[gameName].push(bet);
+    return acc;
+  }, {});
+
   return (
-    <div className="bg-white border border-gray-300">
-      <div className="bg-[#243a48] text-white text-[13px] font-bold py-2 px-3 flex justify-between items-center">
+    <div className="bg-[#eee] border border-gray-300">
+      <div className="bg-[#243a48] text-white text-[13px] font-black py-2 px-3 flex justify-between items-center uppercase tracking-tighter">
         <span>My Bets</span>
-        <button onClick={fetchBets} className="text-xs text-gray-300 hover:text-white underline cursor-pointer">Refresh</button>
+        <button onClick={fetchBets} className="text-[10px] text-[#ffb400] hover:underline cursor-pointer font-bold">REFRESH</button>
       </div>
       
       {isLoading ? (
-        <div className="p-6 text-center text-[11px] text-gray-600">
-          Loading bets...
+        <div className="p-10 text-center">
+          <div className="w-6 h-6 border-2 border-[#ffb400] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+          <span className="text-[10px] font-bold text-gray-500 uppercase">Loading bets...</span>
         </div>
       ) : bets.length === 0 ? (
-        <div className="p-6 text-center text-[11px] text-gray-600">
-          You have no placed bets for this event.
+        <div className="p-8 text-center text-[10px] font-bold text-gray-400 uppercase bg-white">
+          No open bets found
         </div>
       ) : (
-        <div className="flex flex-col">
-          {/* Header row */}
-          <div className="flex bg-[#dce5ec] text-[#444] text-[11px] font-bold h-[25px] items-center border-b border-[#c8d1d8] px-1">
-            <div className="w-[50%] px-1">Matched Bets</div>
-            <div className="w-[15%] text-center">Odds</div>
-            <div className="w-[15%] text-center">Stake</div>
-            <div className="w-[20%] text-center">Profit</div>
-          </div>
-          
-          <div className="overflow-y-auto max-h-[600px]">
-             {bets.map((bet, idx) => {
-               const sideRaw = bet.Side || bet.type || '';
-               const isBack = sideRaw.toLowerCase() === 'back' || sideRaw.toLowerCase() === 'yes';
-               
-               const bgColor = isBack ? 'bg-[#e2f2ff]' : 'bg-[#fdf1f3]';
-               
-               const rateNum = parseFloat(bet.Rate || '0');
-               const stakeNum = parseFloat(bet.Stake || '0');
-               
-               let profitStr = '0.00';
-               if (bet.Type?.toUpperCase() === 'FANCY') {
-                 // Fancy profit calculation is often just the stake or handled differently based on rate
-                 profitStr = (stakeNum * (rateNum / 100)).toFixed(2);
-               } else {
-                 profitStr = isBack 
-                   ? (stakeNum * (rateNum - 1)).toFixed(2)
-                   : stakeNum.toFixed(2);
-               }
+        <div className="flex flex-col gap-2 p-1">
+          {Object.entries(groupedBets).map(([gameName, gameBets], gIdx) => {
+            const firstBet = gameBets[0];
+            const sportName = (firstBet.Sport || firstBet.sport || firstBet.SportName || sport || 'SPORTS').toUpperCase();
 
-               return (
-                 <div key={idx} className={`flex items-center text-[11px] border-b border-gray-200 py-2 px-1 ${bgColor}`}>
-                   <div className="w-[50%] flex flex-col px-1 overflow-hidden">
-                     <span className="font-bold text-black truncate" title={bet.Selection}>{bet.Selection}</span>
-                     <span className="text-gray-600 text-[10px] truncate">{bet.Game_Type || bet.Type || 'Match Odds'}</span>
-                   </div>
-                   <div className="w-[15%] text-center font-bold">{bet.Rate}</div>
-                   <div className="w-[15%] text-center">{bet.Stake}</div>
-                   <div className="w-[20%] text-center font-bold text-black">{profitStr}</div>
-                 </div>
-               )
-             })}
-          </div>
+            return (
+              <div key={gIdx} className="bg-white shadow-sm border border-black/5 overflow-hidden">
+                {/* Tournament Header */}
+                <div className="bg-[#3b5160] flex items-center justify-between px-3 py-1.5 border-l-4 border-[#ffb400]">
+                  <h3 className="text-[10px] font-black text-white uppercase truncate pr-2">{gameName}</h3>
+                  <span className="text-[9px] font-black text-[#ffb400] uppercase shrink-0">{sportName}</span>
+                </div>
+
+                {/* Column Headers */}
+                <div className="grid grid-cols-[1fr_1.5fr_0.8fr_0.8fr_1.2fr] bg-[#dce5ec] text-[#253845] text-[8px] font-black uppercase py-1.5 px-2 tracking-tighter border-b border-black/5">
+                  <div>Market</div>
+                  <div>Selection</div>
+                  <div className="text-center">Rate</div>
+                  <div className="text-center">Stake</div>
+                  <div className="text-right">Date</div>
+                </div>
+
+                {/* Bet Rows */}
+                <div className="flex flex-col">
+                  {gameBets.map((bet, idx) => {
+                    const sideRaw = bet.Side || bet.type || bet.Type || '';
+                    const isBack = sideRaw.toLowerCase() === 'back' || sideRaw.toLowerCase() === 'yes';
+                    const bgColor = isBack ? 'bg-[#e2f2ff]' : 'bg-[#fdf1f3]';
+                    const dateStr = bet.Matched_Date || bet.Date || bet.datetime || '---';
+
+                    return (
+                      <div key={idx} className={`grid grid-cols-[1fr_1.5fr_0.8fr_0.8fr_1.2fr] items-center text-[9px] border-b border-black/5 py-2 px-2 last:border-b-0 ${bgColor}`}>
+                        <div className="font-bold text-gray-700 truncate pr-1" title={bet.Game_Type || bet.Type}>{bet.Game_Type || bet.Type || 'Odds'}</div>
+                        <div className="font-black text-black truncate pr-1 uppercase" title={bet.Selection}>{bet.Selection}</div>
+                        <div className="text-center font-black text-black">{bet.Rate}</div>
+                        <div className="text-center font-black text-black">{bet.Stake}</div>
+                        <div className="text-right font-bold text-gray-500 whitespace-nowrap overflow-hidden text-[7.5px]">{dateStr}</div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

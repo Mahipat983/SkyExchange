@@ -77,9 +77,9 @@ const EventDetailedPage = () => {
     }
   }, [liveScoreboardHtml]);
 
-  const fetchGameData = useCallback(async () => {
+  const fetchGameData = useCallback(async (showLoading = true) => {
     try {
-      setIsLoading(true);
+      if (showLoading) setIsLoading(true);
       let res;
       if (isLoggedIn && loginToken) {
         console.log('Calling getGameDataLogin for gid:', matchId);
@@ -100,7 +100,7 @@ const EventDetailedPage = () => {
     } catch (err) {
       console.error('Fetch error:', err);
     } finally {
-      setIsLoading(false);
+      if (showLoading) setIsLoading(false);
     }
   }, [isLoggedIn, loginToken, matchId]);
 
@@ -108,7 +108,7 @@ const EventDetailedPage = () => {
   useEffect(() => {
     const handleBetPlaced = (e) => {
       if (e.detail?.matchId?.toString() === matchId?.toString()) {
-        fetchGameData();
+        fetchGameData(false);
       }
     };
     window.addEventListener('bet-placed', handleBetPlaced);
@@ -172,9 +172,12 @@ const EventDetailedPage = () => {
 
   useEffect(() => {
     if (matchId) {
-      fetchGameData();
+      fetchGameData(true); // Initial load shows spinner
+      
+      const interval = setInterval(() => fetchGameData(false), 5000); // Polling is background
+      return () => clearInterval(interval);
     }
-  }, [matchId, isLoggedIn, loginToken]);
+  }, [matchId, isLoggedIn, loginToken, fetchGameData]);
 
   const handleBetClick = (runner, type, price, market = 'Match Odds', runnerIndex, marketData, selectionId) => {
     if (!isLoggedIn) {
@@ -330,7 +333,7 @@ const EventDetailedPage = () => {
           <ScoreboardRender
             html={scoreboardHtml}
             onPin={handleToggleFavourite}
-            onRefresh={fetchGameData}
+            onRefresh={() => fetchGameData(false)}
             tvVisible={tvVisible}
             tvHtml={tvHtml}
             tvLoading={tvLoading}
@@ -347,7 +350,7 @@ const EventDetailedPage = () => {
             <li>
               <a class="btn-refresh" onClick={(e) => {
                 e.preventDefault();
-                fetchGameData();
+                fetchGameData(false);
               }}
               > </a>
             </li>
