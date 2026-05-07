@@ -8,7 +8,7 @@ import SportCompetition from '../components/EventDetailedPage/SportCompetition';
 import OddsTable from '../components/EventDetailedPage/MatchTable/OddsTable';
 import BookmakerTable from '../components/EventDetailedPage/MatchTable/BookmakerTable';
 import FancyTable from '../components/EventDetailedPage/MatchTable/FancyTable';
-import { marketController } from '../controllers';
+import { marketController, bettingController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
 import { useUIStore } from '../store/uiStore';
 import { useRatePolling } from '../hooks/useRatePolling';
@@ -48,6 +48,70 @@ const EventDetailedPage = () => {
   const [tvHtml, setTvHtml] = useState(null);
   const [tvLoading, setTvLoading] = useState(false);
   const pollingRef = useRef(null);
+
+  // Fancy Chart State
+  const [fancyChartOpen, setFancyChartOpen] = useState(false);
+  const [fancyChartLoading, setFancyChartLoading] = useState(false);
+  const [fancyChartData, setFancyChartData] = useState(null);
+  const [fancyChartTitle, setFancyChartTitle] = useState('');
+
+  const groupedChartData = React.useMemo(() => {
+    if (!fancyChartData || typeof fancyChartData !== 'object' || fancyChartData.error) return [];
+
+    // API returns numeric keys as strings
+    const keys = Object.keys(fancyChartData)
+      .filter(k => !isNaN(parseInt(k)))
+      .sort((a, b) => parseInt(a) - parseInt(b));
+
+    if (keys.length === 0) return [];
+
+    const result = [];
+    let startKey = keys[0];
+    let currentValue = fancyChartData[startKey];
+
+    for (let i = 1; i < keys.length; i++) {
+      const key = keys[i];
+      const val = fancyChartData[key];
+
+      if (val !== currentValue) {
+        const endKey = keys[i - 1];
+        result.push({
+          run: startKey === endKey ? startKey : `${startKey} - ${endKey}`,
+          position: currentValue
+        });
+        startKey = key;
+        currentValue = val;
+      }
+    }
+
+    const lastKey = keys[keys.length - 1];
+    result.push({
+      run: startKey === lastKey ? startKey : `${startKey} - ${lastKey}`,
+      position: currentValue
+    });
+
+    return result;
+  }, [fancyChartData]);
+
+  const openFancyChart = async (eid, name) => {
+    if (!isLoggedIn || !loginToken) {
+      openLoginModal();
+      return;
+    }
+    setFancyChartTitle(name);
+    setFancyChartOpen(true);
+    setFancyChartLoading(true);
+    setFancyChartData(null);
+    try {
+      const res = await bettingController.getFancyChart(loginToken, eid.toString());
+      setFancyChartData(res);
+    } catch (err) {
+      console.error('Failed to fetch fancy chart:', err);
+      setFancyChartData({ error: '1', msg: 'Failed to load chart data' });
+    } finally {
+      setFancyChartLoading(false);
+    }
+  };
 
   // Hook for live rates
   const { liveRates, scoreboardHtml: liveScoreboardHtml } = useRatePolling(matchId, gameData, 1000);
@@ -428,6 +492,7 @@ const EventDetailedPage = () => {
                         onCancelBet={() => setSelectedBet(null)}
                         onBetClick={(bet) => handleBetClick(bet.name, bet.side, bet.price, 'Fancy Bet', bet.runnerIndex, bet.marketData)}
                         matchId={matchId}
+                        onOpenFancyChart={openFancyChart}
                       />
                     </div>
                   )}
@@ -437,6 +502,138 @@ const EventDetailedPage = () => {
           </div>
         </div>
       </EventLayout>
+
+      {/* Fancy Chart Modal */}
+      {fancyChartOpen && (
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          zIndex: 1000,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '16px'
+        }}>
+          <div 
+            style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.7)', backdropFilter: 'blur(4px)' }} 
+            onClick={() => setFancyChartOpen(false)} 
+          />
+          <div style={{
+            position: 'relative',
+            zIndex: 1,
+            background: '#fff',
+            borderRadius: '8px',
+            width: '100%',
+            maxWIdth: '400px',
+            maxWidth: '400px',
+            overflow: 'hidden',
+            boxShadow: '0 20px 25px -5px rgba(0,0,0,0.3)',
+            animation: 'fadeIn 0.2s ease-out'
+          }}>
+            <div style={{
+              background: '#2b3a47',
+              color: '#ffb400',
+              padding: '12px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'between',
+              justifyContent: 'space-between'
+            }}>
+              <h3 style={{ margin: 0, fontSize: '14px', fontWeight: '800', textTransform: 'uppercase' }}>
+                Chart: {fancyChartTitle}
+              </h3>
+              <button 
+                onClick={() => setFancyChartOpen(false)}
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  color: '#fff', 
+                  fontSize: '20px', 
+                  cursor: 'pointer',
+                  lineHeight: '1'
+                }}
+              >×</button>
+            </div>
+            
+            <div style={{ padding: '0' }}>
+              {fancyChartLoading ? (
+                <div style={{ padding: '40px', textAlign: 'center' }}>
+                  <div className="animate-spin" style={{ 
+                    width: '30px', 
+                    height: '30px', 
+                    border: '3px solid #f3f4f6', 
+                    borderTopColor: '#ffb400', 
+                    borderRadius: '50%',
+                    margin: '0 auto 12px'
+                  }}></div>
+                  <p style={{ fontSize: '12px', color: '#666', fontWeight: '700' }}>LOADING LADDER...</p>
+                </div>
+              ) : fancyChartData?.error === '1' ? (
+                <div style={{ padding: '40px', textAlign: 'center' }}>
+                  <p style={{ fontSize: '12px', color: '#d0021b', fontWeight: '700' }}>{fancyChartData.msg || 'Failed to load chart'}</p>
+                </div>
+              ) : (
+                <div style={{ maxHeight: '450px', overflowY: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+                    <thead style={{ position: 'sticky', top: 0, background: '#f8f9fa', borderBottom: '2px solid #eee' }}>
+                      <tr>
+                        <th style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '800', color: '#666', textTransform: 'uppercase' }}>Run</th>
+                        <th style={{ padding: '10px 16px', fontSize: '11px', fontWeight: '800', color: '#666', textTransform: 'uppercase', textAlign: 'right' }}>Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {groupedChartData.map((row, idx) => {
+                        const pos = parseFloat(row.position);
+                        return (
+                          <tr key={idx} style={{ borderBottom: '1px solid #f1f1f1' }}>
+                            <td style={{ padding: '8px 16px', fontSize: '13px', fontWeight: '700', color: '#333' }}>{row.run}</td>
+                            <td style={{ 
+                              padding: '8px 16px', 
+                              fontSize: '13px', 
+                              fontWeight: '900', 
+                              textAlign: 'right',
+                              color: pos >= 0 ? '#2aa84a' : '#d0021b'
+                            }}>
+                              {pos > 0 ? `+${row.position}` : row.position}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                      {groupedChartData.length === 0 && (
+                        <tr>
+                          <td colSpan="2" style={{ padding: '30px', textAlign: 'center', color: '#999', fontSize: '12px', fontStyle: 'italic' }}>
+                            No Ladder Data Available
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+            
+            <div style={{ padding: '12px', borderTop: '1px solid #eee', background: '#fcfcfc' }}>
+              <button 
+                onClick={() => setFancyChartOpen(false)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  background: '#2b3a47',
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: '4px',
+                  fontWeight: '800',
+                  fontSize: '12px',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer'
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 };

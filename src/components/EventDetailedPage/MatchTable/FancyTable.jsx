@@ -21,7 +21,7 @@ const DEMO_MARKETS = [
   { id: 3, name: '6 Over Run UAE', no: 42, noRate: 100, yes: 44, yesRate: 100, min: '1.00', max: '300.00' },
 ];
 
-const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId }) => {
+const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId, onOpenFancyChart }) => {
   const [activeTab, setActiveTab] = useState('All');
 
   const allMarkets = fancyData && fancyData.length > 0
@@ -242,35 +242,67 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                   minHeight: '40px',
                 }}
               >
-                {/* Market name */}
                 <div style={{
                   flex: 1,
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
+                  alignItems: 'center',
                   padding: '4px 16px',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  color: '#222',
                   borderRight: '1px solid #e8e8e8',
                 }}>
-                  <div>{market.name}</div>
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#222' }}>{market.name}</div>
+                    {(() => {
+                      const chartVal = rates?.chart ??
+                        (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
+                          market.Chart1 !== undefined && market.Chart1 !== null ? parseFloat(market.Chart1) :
+                            market.Chart2 !== undefined && market.Chart2 !== null ? parseFloat(market.Chart2) : null);
+
+                      if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                        return (
+                          <div style={{
+                            fontSize: '11px',
+                            fontWeight: '700',
+                            marginTop: '2px',
+                            color: chartVal < 0 ? '#d0021b' : '#2aa84a'
+                          }}>
+                            {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })()}
+                  </div>
+                  
+                  {/* Book Button */}
                   {(() => {
                     const chartVal = rates?.chart ??
                       (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
                         market.Chart1 !== undefined && market.Chart1 !== null ? parseFloat(market.Chart1) :
                           market.Chart2 !== undefined && market.Chart2 !== null ? parseFloat(market.Chart2) : null);
 
-                    if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
+                    if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0 && onOpenFancyChart) {
                       return (
-                        <div style={{
-                          fontSize: '11px',
-                          fontWeight: '700',
-                          marginTop: '2px',
-                          color: chartVal < 0 ? '#d0021b' : '#2aa84a'
-                        }}>
-                          {chartVal < 0 ? chartVal.toFixed(0) : `(${chartVal.toFixed(2)})`}
-                        </div>
+                        <button
+                          onClick={() => onOpenFancyChart(market.id, market.name)}
+                          style={{
+                            background: '#ffb400',
+                            border: '1px solid #e5a200',
+                            borderRadius: '4px',
+                            padding: '3px 8px',
+                            fontSize: '11px',
+                            fontWeight: '800',
+                            cursor: 'pointer',
+                            color: '#000',
+                            textTransform: 'uppercase',
+                            marginLeft: '8px',
+                            boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                            transition: 'all 0.1s'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.background = '#e5a200'}
+                          onMouseLeave={(e) => e.currentTarget.style.background = '#ffb400'}
+                        >
+                          Book
+                        </button>
                       );
                     }
                     return null;
