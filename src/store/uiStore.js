@@ -5,6 +5,10 @@ export const useUIStore = create((set) => ({
   openLoginModal: () => set({ isLoginModalOpen: true }),
   closeLoginModal: () => set({ isLoginModalOpen: false }),
 
+  isSignupModalOpen: false,
+  openSignupModal: () => set({ isSignupModalOpen: true }),
+  closeSignupModal: () => set({ isSignupModalOpen: false }),
+
   overlay: {
     isOpen: false,
     url: '',

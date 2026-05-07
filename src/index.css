@@ -995,6 +995,242 @@ body {
   margin-top: 5px;
 }
 
+/* ===== SIGNUP MODAL ===== */
+.signup-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.signup-modal-box {
+  width: 850px;
+  height: 580px;
+  display: flex;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.signup-modal-left {
+  width: 380px;
+  background: #000 url('/images/mobile/gamehall/KV-pic.png') center / cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup-modal-left-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.signup-modal-logo-container {
+  position: relative;
+  z-index: 2;
+}
+
+.signup-modal-logo {
+  width: 150px;
+  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+}
+
+.signup-modal-right {
+  flex: 1;
+  background: #ffb400;
+  padding: 40px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+}
+
+.signup-modal-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #000;
+  color: #fff;
+  border: none;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  z-index: 10;
+}
+
+.signup-modal-header-container {
+  text-align: center;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.signup-modal-main-title {
+  font-size: 42px;
+  font-weight: 900;
+  color: #1a2d3b;
+  margin: 0;
+  line-height: 1;
+}
+
+.signup-modal-sub-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  opacity: 0.9;
+}
+
+.signup-modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.signup-modal-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ccc;
+  background: #fff;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  height: 44px;
+  line-height: 44px; /* Matches height for centering text */
+  vertical-align: middle;
+}
+
+.signup-modal-input:focus {
+  border-color: #ffb400;
+  box-shadow: 0 0 0 2px rgba(255, 180, 0, 0.2);
+}
+
+.signup-modal-input.bg-blue-tint {
+  background: #eef5ff;
+}
+
+.signup-modal-phone-row {
+  display: flex;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  height: 44px; /* Fixed height to match inputs */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.signup-modal-phone-row:focus-within {
+  border-color: #ffb400;
+  box-shadow: 0 0 0 2px rgba(255, 180, 0, 0.2);
+}
+
+.country-code-picker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-right: 1px solid #eee;
+  background: #fdfdfd;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  height: 100%;
+}
+
+.country-code-picker img {
+  width: 20px;
+  height: 14px;
+  border-radius: 2px;
+}
+
+.arrow-down {
+  font-size: 10px;
+  color: #666;
+}
+
+.no-border {
+  border: none !important;
+  box-shadow: none !important;
+  height: 100% !important;
+}
+
+.signup-modal-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.signup-modal-checkbox-row a {
+  color: #000;
+  text-decoration: underline;
+}
+
+.signup-modal-password-wrap {
+  position: relative;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.signup-modal-btn {
+  background: linear-gradient(180deg, #d4af37 0%, #b8860b 100%);
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: 800;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  margin-top: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.signup-modal-footer {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.signin-link {
+  color: #000;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
 /* MOBILE SPECIFIC COMPONENTS */
 .mobile-h3 {
   background-image: linear-gradient(-180deg, #2e4b5e 0%, #243a48 82%);

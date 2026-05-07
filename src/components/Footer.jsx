@@ -28,7 +28,7 @@ function Footer() {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '12px',
-          background: '#1a1a1a',
+
           borderRadius: '8px',
           border: '1px solid #333',
           width: '200px',
@@ -43,10 +43,10 @@ function Footer() {
         </div>
 
         {/* Description Text Container */}
-        <div style={{ 
-          fontSize: '11px', 
-          color: '#444', 
-          lineHeight: '1.6', 
+        <div style={{
+          fontSize: '11px',
+          color: '#444',
+          lineHeight: '1.6',
           textAlign: 'left',
           padding: '12px',
           border: '1px solid #f0f0f0',
@@ -57,7 +57,7 @@ function Footer() {
             <strong>AllWhiteLabel</strong> is your one-stop platform for online sports betting and casino gaming, offering a wide range of games including cricket, football, tennis, and live casino experiences.
           </p>
           <p style={{ marginBottom: '8px' }}>
-            This platform operates under <strong>AllWhiteLabel247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
+            This platform operates under <strong>SkyExchange247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
           </p>
           <p style={{ color: '#666', margin: 0 }}>
             AllWhiteLabel promotes responsible gaming and is strictly for users aged 18+. Users must ensure that online gaming is legal in their jurisdiction.

@@ -2,11 +2,12 @@ import React from 'react';
 import DesktopHeader from './DesktopHeader';
 import MobileHeader from './MobileHeader';
 import LoginModal from './LoginModal';
+import SignupModal from './SignupModal';
 import GameOverlay from './GameOverlay';
 import { useUIStore } from '../store/uiStore';
 
 function Layout({ children }) {
-  const { isLoginModalOpen, closeLoginModal, overlay, closeOverlay } = useUIStore();
+  const { isLoginModalOpen, closeLoginModal, isSignupModalOpen, closeSignupModal, overlay, closeOverlay } = useUIStore();
 
   return (
     <>
@@ -21,8 +22,9 @@ function Layout({ children }) {
       </div>
 
 
-      {/* Login Modal (triggered by Premium sportBook etc.) */}
+      {/* Modals */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+      <SignupModal />
 
       {/* Global Game Overlay */}
       <GameOverlay 

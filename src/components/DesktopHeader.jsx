@@ -7,7 +7,7 @@ import { useUIStore } from '../store/uiStore';
 import EditStakeModal from './EditStakeModal';
 
 function DesktopHeader() {
-  const openLoginModal = useUIStore(state => state.openLoginModal);
+  const { openLoginModal, openSignupModal } = useUIStore();
   const [validationCode, setValidationCode] = useState('');
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
@@ -414,7 +414,17 @@ function DesktopHeader() {
                 <a className="btn-login" onClick={validateLogin} style={{ cursor: 'pointer' }}>{loading ? '...' : 'Login'}<img className="icon-login" src="/images/transparent.gif" alt="" /></a>
               </li>
               <li className="li-signup">
-                <Link to="/signup" className="btn-signup">Sign up<img className="icon-login" src="/images/transparent.gif" alt="" /></Link>
+                <a 
+                  className="btn-signup" 
+                  style={{ cursor: 'pointer' }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    openSignupModal();
+                  }}
+                >
+                  Sign up
+                  <img className="icon-login" src="/images/transparent.gif" alt="" />
+                </a>
               </li>
             </ul>
           ) : (
