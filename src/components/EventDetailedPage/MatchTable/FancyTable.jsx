@@ -32,6 +32,8 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
 
       return {
         id: m.eid || m.MarketId || m.marketid,
+        eid: m.eid,
+        gkey: m.gkey,
         name: m.name,
         no: '-',
         noRate: '-',
