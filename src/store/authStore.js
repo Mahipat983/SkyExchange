@@ -25,6 +25,7 @@ export const useAuthStore = create(
 
       // Action to log out and clear the session
       logout: () => {
+        // First reset the store state
         set({
           username: null,
           loginToken: '',
@@ -32,8 +33,18 @@ export const useAuthStore = create(
           balance: '0',
           exposure: '0'
         });
-        localStorage.removeItem('skyexchange-auth-storage');
-        window.location.href = '/login';
+        
+        // Explicitly clear all storage to prevent stale data re-hydration
+        try {
+          localStorage.removeItem('skyexchange-auth-storage');
+          localStorage.clear(); // Clear any other leftovers
+          sessionStorage.clear();
+        } catch (e) {
+          console.error('Storage clear error:', e);
+        }
+
+        // Force a clean redirect to login page
+        window.location.replace('/login');
       },
 
       // Helper to update balance etc separately if needed

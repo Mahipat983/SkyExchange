@@ -57,10 +57,11 @@ function Footer() {
             <strong>AllWhiteLabel</strong> is your one-stop platform for online sports betting and casino gaming, offering a wide range of games including cricket, football, tennis, and live casino experiences.
           </p>
           <p style={{ marginBottom: '8px' }}>
-            This platform operates under <strong>SkyExchange247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
+            <strong>Sky Exchange 247</strong> platform operates under <strong>All white label 247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
+
           </p>
           <p style={{ color: '#666', margin: 0 }}>
-            AllWhiteLabel promotes responsible gaming and is strictly for users aged 18+. Users must ensure that online gaming is legal in their jurisdiction.
+            <strong>All white label 247</strong> promotes responsible gaming and is strictly for users aged 18+. Users must ensure that online gaming is legal in their jurisdiction.
           </p>
         </div>
       </div>
