@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { bettingController } from '../controllers';
+import { formatTime12h } from '../utils/format';
 
 const BetSlip = ({ sport }) => {
   const { matchId } = useParams();
@@ -116,7 +117,8 @@ const BetSlip = ({ sport }) => {
                     const sideRaw = bet.Side || bet.type || bet.Type || '';
                     const isBack = sideRaw.toLowerCase() === 'back' || sideRaw.toLowerCase() === 'yes';
                     const bgColor = isBack ? 'bg-[#e2f2ff]' : 'bg-[#fdf1f3]';
-                    const dateStr = bet.Matched_Date || bet.Date || bet.datetime || '---';
+                    const rawDate = bet.Matched_Date || bet.Date || bet.datetime;
+                    const dateStr = formatTime12h(rawDate);
 
                     return (
                       <div key={idx} className={`grid grid-cols-[1fr_1.5fr_0.8fr_0.8fr_1.2fr] items-center text-[9px] border-b border-black/5 py-2 px-2 last:border-b-0 ${bgColor}`}>
