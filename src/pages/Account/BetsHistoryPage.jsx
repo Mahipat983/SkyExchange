@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom';
 import AccountLayout from './AccountLayout';
 import { useAuthStore } from '../../store/authStore';
 import { bettingController } from '../../controllers';
 import { formatTime12h } from '../../utils/format';
 
 function BetsHistoryPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('Current Bets');
   const [bets, setBets] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -65,7 +66,7 @@ function BetsHistoryPage() {
       setLoading(true);
       const res = await bettingController.getMyBets(loginToken);
       if (res && typeof res === 'object' && !res.error) {
-        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null && (item.BetId || item.Id));
+        const betArray = Object.values(res).filter(item => typeof item === 'object' && item !== null && (item.Game || item.Selection || item.gid));
         setBets(betArray);
       } else {
         setBets([]);
@@ -151,12 +152,33 @@ function BetsHistoryPage() {
             ) : currentBetsToday.length > 0 ? (
               currentBetsToday.map((bet, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid #eee', fontSize: '13px' }}>
-                  <td style={{ padding: '12px', fontWeight: 'bold', color: '#3b5160' }}>{bet.Game || bet.Market || '-'}</td>
+                  <td style={{ padding: '12px', fontWeight: 'bold', color: '#3b5160' }}>
+                    {bet.gid ? (
+                      <Link 
+                        to={`/event-detail/${bet.gid}`}
+                        style={{ color: '#3b5160', textDecoration: 'none', cursor: 'pointer' }}
+                        onMouseOver={(e) => e.target.style.textDecoration = 'underline'}
+                        onMouseOut={(e) => e.target.style.textDecoration = 'none'}
+                      >
+                        {bet.Game || bet.Market || '-'}
+                      </Link>
+                    ) : (
+                      bet.Game || bet.Market || '-'
+                    )}
+                  </td>
                   <td style={{ padding: '12px', textAlign: 'center' }}>{bet.Selection || '-'}</td>
                   <td style={{ padding: '12px', textAlign: 'center' }}>
-                    <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 'bold', background: (bet.Type || '').toLowerCase() === 'back' ? '#d4eaff' : '#fcd4d4', color: (bet.Type || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545' }}>
-                      {(bet.Type || 'BACK').toUpperCase()}
+                    <span style={{ 
+                      padding: '2px 8px', 
+                      borderRadius: '4px', 
+                      fontSize: '10px', 
+                      fontWeight: 'bold', 
+                      background: (bet.Side || '').toLowerCase() === 'back' ? '#d4eaff' : '#fcd4d4', 
+                      color: (bet.Side || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545' 
+                    }}>
+                      {(bet.Side || 'BACK').toUpperCase()}
                     </span>
+                    <div style={{ fontSize: '9px', color: '#888', marginTop: '2px' }}>{bet.Game_Type || bet.Type}</div>
                   </td>
                   <td style={{ padding: '12px', textAlign: 'center', fontWeight: '900', color: '#ffb400' }}>{bet.Rate}</td>
                   <td style={{ padding: '12px', textAlign: 'center', fontWeight: 'bold' }}>₹{parseFloat(bet.Stake).toLocaleString()}</td>

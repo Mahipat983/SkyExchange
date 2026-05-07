@@ -481,14 +481,21 @@ function DesktopHeader() {
                   <div className="balance-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 10px', borderRight: '1px solid #555' }}>
                     <span style={{ fontSize: '12px', color: '#ffb400' }}>Main Balance <strong style={{ color: '#ffb400' }}>PTH {balance}</strong></span>
                     <span style={{ fontSize: '12px', color: '#ffb400' }}>Exposure <strong style={{ color: '#ffb400' }}>{exposure}</strong></span>
-                    <div style={{ border: '1px solid #ffb400', color: '#ffb400', fontSize: '11px', padding: '0 4px', borderRadius: '3px' }}>+3</div>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); /* Refresh handled by watchdog */ }} style={{ background: 'none', border: 'none', color: '#ffb400', width: '30px', cursor: 'pointer' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path></svg>
                   </button>
                 </div>
                 {isBalanceModalOpen && (
-                  <div className="balance-modal-content" style={{ position: 'absolute', top: '36px', right: '0', background: '#ecf0f1', width: '320px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 1001 }} onClick={(e) => e.stopPropagation()}>
+                  <div 
+                    className="balance-modal-content" 
+                    style={{ position: 'absolute', top: '36px', right: '0', background: '#ecf0f1', width: '320px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 1001, cursor: 'pointer' }} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      navigate('/bets');
+                      setIsBalanceModalOpen(false);
+                    }}
+                  >
                     <div style={{ padding: '15px' }}>
                       <div style={{ background: '#fff', borderRadius: '4px', padding: '12px', marginBottom: '10px', border: '1px solid #ddd' }}>
                         <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>Main Balance</p>
