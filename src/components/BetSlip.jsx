@@ -92,7 +92,16 @@ const BetSlip = ({ sport }) => {
         <div className="flex flex-col gap-2 p-1">
           {Object.entries(groupedBets).map(([gameName, gameBets], gIdx) => {
             const firstBet = gameBets[0];
-            const sportName = (firstBet.Sport || firstBet.sport || firstBet.SportName || sport || 'SPORTS').toUpperCase();
+            const getDisplaySport = (b) => {
+              const rawSport = (b.Sport || b.sport || b.SportName || b.Type || b.Game_Type || sport || 'SPORTS').toLowerCase();
+              if (rawSport.includes('soccer') || rawSport.includes('football')) return 'FOOTBALL';
+              if (rawSport.includes('cricket')) return 'CRICKET';
+              if (rawSport.includes('tennis')) return 'TENNIS';
+              if (rawSport.includes('horse')) return 'HORSE RACING';
+              if (rawSport.includes('greyhound')) return 'GREYHOUND RACING';
+              return rawSport.toUpperCase();
+            };
+            const sportName = getDisplaySport(firstBet);
 
             return (
               <div key={gIdx} className="bg-white shadow-sm border border-black/5 overflow-hidden">
