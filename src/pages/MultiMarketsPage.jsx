@@ -110,21 +110,173 @@ function MultiMarketsPage() {
     }
   };
 
+  // 3. Fetch Competition Details for Sidebar
+  const [sidebarData, setSidebarData] = useState([]);
+  const [isSidebarLoading, setIsSidebarLoading] = useState(false);
+  const [openAccordions, setOpenAccordions] = useState({});
+
+  useEffect(() => {
+    const fetchSidebarData = async () => {
+      if (favorites.length === 0) {
+        setSidebarData([]);
+        return;
+      }
+
+      try {
+        setIsSidebarLoading(true);
+        const uniqueGids = [...new Set(favorites.map(f => f.gid || f.Gid || f.gkey).filter(Boolean))];
+        
+        const results = await Promise.all(uniqueGids.map(gid => marketController.getGameData(gid)));
+        
+        const sportsGroups = {};
+        results.forEach(res => {
+          if (res && !res.error) {
+            let data = typeof res === 'string' ? JSON.parse(res) : res;
+            if (data["0"]) data = data["0"];
+            
+            const sportName = (data.Sport || data.GameType || 'Cricket').toUpperCase();
+            
+            if (!sportsGroups[sportName]) {
+              sportsGroups[sportName] = {
+                name: sportName,
+                events: []
+              };
+            }
+            if (!sportsGroups[sportName].events.some(g => (g.gid || g.Gid) === (data.gid || data.Gid))) {
+              sportsGroups[sportName].events.push(data);
+            }
+          }
+        });
+        
+        setSidebarData(Object.values(sportsGroups));
+      } catch (err) {
+        console.error('Sidebar fetch error:', err);
+      } finally {
+        setIsSidebarLoading(false);
+      }
+    };
+
+    fetchSidebarData();
+  }, [favorites]);
+
+  const toggleAccordion = (key) => {
+    setOpenAccordions(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const sidebarStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    height: 'fit-content',
+    backgroundColor: '#fff',
+    fontFamily: 'Tahoma, Helvetica, sans-serif',
+    borderRight: '1px solid #ccc'
+  };
+
+  const headerStyle = {
+    backgroundColor: '#2b3a47',
+    color: '#ffb400',
+    padding: '12px 15px',
+    fontWeight: '800',
+    fontSize: '14px',
+    textTransform: 'uppercase',
+    borderBottom: '2px solid #ffb400',
+    letterSpacing: '0.5px'
+  };
+
+  const compLinkStyle = {
+    padding: '10px 15px',
+    fontSize: '12px',
+    fontWeight: '700',
+    color: '#333',
+    backgroundColor: '#f8f9fa',
+    borderBottom: '1px solid #eee',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    cursor: 'pointer',
+    transition: 'all 0.2s'
+  };
+
+  const matchLinkStyle = {
+    padding: '8px 15px 8px 30px',
+    fontSize: '11px',
+    fontWeight: '600',
+    color: '#4b5965',
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #f1f5f9',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    textDecoration: 'none'
+  };
+
   return (
     <Layout>
       <main className="main">
-        {/* Left sidebar */}
-        <aside className="sidebar sideNav">
-          <div className="sideNav__head">Sports</div>
-          <div className="sideNav__scroll">
-            <Link className="sideNav__item sideNav__item--link" to="/">All Sports</Link>
-            <Link className="sideNav__item sideNav__item--link" to="/cricket">Cricket</Link>
-            <Link className="sideNav__item sideNav__item--link" to="/football">Football</Link>
-            <Link className="sideNav__item sideNav__item--link" to="/tennis">Tennis</Link>
-            <Link className="sideNav__item sideNav__item--link" to="/horse-racing">Horse Racing</Link>
-            <Link className="sideNav__item sideNav__item--link" to="/greyhound-racing">Greyhound Racing</Link>
-            <a className="sideNav__item sideNav__item--link" href="#">Fancybet</a>
-            <a className="sideNav__item sideNav__item--link" href="#">Election</a>
+        {/* Left sidebar: Dynamic followed competitions with LeftSidebar theme */}
+        <aside style={sidebarStyle} className="sidebar sideNav">
+          <div style={headerStyle}>MULTI MARKETS</div>
+          
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {isSidebarLoading ? (
+              <div className="p-10 text-center">
+                <div className="w-5 h-5 border-2 border-[#ffb400] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+              </div>
+            ) : sidebarData.length === 0 ? (
+              <div className="p-8 text-center text-[11px] text-gray-500 font-bold uppercase leading-relaxed bg-[#f8f9fa]">
+                No followed markets.<br/>Pin markets to see them here.
+              </div>
+            ) : (
+              sidebarData.map((sportGroup, idx) => {
+                const key = `multi-sport-${idx}`;
+                const isOpen = openAccordions[key];
+                
+                return (
+                  <div key={key}>
+                    <div 
+                      style={{
+                        ...compLinkStyle,
+                        backgroundColor: isOpen ? '#f1f5f9' : '#f8f9fa'
+                      }}
+                      onClick={() => toggleAccordion(key)}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = isOpen ? '#f1f5f9' : '#f8f9fa'}
+                    >
+                      <span className="uppercase">{sportGroup.name}</span>
+                      <span style={{ color: '#ffb400', fontSize: '10px' }}>{isOpen ? '▲' : '▼'}</span>
+                    </div>
+                    
+                    {isOpen && (
+                      <div style={{ display: 'flex', flexDirection: 'column', backgroundColor: '#fff' }}>
+                        {sportGroup.events.map((game, gIdx) => (
+                          <Link 
+                            key={gIdx} 
+                            to={`/${(game.Sport || 'cricket').toLowerCase()}/${game.gid || game.Gid}`}
+                            style={matchLinkStyle}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fafafa';
+                              e.currentTarget.style.color = '#ffb400';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.backgroundColor = '#fff';
+                              e.currentTarget.style.color = '#4b5965';
+                            }}
+                          >
+                            <span style={{ color: '#ffb400', fontSize: '8px' }}>●</span>
+                            {game.Game_name || `${game.Team1} v ${game.Team2}`}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         </aside>
 
