@@ -65,7 +65,7 @@ function MatchRow({ match, odds, sport }) {
 
   const rawRunners = matchOdds.runner || matchOdds.runners || [];
   const runnerArr = Array.isArray(rawRunners) ? rawRunners : Object.values(rawRunners);
-  
+
   const rowOdds = [null, null, null];
   if (typeof rawRunners === 'object' && !Array.isArray(rawRunners)) {
     if (rawRunners["0"]) rowOdds[0] = extractOdd(rawRunners["0"]);
@@ -74,34 +74,34 @@ function MatchRow({ match, odds, sport }) {
   } else {
     runnerArr.forEach((r, idx) => { if (idx < 3) rowOdds[idx] = extractOdd(r); });
   }
-  
+
   if (rowOdds[0] && rowOdds[1] && !rowOdds[2]) {
     rowOdds[2] = rowOdds[1];
     rowOdds[1] = null;
   }
-  
+
   const prices = rowOdds.map(o => o || { back: '--', lay: '--' });
 
   return (
     <div className="sports-row desktop-grid" style={{ position: 'relative', opacity: isSuspended ? 0.7 : 1 }}>
       <div className="col-event">
         <div style={{ display: 'flex', alignItems: 'center', marginBottom: '3px' }}>
-          <span className="green-dot" style={{ display: isLive ? 'inline-block' : 'none' }}></span>
 
-          <a 
-            href="#" 
+
+          <a
+            href="#"
             onClick={(e) => {
               e.preventDefault();
               navigate(`/${sport.toLowerCase()}/${match.id || match.marketId}`);
-            }} 
+            }}
             className="event-link"
           >
             {match.name}
           </a>
         </div>
         <div className="event-sub flex items-center gap-1">
-          
-          <div className="flex items-center gap-1 ml-1">
+
+          <div className="flex items-center gap-1  ">
             {isLive && match.hasTV && (
               <div className="w-[18px] h-[15px] bg-[#3498db] rounded-[2px] flex items-center justify-center shadow-sm border border-[#2980b9]" title="Live TV">
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
@@ -133,7 +133,7 @@ function MatchRow({ match, odds, sport }) {
             )}
           </div>
         </div>
-        <div style={{ fontSize: '10px', color: '#666', fontWeight: 'bold', marginLeft: '12px', display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <div style={{ fontSize: '10px', color: '#666', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '5px' }}>
           <span>{formatDateTime(parseDate(match.DateTime || match.dateTime || match.StartTime || match.startTime))}</span>
           {isLive && (
             <>
@@ -147,9 +147,9 @@ function MatchRow({ match, odds, sport }) {
 
 
       <div className="col-odds" style={{ position: 'relative' }}>
-          <div className="odds-box back">{prices[0].back}</div>
-          <div className="odds-box lay">{prices[0].lay}</div>
-          {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
+        <div className="odds-box back">{prices[0].back}</div>
+        <div className="odds-box lay">{prices[0].lay}</div>
+        {isSuspended && <div className="suspended-overlay-grid"><span>SUSPENDED</span></div>}
       </div>
 
       <div className="col-odds" style={{ position: 'relative' }}>
@@ -207,36 +207,36 @@ function SportPageWithLayout({
         const res = await marketController.getGameList(sport);
         let matchData = [];
         if (res && res.matches) {
-            matchData = res.matches;
+          matchData = res.matches;
         } else if (res && typeof res === 'object') {
           matchData = Object.values(res).filter(v => typeof v === 'object' && v !== null && (v.MarketId || v.marketid));
         }
-        
+
         const now = new Date();
         const processed = matchData.map(m => {
-            const startTimeStr = m.DateTime || m.dateTime || m.Datetime || m.staredtime || m.StartTime || '';
-            const startTime = parseDate(startTimeStr);
-            const isWinnerMarket = (m.Game_Type || m.GameType || '').toLowerCase() === 'winner' || (m.Team2 || '').includes('TOURNAMENT_WINNER');
-            const team1 = m.Team1 || m.team1;
-            const team2 = m.Team2 || m.team2;
-            const gName = m.Game_name || m.GameName || m.ename || m.name || m.Competition;
-            let name = 'Match';
-            if (team1 && team2) name = team2 === 'TOURNAMENT_WINNER' ? team1 : `${team1} vs ${team2}`;
-            else if (gName) name = gName;
+          const startTimeStr = m.DateTime || m.dateTime || m.Datetime || m.staredtime || m.StartTime || '';
+          const startTime = parseDate(startTimeStr);
+          const isWinnerMarket = (m.Game_Type || m.GameType || '').toLowerCase() === 'winner' || (m.Team2 || '').includes('TOURNAMENT_WINNER');
+          const team1 = m.Team1 || m.team1;
+          const team2 = m.Team2 || m.team2;
+          const gName = m.Game_name || m.GameName || m.ename || m.name || m.Competition;
+          let name = 'Match';
+          if (team1 && team2) name = team2 === 'TOURNAMENT_WINNER' ? team1 : `${team1} vs ${team2}`;
+          else if (gName) name = gName;
 
-            return {
-                id: m.gid || m.Gid || m.Event_Id || m.eid || m.MarketId || Math.random(),
-                marketId: m.MarketId || m.marketid,
-                name,
-                status: (startTime && startTime <= now) || isWinnerMarket ? 'In-Play' : (startTimeStr.split(' ')[1] || startTimeStr),
-                startTime: startTimeStr,
-                isWinner: isWinnerMarket,
-                hasBM: !!(m.bm || m.bookmaker || m.BM === 'Y'),
-                hasTV: !!(m.tv || m.TV === 'Y' || m.isTV === 'Y'),
-                hasF: !!(m.f || m.fancy || m.Fancy === 'Y'),
-                hasGoal: m.Goal === 'Y' || m.goal === 'Y',
-                hasWset: m.Wset === 'Y' || m.wset === 'Y'
-            };
+          return {
+            id: m.gid || m.Gid || m.Event_Id || m.eid || m.MarketId || Math.random(),
+            marketId: m.MarketId || m.marketid,
+            name,
+            status: (startTime && startTime <= now) || isWinnerMarket ? 'In-Play' : (startTimeStr.split(' ')[1] || startTimeStr),
+            startTime: startTimeStr,
+            isWinner: isWinnerMarket,
+            hasBM: !!(m.bm || m.bookmaker || m.BM === 'Y'),
+            hasTV: !!(m.tv || m.TV === 'Y' || m.isTV === 'Y'),
+            hasF: !!(m.f || m.fancy || m.Fancy === 'Y'),
+            hasGoal: m.Goal === 'Y' || m.goal === 'Y',
+            hasWset: m.Wset === 'Y' || m.wset === 'Y'
+          };
         });
         setMatches(processed);
       } catch (err) {
@@ -247,14 +247,14 @@ function SportPageWithLayout({
     };
 
     const fetchCompetitions = async () => {
-        try {
-            const res = await marketController.getCompetitionList(sport);
-            if (Array.isArray(res)) setCompetitions(res);
-            else if (res && typeof res === 'object') {
-                const list = Object.values(res).filter(v => typeof v === 'object' && v !== null && (v.Competition_Name || v.name));
-                setCompetitions(list);
-            }
-        } catch (err) { }
+      try {
+        const res = await marketController.getCompetitionList(sport);
+        if (Array.isArray(res)) setCompetitions(res);
+        else if (res && typeof res === 'object') {
+          const list = Object.values(res).filter(v => typeof v === 'object' && v !== null && (v.Competition_Name || v.name));
+          setCompetitions(list);
+        }
+      } catch (err) { }
     };
 
     fetchMatches();
@@ -270,7 +270,7 @@ function SportPageWithLayout({
       try {
         const res = await marketController.getLiveRates(marketIds);
         if (res && typeof res === 'object' && !res.error) {
-           setOdds(prev => ({ ...prev, ...res }));
+          setOdds(prev => ({ ...prev, ...res }));
         }
       } catch (err) { }
     };
