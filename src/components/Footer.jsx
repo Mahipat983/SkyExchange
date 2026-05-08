@@ -8,57 +8,23 @@ function Footer() {
 
 
       {/* New License and Description Section */}
-      <div style={{
-        margin: '15px auto',
-        maxWidth: '950px',
-        border: '1px solid #d1d1d1',
-        borderRadius: '12px',
-        padding: '15px 20px',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: '20px',
-        backgroundColor: '#fff',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
-        fontFamily: 'Arial, Helvetica, sans-serif'
-      }}>
+      <div className="footer-license-section">
         {/* Logo Section Container */}
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '12px',
-
-          borderRadius: '8px',
-          border: '1px solid #333',
-          width: '200px',
-          height: '90px',
-          flexShrink: 0
-        }}>
+        <div className="footer-logo-container">
           <img
             src="/Logo/allWhiteLabel.png"
-            style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+            className="footer-logo-img"
             alt="AllWhiteLabel Logo"
           />
         </div>
 
         {/* Description Text Container */}
-        <div style={{
-          fontSize: '11px',
-          color: '#444',
-          lineHeight: '1.6',
-          textAlign: 'left',
-          padding: '12px',
-          border: '1px solid #f0f0f0',
-          borderRadius: '8px',
-          flex: 1
-        }}>
+        <div className="footer-description-container">
           <p style={{ marginBottom: '8px' }}>
             <strong>All white label 247</strong> is your one-stop platform for online sports betting and casino gaming, offering a wide range of games including cricket, football, tennis, and live casino experiences.
           </p>
           <p style={{ marginBottom: '8px' }}>
             <strong>Sky Exchange 247</strong> platform operates under <strong>All white label 247</strong> and is licensed and regulated by the Curaçao Authority under N.V. License No. B2C-669UN7GS-2678JAZ.
-
           </p>
           <p style={{ color: '#666', margin: 0 }}>
             <strong>All white label 247</strong> promotes responsible gaming and is strictly for users aged 18+. Users must ensure that online gaming is legal in their jurisdiction.

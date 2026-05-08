@@ -4,10 +4,16 @@ import MobileHeader from './MobileHeader';
 import LoginModal from './LoginModal';
 import SignupModal from './SignupModal';
 import GameOverlay from './GameOverlay';
+import EditStakeModal from './EditStakeModal';
 import { useUIStore } from '../store/uiStore';
 
 function Layout({ children }) {
-  const { isLoginModalOpen, closeLoginModal, isSignupModalOpen, closeSignupModal, overlay, closeOverlay } = useUIStore();
+  const { 
+    isLoginModalOpen, closeLoginModal, 
+    isSignupModalOpen, closeSignupModal, 
+    overlay, closeOverlay,
+    isEditStakeModalOpen, closeEditStakeModal
+  } = useUIStore();
 
   return (
     <>
@@ -25,6 +31,7 @@ function Layout({ children }) {
       {/* Modals */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
       <SignupModal />
+      <EditStakeModal isOpen={isEditStakeModalOpen} onClose={closeEditStakeModal} />
 
       {/* Global Game Overlay */}
       <GameOverlay 

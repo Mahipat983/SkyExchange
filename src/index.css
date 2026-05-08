@@ -1523,3 +1523,225 @@ body {
   overflow: visible !important;
   text-overflow: clip !important;
 }
+
+/* ======= MOBILE HEADER RESPONSIVE FIXES ======= */
+@media screen and (max-width: 768px) {
+  .mobile-only header {
+    height: 48px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    padding: 0 10px !important;
+    background-image: linear-gradient(180deg, #474747 0%, #070707 100%) !important;
+    border-bottom: 1px solid #333 !important;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+  }
+
+  .mobile-only header .top-logo {
+    margin: 0 !important;
+    width: 110px !important;
+    height: 35px !important;
+    background-size: contain !important;
+    background-position: left center !important;
+  }
+
+  .mobile-only header .btn-wrap {
+    display: flex !important;
+    gap: 8px !important;
+    align-items: center !important;
+    width: auto !important;
+    justify-content: flex-end !important;
+  }
+
+  /* Both buttons: identical sizing & layout */
+  .mobile-only header .btn-wrap a,
+  .mobile-only header .btn-signup,
+  .mobile-only header .login-index {
+    height: 30px !important;
+    min-height: 30px !important;
+    max-width: none !important;
+    max-height: none !important;
+    line-height: 1 !important;
+    padding: 0 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 4px !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    text-decoration: none !important;
+    color: #fff !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    margin-top: 0 !important;
+    text-indent: 0 !important;
+    font-family: Tahoma, Helvetica, sans-serif !important;
+    flex: 0 0 auto !important; /* prevent flex-grow distortion */
+  }
+
+  .mobile-only header .btn-signup {
+    background-image: linear-gradient(180deg, #5a5a5a 0%, #333333 100%) !important;
+    border: 1px solid #555 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+  }
+
+  .mobile-only header .login-index {
+    background-image: linear-gradient(180deg, #f72424 0%, #bb1c00 100%) !important;
+    border: 1px solid #820110 !important;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+  }
+
+  /* The :before pseudo adds the SVG user icon — keep it but fix its size */
+  .mobile-only header .login-index:before {
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    margin-right: 4px !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+  }
+}
+
+/* ======= FOOTER STYLES ======= */
+.footer-license-section {
+  margin: 30px auto;
+  max-width: 1000px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 20px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.footer-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #999;
+  width: 240px;
+  min-height: 120px;
+  flex-shrink: 0;
+}
+
+.footer-logo-img {
+  max-height: 100px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.footer-description-container {
+  font-size: 11.5px;
+  color: #333;
+  line-height: 1.6;
+  text-align: left;
+  padding: 15px 20px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.policy-link {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.policy-link li a {
+  text-decoration: none;
+  color: #666;
+  font-size: 11px;
+}
+
+.app-link {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.app-link p {
+  font-size: 10px;
+  color: #999;
+  margin-top: 5px;
+}
+
+/* Mobile Footer Overrides */
+@media screen and (max-width: 768px) {
+  .footer-license-section {
+    flex-direction: column;
+    align-items: center; /* Horizontally center the stacked boxes */
+    max-width: 95%;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .footer-logo-container {
+    width: 100%;
+    max-width: 280px;
+    height: 80px;
+    margin: 0 auto; /* Extra insurance for centering */
+  }
+
+  .footer-description-container {
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .policy-link {
+    gap: 10px 15px;
+    padding: 0 10px;
+  }
+
+  .policy-link li {
+    flex: 1 1 40%;
+    text-align: center;
+  }
+
+  .app-link {
+    padding-bottom: 20px;
+  }
+}
+
+/* ======= GLOBAL MOBILE OVERLAP FIX ======= */
+@media screen and (max-width: 768px) {
+  /* Applying padding primarily to body to avoid double-padding issues */
+  body {
+    padding-bottom: 80px !important;
+  }
+
+  /* Target only specific top-level page containers if body padding is insufficient */
+  /* We avoid nesting selectors like .full-wrap and .over-wrap here to prevent double space */
+  .mobile-sports-container,
+  .inplay-layout,
+  .casino-container,
+  .wallet-container,
+  .statement-container,
+  .full-market-container,
+  .multi-market-container,
+  .offers-container,
+  .login-container,
+  .signup-container,
+  .full-wrap {
+    padding-bottom: 80px !important;
+  }
+  
+  /* Ensure individual match lists don't add extra space if they are inside padded containers */
+  .mobile-match-list,
+  #centerColumn,
+  .over-wrap {
+    padding-bottom: 0 !important;
+  }
+}
+

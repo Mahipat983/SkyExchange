@@ -113,7 +113,10 @@
 .racing-loading, .racing-no-data {
   padding: 40px;
   text-align: center;
-  color: #fff;
-  background: #2e354a;
+  color: #666;
+  background: #fff;
+  border: 1px solid #eee;
   border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
 }

@@ -20,4 +20,10 @@ export const useUIStore = create((set) => ({
   closeOverlay: () => set({ 
     overlay: { isOpen: false, url: '', title: '' } 
   }),
+  isSearchOpen: false,
+  openSearch: () => set({ isSearchOpen: true }),
+  closeSearch: () => set({ isSearchOpen: false }),
+  isEditStakeModalOpen: false,
+  openEditStakeModal: () => set({ isEditStakeModalOpen: true }),
+  closeEditStakeModal: () => set({ isEditStakeModalOpen: false }),
 }));

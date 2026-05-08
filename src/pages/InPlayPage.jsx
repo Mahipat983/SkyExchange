@@ -448,8 +448,15 @@ function InPlayPage() {
         }
 
         @media (max-width: 980px) {
-            .col-odds-header, .col-odds-wrap {
+            .col-odds-header, .col-odds-wrap, .right-area {
                 display: none;
+            }
+            .left-area {
+                width: 100% !important;
+                margin-top: 10px; /* Added top gap */
+            }
+            .inplay-layout {
+                min-height: calc(100vh - 50px);
             }
         }
       `}</style>

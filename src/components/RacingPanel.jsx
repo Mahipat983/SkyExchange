@@ -13,11 +13,12 @@ const RacingPanel = ({ sportType }) => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setData([]); // Clear data to prevent flickering from previous sport
+        setActiveTab(''); // Reset active tab
         const res = await marketController.getRacingData(sportType);
         if (Array.isArray(res)) {
           setData(res);
-          // Set initial active tab if not set
-          if (!activeTab && res.length > 0) {
+          if (res.length > 0) {
             const firstCountry = res[0].Country || 'Unknown';
             setActiveTab(firstCountry);
           }
@@ -30,7 +31,7 @@ const RacingPanel = ({ sportType }) => {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh every 30s
+    const interval = setInterval(fetchData, 30000);
     return () => clearInterval(interval);
   }, [sportType]);
 
