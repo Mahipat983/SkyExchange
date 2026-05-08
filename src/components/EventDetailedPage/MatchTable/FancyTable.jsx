@@ -274,7 +274,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                       return null;
                     })()}
                   </div>
-                  
+
                   {/* Book Button */}
                   {(() => {
                     const chartVal = rates?.chart ??
@@ -396,11 +396,10 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
 
               {/* News Message Row */}
               {market.msg && market.msg !== '' && (
-                <div style={{ background: '#1a1a1a', padding: '2px 16px', borderBottom: '1px solid #e8e8e8', overflow: 'hidden' }}>
+                <div style={{ background: 'transparent', padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
-
                     <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                      <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#d0021b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                         {market.msg}
                       </span>
                     </div>

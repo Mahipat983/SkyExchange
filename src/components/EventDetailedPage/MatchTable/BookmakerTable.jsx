@@ -69,7 +69,7 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
       {/* Table Area */}
       <div className="w-full">
         {/* Table Header Row */}
-        <div className="flex border-b border-[#e5e5e5] bg-[#fffce3] h-[24px]">
+        <div className="flex bg-[#fffce3] h-[24px]" style={{ borderBottom: '1px solid rgb(228, 231, 237)' }}>
           <div className="flex-1 border-r border-[#e4e7ed]"></div>
           <div className="w-[688.128px] flex text-center">
             <div className="w-[114.688px]"></div>
@@ -101,16 +101,16 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
 
             return (
               <React.Fragment key={idx}>
-                <div className="flex border-b border-[#e5e5e5] bg-[#fffce3] min-h-[42px]">
+                <div className="flex bg-[#fffce3] min-h-[42px]" style={{ borderBottom: '1px solid rgb(228, 231, 237)' }}>
                   {/* Runner Name */}
                   <div className="flex-1 px-4 flex flex-col justify-center border-r border-[#e4e7ed]">
                     <span className="font-bold text-sm text-black">{runner.RunnerName}</span>
                     {(() => {
-                      const chartVal = rates?.chart ?? 
+                      const chartVal = rates?.chart ??
                         (runner.Chart !== undefined && runner.Chart !== null ? parseFloat(runner.Chart) :
-                         runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
-                         runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
-                      
+                          runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
+                            runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
+
                       if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
                         return (
                           <div className={`text-[11px] font-bold mt-0.5 ${chartVal < 0 ? 'text-[#d0021b]' : 'text-[#2aa84a]'}`}>
@@ -196,7 +196,7 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
                 {/* Render Inline Bet Box if this runner is selected */}
                 {selectedBet?.runner === runner.RunnerName && (selectedBet?.market === bookmakerData?.name || selectedBet?.market === 'Match Odds' || selectedBet?.market === 'Bookmaker Market') && (
                   <div className="w-full">
-                    <InlineBetBox 
+                    <InlineBetBox
                       selection={selectedBet}
                       matchId={marketId}
                       onCancel={onCancelBet}
@@ -206,11 +206,10 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
 
                 {/* Runner Message Row */}
                 {runner.Msg && runner.Msg !== '' && (
-                  <div className="flex border-b border-[#e5e5e5] bg-[#1a1a1a] py-0.5 px-4 overflow-hidden">
+                  <div className="flex bg-transparent py-0.5 px-4 overflow-hidden" style={{ borderBottom: '1px solid rgb(228, 231, 237)' }}>
                     <div className="flex items-center gap-2 w-full h-[20px]">
-
                       <div className="flex-1 overflow-hidden whitespace-nowrap">
-                        <span className="animate-ticker text-[10px] font-black text-white uppercase tracking-wider">
+                        <span className="animate-ticker text-[10px] font-black text-[#d0021b] uppercase tracking-wider">
                           {runner.Msg}
                         </span>
                       </div>
@@ -223,11 +222,10 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
 
           {/* Market-level Message Row */}
           {bookmakerData?.Msg && bookmakerData?.Msg !== '' && (
-            <div className="flex border-b border-[#e5e5e5] bg-[#1a1a1a] py-0.5 px-4 overflow-hidden">
+            <div className="flex bg-transparent py-0.5 px-4 overflow-hidden" style={{ borderBottom: '1px solid rgb(228, 231, 237)' }}>
               <div className="flex items-center gap-2 w-full h-[20px]">
-
                 <div className="flex-1 overflow-hidden whitespace-nowrap">
-                  <span className="animate-ticker text-[10px] font-black text-white uppercase tracking-wider">
+                  <span className="animate-ticker text-[10px] font-black text-[#d0021b] uppercase tracking-wider">
                     {bookmakerData.Msg}
                   </span>
                 </div>

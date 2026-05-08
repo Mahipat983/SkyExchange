@@ -204,16 +204,16 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                   <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
                     <div>{runner.RunnerName}</div>
                     {(() => {
-                      const chartVal = rates?.chart ?? 
+                      const chartVal = rates?.chart ??
                         (runner.Chart !== undefined && runner.Chart !== null ? parseFloat(runner.Chart) :
-                         runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
-                         runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
-                      
+                          runner.Chart1 !== undefined && runner.Chart1 !== null ? parseFloat(runner.Chart1) :
+                            runner.Chart2 !== undefined && runner.Chart2 !== null ? parseFloat(runner.Chart2) : null);
+
                       if (chartVal !== null && !isNaN(chartVal) && chartVal !== 0) {
                         return (
-                          <div style={{ 
-                            fontSize: '11px', 
-                            fontWeight: '700', 
+                          <div style={{
+                            fontSize: '11px',
+                            fontWeight: '700',
                             marginTop: '2px',
                             color: chartVal < 0 ? '#d0021b' : '#2aa84a'
                           }}>
@@ -277,7 +277,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                 {selectedBet?.runner === runner.RunnerName && selectedBet?.market === displayName && (
                   <tr>
                     <td colSpan={7} style={{ padding: 0 }}>
-                      <InlineBetBox 
+                      <InlineBetBox
                         selection={selectedBet}
                         matchId={marketId}
                         onCancel={onCancelBet}
@@ -289,12 +289,11 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
 
                 {/* Runner Message Row */}
                 {runner.Msg && runner.Msg !== '' && (
-                  <tr style={{ backgroundColor: '#1a1a1a', borderBottom: '1px solid #e4e7ed' }}>
-                    <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden' }}>
+                  <tr style={{ backgroundColor: 'transparent' }}>
+                    <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
-
                         <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                          <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                          <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#d0021b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                             {runner.Msg}
                           </span>
                         </div>
@@ -308,12 +307,11 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
 
           {/* Market-level Message Row */}
           {marketData?.Msg && marketData?.Msg !== '' && (
-            <tr style={{ backgroundColor: '#1a1a1a' }}>
-              <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden' }}>
+            <tr style={{ backgroundColor: 'transparent' }}>
+              <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
-
                   <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                    <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#d0021b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                       {marketData.Msg}
                     </span>
                   </div>
