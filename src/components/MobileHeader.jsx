@@ -469,21 +469,80 @@ function MobileHeader() {
           /* ===== LOGGED IN: Bets | Search | Wallet | Setting | User ===== */
           <div className="mhdr-logged-in-row">
             {/* 1. Deposit shortcut */}
-            <Link className="mhdr-icon-btn" to="/wallet/deposit" style={{ fontWeight: '800', fontSize: '14px' }}>
+            <Link
+              className="mhdr-shortcut-btn"
+              to="/wallet/deposit"
+              style={{
+                background: '#28a745',
+                color: '#fff',
+                border: '2px solid #fff',
+                borderRadius: '6px',
+                width: '25px',
+                height: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '800',
+                fontSize: '12px',
+                textDecoration: 'none'
+              }}
+            >
               D
             </Link>
 
             {/* 2. Withdraw shortcut */}
-            <Link className="mhdr-icon-btn" to="/wallet/withdrawal" style={{ fontWeight: '800', fontSize: '14px' }}>
+            <Link
+              className="mhdr-shortcut-btn"
+              to="/wallet/withdrawal"
+              style={{
+                background: '#dc3545',
+                color: '#fff',
+                border: '2px solid #fff',
+                borderRadius: '6px',
+                width: '25px',
+                height: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: '800',
+                fontSize: '12px',
+                textDecoration: 'none'
+              }}
+            >
               W
             </Link>
 
-            {/* 3. Balance Overview button (replaces Bets) */}
-            <Link className="mhdr-bets-header-btn" to="/balance-overview" style={{ minWidth: '60px' }}>
-              {balance}
+            {/* 3. Bets button */}
+            <Link className="mhdr-bets-header-btn" to="/bets" style={{ padding: '4px 8px', height: "25px", fontSize: '11px', minWidth: 'unset' }}>
+              Bets
             </Link>
 
-            {/* 4. Setting icon */}
+            {/* 4. Balance & Exposure Box */}
+            <Link
+              to="/balance-overview"
+              style={{
+                background: '#333',
+                borderRadius: '6px',
+                height: "35px",
+                padding: '2px 8px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                textDecoration: 'none',
+                minWidth: '70px',
+                border: '1px solid #444',
+                lineHeight: '1.2'
+              }}
+            >
+              <div style={{ color: '#ffb400', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                Bal: <span style={{ color: '#ffb400' }}>{balance}</span>
+              </div>
+              <div style={{ color: '#ffb400', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
+                Exp: <span style={{ color: '#ffb400' }}>{exposure || '0.00'}</span>
+              </div>
+            </Link>
+
+            {/* 5. Setting icon */}
             <button
               className="mhdr-icon-btn"
               onClick={() => setShowSettings(true)}
@@ -495,7 +554,7 @@ function MobileHeader() {
               </svg>
             </button>
 
-            {/* 5. User icon → Sidebar */}
+            {/* 6. User icon → Sidebar */}
             <button
               className="mhdr-icon-btn"
               onClick={() => setShowSidebar(true)}
