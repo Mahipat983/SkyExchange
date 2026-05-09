@@ -21,8 +21,11 @@ const DEMO_MARKETS = [
   { id: 3, name: '6 Over Run UAE', no: 42, noRate: 100, yes: 44, yesRate: 100, min: '1.00', max: '300.00' },
 ];
 
-const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId, onOpenFancyChart }) => {
+const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId, onOpenFancyChart, mobileView = false }) => {
   const [activeTab, setActiveTab] = useState('All');
+
+  const cellWidth = mobileView ? '70px' : '114.688px';
+  const spacerWidth = mobileView ? '0px' : '229.376px';
 
   const allMarkets = fancyData && fancyData.length > 0
     ? fancyData.map(m => {
@@ -89,7 +92,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
   return (
     <div style={{ fontFamily: 'Tahoma, Arial, sans-serif', fontSize: '13px', marginBottom: '8px' }}>
 
-      {/* ── Header row: dark outer, limited-width teal badge ── */}
+      {/* ── Header row ── */}
       <div style={{
         background: '#243a48',
         display: 'flex',
@@ -97,7 +100,6 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         padding: '4px 8px',
         gap: '6px',
       }}>
-        {/* Limited-width teal badge containing clock + label */}
         <div style={{
           background: '#1a8a8a',
           color: '#fff',
@@ -107,7 +109,6 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           padding: '3px 10px 3px 6px',
           borderRadius: '2px',
         }}>
-          {/* Green clock icon */}
           <span style={{
             background: '#4caf50',
             borderRadius: '50%',
@@ -123,7 +124,6 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
             Fancy Bet
           </span>
         </div>
-        {/* Info icon — outside the badge */}
         <span style={{
           border: '1px solid rgba(255,255,255,0.5)',
           borderRadius: '50%',
@@ -139,14 +139,16 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         }}>i</span>
       </div>
 
-      {/* ── Filter tabs row (matches special_bets-tab reference) ── */}
+      {/* ── Filter tabs row ── */}
       <div style={{
         background: '#1a8a8a',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: mobileView ? 'flex-start' : 'center',
         padding: '6px 8px',
         minHeight: '32px',
+        overflowX: 'auto',
+        scrollbarWidth: 'none'
       }}>
         <ul style={{
           display: 'flex',
@@ -178,8 +180,8 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                padding: '0 12px',
-                fontSize: '12px',
+                padding: mobileView ? '0 8px' : '0 12px',
+                fontSize: '11px',
                 fontWeight: '600',
                 color: activeTab === tab ? '#1a8a8a' : '#076875',
                 whiteSpace: 'nowrap',
@@ -205,7 +207,6 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         fontWeight: 'bold',
         fontSize: '13px',
       }}>
-
         <span>Fancy Bet</span>
       </div>
 
@@ -217,14 +218,14 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         borderBottom: '1px solid #e0e0e0',
       }}>
         <div style={{ flex: 1, borderRight: '1px solid #e0e0e0' }} />
-        <div style={{ width: '229.376px' }} />
-        <div style={{ width: '114.688px', textAlign: 'center', textTransform: "uppercase", fontWeight: 'bold', fontSize: '12px', color: '#333', padding: '4px 0' }}>
+        {!mobileView && <div style={{ width: spacerWidth }} />}
+        <div style={{ width: cellWidth, textAlign: 'center', textTransform: "uppercase", fontWeight: 'bold', fontSize: '11px', color: '#333', padding: '4px 0' }}>
           no
         </div>
-        <div style={{ width: '114.688px', textAlign: 'center', textTransform: "uppercase", fontWeight: 'bold', fontSize: '12px', color: '#333', padding: '4px 0' }}>
+        <div style={{ width: cellWidth, textAlign: 'center', textTransform: "uppercase", fontWeight: 'bold', fontSize: '11px', color: '#333', padding: '4px 0' }}>
           yes
         </div>
-        <div style={{ width: '229.376px' }} />
+        {!mobileView && <div style={{ width: spacerWidth }} />}
       </div>
 
       {/* ── Market rows ── */}
@@ -241,18 +242,18 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                   display: 'flex',
                   alignItems: 'stretch',
                   borderBottom: '1px solid #e8e8e8',
-                  minHeight: '40px',
+                  minHeight: mobileView ? '50px' : '40px',
                 }}
               >
                 <div style={{
                   flex: 1,
                   display: 'flex',
                   alignItems: 'center',
-                  padding: '4px 16px',
+                  padding: mobileView ? '4px 8px' : '4px 16px',
                   borderRight: '1px solid #e8e8e8',
                 }}>
                   <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div style={{ fontSize: '13px', fontWeight: '600', color: '#222' }}>{market.name}</div>
+                    <div style={{ fontSize: mobileView ? '12px' : '13px', fontWeight: '600', color: '#222' }}>{market.name}</div>
                     {(() => {
                       const chartVal = rates?.chart ??
                         (market.Chart !== undefined && market.Chart !== null ? parseFloat(market.Chart) :
@@ -273,6 +274,13 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                       }
                       return null;
                     })()}
+
+                    {/* Mobile Min/Max display */}
+                    {mobileView && (
+                      <div style={{ fontSize: '10px', color: '#777', marginTop: '2px' }}>
+                        Min: {market.min} / Max: {market.max}
+                      </div>
+                    )}
                   </div>
 
                   {/* Book Button */}
@@ -290,18 +298,14 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                             background: '#ffb400',
                             border: '1px solid #e5a200',
                             borderRadius: '4px',
-                            padding: '3px 8px',
-                            fontSize: '11px',
+                            padding: '2px 6px',
+                            fontSize: '10px',
                             fontWeight: '800',
                             cursor: 'pointer',
                             color: '#000',
                             textTransform: 'uppercase',
-                            marginLeft: '8px',
-                            boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                            transition: 'all 0.1s'
+                            marginLeft: '4px',
                           }}
-                          onMouseEnter={(e) => e.currentTarget.style.background = '#e5a200'}
-                          onMouseLeave={(e) => e.currentTarget.style.background = '#ffb400'}
                         >
                           Book
                         </button>
@@ -311,16 +315,13 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                   })()}
                 </div>
 
-                {/* Left spacer for alignment */}
-                <div style={{ width: '229.376px' }} />
+                {!mobileView && <div style={{ width: spacerWidth }} />}
 
-                {/* Betting Cells Container for single overlay */}
                 <div style={{ display: 'flex', position: 'relative' }}>
-                  {/* no (Lay / pink) cell */}
                   <div
                     onClick={() => !isSuspended && onBetClick && onBetClick({ name: market.name, side: 'lay', price: rates?.lay?.p1, runnerIndex: 0, marketData: { ...market, noVal: parseFloat(rates?.lay?.v1 || '100'), yesVal: parseFloat(rates?.back?.v1 || '100') } })}
                     style={{
-                      width: '114.688px',
+                      width: cellWidth,
                       background: '#faa9ba',
                       display: 'flex',
                       flexDirection: 'column',
@@ -328,10 +329,9 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                       justifyContent: 'center',
                       cursor: 'pointer',
                       borderLeft: '1px solid #fff',
-                      transition: 'opacity 0.15s',
                     }}
                   >
-                    <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
+                    <span style={{ fontWeight: '900', fontSize: mobileView ? '16px' : '14px', lineHeight: 1.1, color: '#000' }}>
                       {rates?.lay?.p1 || '-'}
                     </span>
                     <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
@@ -339,11 +339,10 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                     </span>
                   </div>
 
-                  {/* yes (Back / blue) cell */}
                   <div
                     onClick={() => !isSuspended && onBetClick && onBetClick({ name: market.name, side: 'back', price: rates?.back?.p1, runnerIndex: 0, marketData: { ...market, noVal: parseFloat(rates?.lay?.v1 || '100'), yesVal: parseFloat(rates?.back?.v1 || '100') } })}
                     style={{
-                      width: '114.688px',
+                      width: cellWidth,
                       background: '#72bbef',
                       display: 'flex',
                       flexDirection: 'column',
@@ -351,10 +350,9 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                       justifyContent: 'center',
                       cursor: 'pointer',
                       borderLeft: '1px solid #fff',
-                      transition: 'opacity 0.15s',
                     }}
                   >
-                    <span style={{ fontWeight: 'bold', fontSize: '14px', lineHeight: 1.1, color: '#000' }}>
+                    <span style={{ fontWeight: '900', fontSize: mobileView ? '16px' : '14px', lineHeight: 1.1, color: '#000' }}>
                       {rates?.back?.p1 || '-'}
                     </span>
                     <span style={{ fontSize: '11px', color: '#444', lineHeight: 1.1 }}>
@@ -362,7 +360,6 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                     </span>
                   </div>
 
-                  {/* Single Suspension Overlay across both cells */}
                   {isSuspended && (
                     <div style={{
                       ...suspensionOverlayStyle,
@@ -374,27 +371,27 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                   )}
                 </div>
 
-                {/* Min/Max info */}
-                <div style={{
-                  width: '229.376px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '0 4px',
-                  fontSize: '10px',
-                  color: '#777',
-                  textAlign: 'center',
-                  lineHeight: 1.4,
-                }}>
-                  <span style={{ color: '#707c8a' }}>Min/Max</span>
-                  <span style={{ fontSize: '13px', color: '#2b3a47', fontWeight: '400' }}>
-                    {market.min} / {market.max}
-                  </span>
-                </div>
+                {!mobileView && (
+                  <div style={{
+                    width: spacerWidth,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 4px',
+                    fontSize: '10px',
+                    color: '#777',
+                    textAlign: 'center',
+                    lineHeight: 1.4,
+                  }}>
+                    <span style={{ color: '#707c8a' }}>Min/Max</span>
+                    <span style={{ fontSize: '13px', color: '#2b3a47', fontWeight: '400' }}>
+                      {market.min} / {market.max}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              {/* News Message Row */}
               {market.msg && market.msg !== '' && (
                 <div style={{ background: 'transparent', padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
@@ -407,13 +404,13 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
                 </div>
               )}
 
-              {/* Render Inline Bet Box if this fancy market is selected */}
               {selectedBet?.runner === market.name && selectedBet?.market === 'Fancy Bet' && (
                 <div style={{ padding: 0 }}>
                   <InlineBetBox
                     selection={selectedBet}
                     matchId={matchId}
                     onCancel={onCancelBet}
+                    mobileView={mobileView}
                   />
                 </div>
               )}

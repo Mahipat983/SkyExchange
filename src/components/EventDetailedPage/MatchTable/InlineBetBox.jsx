@@ -5,7 +5,7 @@ import { userController } from '../../../controllers/user/userController';
 import { useSnackbarStore } from '../../../store/snackbarStore';
 import { useBettingStore } from '../../../store/bettingStore';
 
-const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
+const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport, mobileView = false }) => {
   const { loginToken } = useAuthStore();
   const showSnackbar = useSnackbarStore(state => state.show);
   const { stakes: globalStakes, setStakes: setGlobalStakes } = useBettingStore();
@@ -176,6 +176,127 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport }) => {
       setIsLoading(false);
     }
   };
+
+  if (mobileView) {
+    return (
+      <div style={{ backgroundColor: bgColor, borderBottom: `2px solid ${borderColor}`, padding: '10px', fontSize: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          {/* Row 1: Price Info & Accept Odds */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{
+              backgroundColor: '#fff',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              padding: '6px 12px',
+              display: 'flex',
+              gap: '10px',
+              alignItems: 'baseline',
+              boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.05)'
+            }}>
+              <span style={{ fontWeight: '900', fontSize: '20px', color: '#1e1e1e' }}>{selection.price}</span>
+              <span style={{ fontSize: '11px', color: '#888', fontWeight: 'bold' }}>100.00</span>
+            </div>
+            
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <input
+                type="checkbox"
+                checked={acceptAnyOdds}
+                onChange={(e) => setAcceptAnyOdds(e.target.checked)}
+                id="accept-odds-mobile"
+                style={{ width: '16px', height: '16px' }}
+              />
+              <label htmlFor="accept-odds-mobile" style={{ fontSize: '12px', fontWeight: 'bold', color: '#00508a' }}>Accept Any Odds</label>
+            </div>
+          </div>
+
+          {/* Row 2: Stake Input & Cancel Button */}
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ flex: 1, position: 'relative' }}>
+              <input
+                type="number"
+                value={stake}
+                onChange={(e) => setStake(e.target.value)}
+                placeholder="0.00"
+                style={{
+                  width: '100%',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  padding: '0 12px',
+                  fontWeight: '900',
+                  fontSize: '18px',
+                  height: '45px',
+                  outline: 'none',
+                  backgroundColor: '#fff',
+                  boxSizing: 'border-box'
+                }}
+              />
+            </div>
+            <button
+              onClick={onCancel}
+              style={{
+                backgroundColor: '#f1f1f1',
+                border: '1px solid #ccc',
+                borderRadius: '4px',
+                padding: '0 15px',
+                fontWeight: 'bold',
+                height: '45px',
+                color: '#333',
+                fontSize: '13px',
+                textTransform: 'uppercase'
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+
+          {/* Row 3: Full Width Place Bet Button */}
+          <button
+            onClick={handlePlaceBet}
+            disabled={isLoading || !stake}
+            style={{
+              width: '100%',
+              background: (!stake || isLoading)
+                ? '#9e9e9e'
+                : 'linear-gradient(180deg, #9f9b99 0%, #877f7d 100%)',
+              border: '1px solid #7a716e',
+              borderRadius: '4px',
+              fontWeight: '900',
+              color: (!stake || isLoading) ? '#e0e0e0' : '#fac973',
+              fontSize: '16px',
+              height: '48px',
+              textTransform: 'uppercase',
+              boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+              letterSpacing: '1px'
+            }}
+          >
+            {isLoading ? 'Processing...' : `Place Bet: ${stake ? '₹' + stake : ''}`}
+          </button>
+
+          {/* Row 4: Stake Buttons Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+            {globalStakes.map((stakeObj, idx) => (
+              <button
+                key={idx}
+                onClick={() => handleStakeClick(stakeObj.value)}
+                style={{
+                  backgroundColor: '#fff',
+                  border: '1px solid #ccc',
+                  borderRadius: '4px',
+                  padding: '10px 0',
+                  fontWeight: '900',
+                  color: '#3b5160',
+                  fontSize: '14px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+                }}
+              >
+                +{stakeObj.value}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ backgroundColor: bgColor, borderBottom: `2px solid ${borderColor}`, fontSize: '12px' }}>

@@ -22,6 +22,7 @@ import FullMarketCricketPage from './pages/FullMarketCricketPage';
 import FullMarketFootballPage from './pages/FullMarketFootballPage';
 import FullMarketTennisPage from './pages/FullMarketTennisPage';
 import EventDetailedPage from './pages/EventDetailedPage';
+import EventDetailedPageMobile from './pages/EventDetailedPageMobile';
 import DepositPage from './pages/DepositPage';
 import WithdrawPage from './pages/WithdrawPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -35,6 +36,18 @@ import './App.css';
 import Snackbar from './components/Snackbar';
 import PopupModal from './components/PopupModal';
 import SessionWatchdog from './components/SessionWatchdog';
+
+const ResponsiveEventDetails = () => {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return isMobile ? <EventDetailedPageMobile /> : <EventDetailedPage />;
+};
 
 function App() {
   return (
@@ -53,8 +66,8 @@ function App() {
         <Route path="/full-market-football" element={<FullMarketFootballPage />} />
         <Route path="/full-market-tennis" element={<FullMarketTennisPage />} />
         <Route path="/full-market-horse-racing" element={<FullMarketHorseRacingPage />} />
-        <Route path="/event-detail/:matchId/:eventId?" element={<EventDetailedPage />} />
-        <Route path="/:sport/:matchId/:eventId?" element={<EventDetailedPage />} />
+        <Route path="/event-detail/:matchId/:eventId?" element={<ResponsiveEventDetails />} />
+        <Route path="/:sport/:matchId/:eventId?" element={<ResponsiveEventDetails />} />
         <Route path="/sports" element={<SportsPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />

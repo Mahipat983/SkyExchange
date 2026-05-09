@@ -2,10 +2,10 @@ import React from 'react';
 import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 import InlineBetBox from './InlineBetBox';
 
-const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selectedBet, onCancelBet, sport, isInPlay }) => {
+const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selectedBet, onCancelBet, sport, isInPlay, mobileView = false }) => {
   const displayName = marketData?.name || marketName || 'Match Odds';
-  const oddsWidth = '114.688px';
-  const uniformHeight = '35px';
+  const oddsWidth = mobileView ? '50px' : '114.688px';
+  const uniformHeight = mobileView ? '45px' : '35px';
 
   // Market ID for rates
   const marketId = (marketData?.MarketId?.toString().startsWith('1.') || marketData?.marketid?.toString().startsWith('1.'))
@@ -17,15 +17,15 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
 
   const baseFont = {
     fontFamily: 'Tahoma, Helvetica, sans-serif',
-    fontSize: '12px',
+    fontSize: mobileView ? '11px' : '12px',
     lineHeight: '15px',
     fontWeight: '400',
     letterSpacing: 'normal'
   };
 
-  const cellStyle = (bgColor) => ({
-    width: oddsWidth,
-    minWidth: oddsWidth,
+  const cellStyle = (bgColor, customWidth) => ({
+    width: customWidth || oddsWidth,
+    minWidth: customWidth || oddsWidth,
     height: uniformHeight,
     backgroundColor: bgColor,
     textAlign: 'center',
@@ -89,31 +89,32 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
           background: '#fff',
           border: '1px solid #d9d9d9',
           borderBottom: 'none',
-          height: '42px',
+          height: mobileView ? '36px' : '42px',
           position: 'relative',
           ...baseFont
         }}>
           {/* Left Section */}
-          <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+          <div style={{ display: 'flex', alignItems: 'center', height: '100%', overflow: 'hidden' }}>
             <div style={{
               background: '#cfd8dc',
               height: '100%',
               display: 'flex',
               alignItems: 'center',
-              padding: '0 12px',
+              padding: mobileView ? '0 8px' : '0 12px',
               fontWeight: '700',
-              color: '#2b3a47'
+              color: '#2b3a47',
+              fontSize: mobileView ? '12px' : '14px',
+              whiteSpace: 'nowrap'
             }}>
               {displayName}
             </div>
           </div>
 
-          {/* Right Section */}
-          <div style={{ display: 'flex', gap: '15px', alignItems: 'center', paddingRight: '10px' }}>
-
-
-
-          </div>
+          {/* Right Section - Min/Max only for non-mobile or simplified for mobile */}
+          {!mobileView && (
+            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', paddingRight: '10px' }}>
+            </div>
+          )}
         </div>
       ) : (
         <div className="bg-[#1f2933] text-white flex items-center px-3 py-2">
@@ -138,56 +139,68 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
 
         <thead>
           <tr style={{
-            height: '32px',
+            height: mobileView ? '24px' : '32px',
             color: '#1e1e1e',
             borderBottom: '1px solid #d9d9d9',
             position: 'relative',
             ...baseFont
           }}>
-            <th style={{ textAlign: 'left', paddingLeft: '12px', width: 'auto' }}>
+            <th style={{ textAlign: 'left', paddingLeft: '12px', width: 'auto', fontSize: mobileView ? '10px' : '12px' }}>
               {Object.keys(marketData?.runners || {}).length} selections
             </th>
 
-            {/* 6 Fixed Rate Columns */}
-            <th style={{ width: oddsWidth }}></th>
-            <th style={{ width: oddsWidth }}></th>
+            {/* Fixed Rate Columns */}
+            {!mobileView && (
+              <>
+                <th style={{ width: oddsWidth }}></th>
+                <th style={{ width: oddsWidth }}></th>
+              </>
+            )}
+            
             <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
               <div style={{ overflow: 'hidden', borderTopLeftRadius: '6px' }}>
                 <div style={headerTabStyle('#72bbef', '#1e1e1e', true)}>
-                  Back all
+                  {mobileView ? 'Back' : 'Back all'}
                 </div>
               </div>
             </th>
             <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
               <div style={{ overflow: 'hidden', borderTopRightRadius: '6px' }}>
                 <div style={headerTabStyle('#faa9ba', '#1e1e1e', false)}>
-                  Lay all
+                  {mobileView ? 'Lay' : 'Lay all'}
                 </div>
               </div>
             </th>
-            <th style={{ width: oddsWidth }}></th>
-            <th style={{ width: oddsWidth }}></th>
+
+            {!mobileView && (
+              <>
+                <th style={{ width: oddsWidth }}></th>
+                <th style={{ width: oddsWidth }}></th>
+              </>
+            )}
 
             {/* Floating Min/Max on the right of the header */}
-            <div style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              display: 'flex',
-              gap: '8px',
-              alignItems: 'center',
-              zIndex: 5
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
-                <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
+            {!mobileView && (
+              <div style={{
+                position: 'absolute',
+                right: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                display: 'flex',
+                gap: '8px',
+                alignItems: 'center',
+                zIndex: 5
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
+                  <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
+                  <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
+                </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
-                <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
-              </div>
-            </div>
+            )}
           </tr>
         </thead>
 
@@ -201,8 +214,8 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             return (
               <React.Fragment key={idx}>
                 <tr style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
-                  <td style={{ paddingLeft: '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
-                    <div>{runner.RunnerName}</div>
+                  <td style={{ paddingLeft: mobileView ? '8px' : '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed' }}>
+                    <div style={{ fontSize: mobileView ? '12px' : '14px' }}>{runner.RunnerName}</div>
                     {(() => {
                       const chartVal = rates?.chart ??
                         (runner.Chart !== undefined && runner.Chart !== null ? parseFloat(runner.Chart) :
@@ -225,45 +238,53 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                     })()}
                   </td>
 
-                  <td colSpan={6} style={{ padding: 0, position: 'relative' }}>
+                  <td colSpan={mobileView ? 2 : 6} style={{ padding: 0, position: 'relative' }}>
                     <div style={{ display: 'flex', width: '100%', height: uniformHeight }}>
-                      {/* Back 3 */}
-                      <div style={cellStyle('#e2f2fe')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.back?.p3 || '-'}</div>
-                        <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v3 || '-'}</div>
-                      </div>
+                      {!mobileView && (
+                        <>
+                          {/* Back 3 */}
+                          <div style={cellStyle('#e2f2fe')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3, idx, runnerId)}>
+                            <div style={{ fontWeight: '700' }}>{rates?.back?.p3 || '-'}</div>
+                            <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v3 || '-'}</div>
+                          </div>
 
-                      {/* Back 2 */}
-                      <div style={cellStyle('#add8f4')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p2, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.back?.p2 || '-'}</div>
-                        <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v2 || '-'}</div>
-                      </div>
+                          {/* Back 2 */}
+                          <div style={cellStyle('#add8f4')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p2, idx, runnerId)}>
+                            <div style={{ fontWeight: '700' }}>{rates?.back?.p2 || '-'}</div>
+                            <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.back?.v2 || '-'}</div>
+                          </div>
+                        </>
+                      )}
 
                       {/* Back 1 */}
-                      <div style={cellStyle('#72bbef')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p1, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.back?.p1 || '-'}</div>
+                      <div style={cellStyle('#72bbef', mobileView ? '50%' : null)} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p1, idx, runnerId)}>
+                        <div style={{ fontWeight: '900', fontSize: mobileView ? '14px' : '12px' }}>{rates?.back?.p1 || '-'}</div>
                         <div style={{ fontSize: '10px' }}>{rates?.back?.v1 || '-'}</div>
                       </div>
 
                       {/* Lay 1 */}
-                      <div style={cellStyle('#faa9ba')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p1, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.lay?.p1 || '-'}</div>
+                      <div style={cellStyle('#faa9ba', mobileView ? '50%' : null)} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p1, idx, runnerId)}>
+                        <div style={{ fontWeight: '900', fontSize: mobileView ? '14px' : '12px' }}>{rates?.lay?.p1 || '-'}</div>
                         <div style={{ fontSize: '10px' }}>{rates?.lay?.v1 || '-'}</div>
                       </div>
 
-                      {/* Lay 2 */}
-                      <div style={cellStyle('#fbcbd5')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.lay?.p2 || '-'}</div>
-                        <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v2 || '-'}</div>
-                      </div>
+                      {!mobileView && (
+                        <>
+                          {/* Lay 2 */}
+                          <div style={cellStyle('#fbcbd5')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2, idx, runnerId)}>
+                            <div style={{ fontWeight: '700' }}>{rates?.lay?.p2 || '-'}</div>
+                            <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v2 || '-'}</div>
+                          </div>
 
-                      {/* Lay 3 */}
-                      <div style={{ ...cellStyle('#fde4ea'), borderRight: 'none' }} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p3, idx, runnerId)}>
-                        <div style={{ fontWeight: '700' }}>{rates?.lay?.p3 || '-'}</div>
-                        <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v3 || '-'}</div>
-                      </div>
+                          {/* Lay 3 */}
+                          <div style={{ ...cellStyle('#fde4ea'), borderRight: 'none' }} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p3, idx, runnerId)}>
+                            <div style={{ fontWeight: '700' }}>{rates?.lay?.p3 || '-'}</div>
+                            <div style={{ fontSize: '10px', color: '#707c8a' }}>{rates?.lay?.v3 || '-'}</div>
+                          </div>
+                        </>
+                      )}
 
-                      {/* Single Suspension Overlay across all 6 cells */}
+                      {/* Single Suspension Overlay */}
                       {isSuspended && (
                         <div style={suspensionOverlayStyle}>
                           <span style={suspensionTextStyle}>{suspensionMsg}</span>
@@ -276,12 +297,13 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                 {/* Render Inline Bet Box if this runner is selected */}
                 {selectedBet?.runner === runner.RunnerName && selectedBet?.market === displayName && (
                   <tr>
-                    <td colSpan={7} style={{ padding: 0 }}>
+                    <td colSpan={mobileView ? 3 : 7} style={{ padding: 0 }}>
                       <InlineBetBox
                         selection={selectedBet}
                         matchId={marketId}
                         onCancel={onCancelBet}
                         sport={sport}
+                        mobileView={mobileView}
                       />
                     </td>
                   </tr>
@@ -290,7 +312,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                 {/* Runner Message Row */}
                 {runner.Msg && runner.Msg !== '' && (
                   <tr style={{ backgroundColor: 'transparent' }}>
-                    <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
+                    <td colSpan={mobileView ? 3 : 7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
                         <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
                           <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#d0021b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -308,7 +330,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
           {/* Market-level Message Row */}
           {marketData?.Msg && marketData?.Msg !== '' && (
             <tr style={{ backgroundColor: 'transparent' }}>
-              <td colSpan={7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
+              <td colSpan={mobileView ? 3 : 7} style={{ padding: '2px 16px', overflow: 'hidden', borderBottom: '1px solid rgb(228, 231, 237)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '20px' }}>
                   <div style={{ flex: 1, overflow: 'hidden', whiteSpace: 'nowrap' }}>
                     <span className="animate-ticker" style={{ fontSize: '10px', fontWeight: '800', color: '#d0021b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>

@@ -7,10 +7,13 @@ import InlineBetBox from './InlineBetBox';
  * 
  * Renders the Bookmaker market table (0% Commission markets).
  */
-const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet, onCancelBet }) => {
+const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet, onCancelBet, mobileView = false }) => {
   // Extract runners from bookmakerData
   const runnersList = bookmakerData?.runners ? Object.values(bookmakerData.runners) : [];
   const runners = runnersList.length > 0 ? runnersList : [];
+
+  const oddsWidth = mobileView ? '50%' : '114.688px';
+  const tableOddsWidth = mobileView ? '100px' : '688.128px';
 
   // Market ID for rates
   const marketId = (bookmakerData?.MarketId?.toString().startsWith('1.') || bookmakerData?.marketid?.toString().startsWith('1.'))
@@ -45,7 +48,7 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
     <div className="mb-4">
       {/* Header Bar */}
       <div className="bg-[#1f2933] text-white flex items-center px-3 py-2">
-        <a id="multiMarketPin" className="add-pin" title="Add to Multi Markets">Add Pin</a>
+        {!mobileView && <a id="multiMarketPin" className="add-pin" title="Add to Multi Markets">Add Pin</a>}
         <span className="font-bold text-sm">{bookmakerData?.name || 'Bookmaker Market'}</span>
         <span className="mx-2 text-gray-400">|</span>
         <span className="text-sm text-gray-300">Zero Commission</span>
@@ -71,23 +74,31 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
         {/* Table Header Row */}
         <div className="flex bg-[#fffce3] h-[24px]" style={{ borderBottom: '1px solid rgb(228, 231, 237)' }}>
           <div className="flex-1 border-r border-[#e4e7ed]"></div>
-          <div className="w-[688.128px] flex text-center">
-            <div className="w-[114.688px]"></div>
-            <div className="w-[114.688px]"></div>
+          <div className={`flex text-center`} style={{ width: tableOddsWidth }}>
+            {!mobileView && (
+              <>
+                <div className="w-[114.688px]"></div>
+                <div className="w-[114.688px]"></div>
+              </>
+            )}
             <div
-              className="w-[114.688px] flex items-center justify-center"
-              style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '22px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E' }}
+              className={`flex items-center justify-center`}
+              style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '22px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: oddsWidth }}
             >
               Back
             </div>
             <div
-              className="w-[114.688px] flex items-center justify-center"
-              style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '22px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E' }}
+              className={`flex items-center justify-center`}
+              style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '22px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: oddsWidth }}
             >
               Lay
             </div>
-            <div className="w-[114.688px]"></div>
-            <div className="w-[114.688px]"></div>
+            {!mobileView && (
+              <>
+                <div className="w-[114.688px]"></div>
+                <div className="w-[114.688px]"></div>
+              </>
+            )}
           </div>
         </div>
 
@@ -123,66 +134,74 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
                   </div>
 
                   {/* Odds Area */}
-                  <div className="relative flex w-[688.128px] h-[42px]">
-                    {/* Back 3 */}
-                    <div
-                      className="flex flex-col items-center justify-center bg-[#e4eff6] cursor-pointer hover:opacity-80 transition-opacity border-r border-white/50"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
-                      onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3, idx)}
-                    >
-                      <span className="font-bold">{rates?.back?.p3 || '-'}</span>
-                      <span className="text-[10px] text-gray-500">{rates?.back?.v3 || '-'}</span>
-                    </div>
+                  <div className="relative flex h-[42px]" style={{ width: tableOddsWidth }}>
+                    {!mobileView && (
+                      <>
+                        {/* Back 3 */}
+                        <div
+                          className="flex flex-col items-center justify-center bg-[#e4eff6] cursor-pointer hover:opacity-80 transition-opacity border-r border-white/50"
+                          style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                          onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3, idx)}
+                        >
+                          <span className="font-bold">{rates?.back?.p3 || '-'}</span>
+                          <span className="text-[10px] text-gray-500">{rates?.back?.v3 || '-'}</span>
+                        </div>
 
-                    {/* Back 2 */}
-                    <div
-                      className="flex flex-col items-center justify-center bg-[#cfe3f1] cursor-pointer hover:opacity-80 transition-opacity border-r border-white/50"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
-                      onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p2, idx)}
-                    >
-                      <span className="font-bold">{rates?.back?.p2 || '-'}</span>
-                      <span className="text-[10px] text-gray-500">{rates?.back?.v2 || '-'}</span>
-                    </div>
+                        {/* Back 2 */}
+                        <div
+                          className="flex flex-col items-center justify-center bg-[#cfe3f1] cursor-pointer hover:opacity-80 transition-opacity border-r border-white/50"
+                          style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                          onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p2, idx)}
+                        >
+                          <span className="font-bold">{rates?.back?.p2 || '-'}</span>
+                          <span className="text-[10px] text-gray-500">{rates?.back?.v2 || '-'}</span>
+                        </div>
+                      </>
+                    )}
 
                     {/* Back 1 (Main) */}
                     <div
                       className="flex flex-col items-center justify-center bg-[#72bbef] border border-white cursor-pointer hover:opacity-80 transition-opacity"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: oddsWidth, height: '42px', boxSizing: 'border-box' }}
                       onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p1, idx)}
                     >
-                      <span className="font-bold">{rates?.back?.p1 || '-'}</span>
+                      <span className="font-bold text-[14px]">{rates?.back?.p1 || '-'}</span>
                       <span className="text-[10px]">{rates?.back?.v1 || '-'}</span>
                     </div>
 
                     {/* Lay 1 (Main) */}
                     <div
                       className="flex flex-col items-center justify-center bg-[#faa9ba] border border-white cursor-pointer hover:opacity-80 transition-opacity"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: oddsWidth, height: '42px', boxSizing: 'border-box' }}
                       onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p1, idx)}
                     >
-                      <span className="font-bold">{rates?.lay?.p1 || '-'}</span>
+                      <span className="font-bold text-[14px]">{rates?.lay?.p1 || '-'}</span>
                       <span className="text-[10px]">{rates?.lay?.v1 || '-'}</span>
                     </div>
 
-                    {/* Lay 2 */}
-                    <div
-                      className="flex flex-col items-center justify-center bg-[#f2cfd5] cursor-pointer hover:opacity-80 transition-opacity border-l border-white/50"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
-                      onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2, idx)}
-                    >
-                      <span className="font-bold">{rates?.lay?.p2 || '-'}</span>
-                      <span className="text-[10px] text-gray-500">{rates?.lay?.v2 || '-'}</span>
-                    </div>
+                    {!mobileView && (
+                      <>
+                        {/* Lay 2 */}
+                        <div
+                          className="flex flex-col items-center justify-center bg-[#f2cfd5] cursor-pointer hover:opacity-80 transition-opacity border-l border-white/50"
+                          style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                          onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2, idx)}
+                        >
+                          <span className="font-bold">{rates?.lay?.p2 || '-'}</span>
+                          <span className="text-[10px] text-gray-500">{rates?.lay?.v2 || '-'}</span>
+                        </div>
 
-                    {/* Lay 3 */}
-                    <div
-                      className="flex flex-col items-center justify-center bg-[#f6e3e7] cursor-pointer hover:opacity-80 transition-opacity border-l border-white/50"
-                      style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
-                      onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p3, idx)}
-                    >
-                      <span className="font-bold">{rates?.lay?.p3 || '-'}</span>
-                      <span className="text-[10px] text-gray-500">{rates?.lay?.v3 || '-'}</span>
-                    </div>
+                        {/* Lay 3 */}
+                        <div
+                          className="flex flex-col items-center justify-center bg-[#f6e3e7] cursor-pointer hover:opacity-80 transition-opacity border-l border-white/50"
+                          style={{ fontFamily: 'Tahoma, Helvetica, sans-serif', fontSize: '12px', lineHeight: '15px', fontWeight: 400, letterSpacing: 'normal', color: '#1E1E1E', width: '114.688px', height: '42px', boxSizing: 'border-box' }}
+                          onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p3, idx)}
+                        >
+                          <span className="font-bold">{rates?.lay?.p3 || '-'}</span>
+                          <span className="text-[10px] text-gray-500">{rates?.lay?.v3 || '-'}</span>
+                        </div>
+                      </>
+                    )}
 
                     {/* Single Suspension Overlay across all 6 cells */}
                     {isSuspended && (
@@ -200,6 +219,7 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
                       selection={selectedBet}
                       matchId={marketId}
                       onCancel={onCancelBet}
+                      mobileView={mobileView}
                     />
                   </div>
                 )}
