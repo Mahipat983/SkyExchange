@@ -196,14 +196,14 @@ function BetsHistoryPage() {
 
   const renderBetsHistory = () => (
     <div className="bets-container">
-      <div className="filter-bar" style={{ display: 'flex', gap: '15px', marginBottom: '20px', alignItems: 'center', background: '#e4e4e4', padding: '15px', borderRadius: '4px', border: '1px solid #7e97a7' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div className="bets-history-filter" style={{ display: 'flex', flexWrap: 'wrap', gap: '15px', marginBottom: '20px', alignItems: 'center', background: '#e4e4e4', padding: '15px', borderRadius: '4px', border: '1px solid #7e97a7' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', flex: '1 1 auto' }}>
           <span style={{ fontSize: '12px', fontWeight: 'bold', color: '#333' }}>Period:</span>
-          <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+          <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc', minWidth: '130px' }} />
           <span style={{ color: '#666' }}>to</span>
-          <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }} />
+          <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc', minWidth: '130px' }} />
         </div>
-        <button onClick={fetchHistoryAndPL} style={{ background: '#3b5160', border: 'none', color: '#fff', padding: '7px 25px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', textTransform: 'uppercase' }}>Get History</button>
+        <button className="get-history-btn" onClick={fetchHistoryAndPL} style={{ background: '#3b5160', border: 'none', color: '#fff', padding: '7px 25px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', textTransform: 'uppercase', minWidth: '150px' }}>Get History</button>
       </div>
 
       <div className="data-table-wrapper" style={{ border: '1px solid #7e97a7', borderRadius: '4px', overflow: 'hidden' }}>
@@ -242,22 +242,22 @@ function BetsHistoryPage() {
 
   const renderProfitAndLoss = () => (
     <div className="pnl-container">
-      <div className="filter-bar" style={{ display: 'flex', gap: '20px', marginBottom: '25px', alignItems: 'center', background: '#fff', border: '1px solid #7e97a7', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)' }}>
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '20px' }}>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+      <div className="pnl-filter-bar" style={{ display: 'flex', gap: '20px', marginBottom: '25px', alignItems: 'center', background: '#fff', border: '1px solid #7e97a7', padding: '20px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', flexWrap: 'wrap' }}>
+        <div className="pnl-date-inputs" style={{ flex: '1 1 300px', display: 'flex', alignItems: 'center', gap: '20px', flexWrap: 'wrap' }}>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: '1 1 140px' }}>
               <span style={{ fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>Start Period</span>
-              <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold' }} />
+              <input type="date" value={plStartDate} onChange={e => setPlStartDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold', width: '100%' }} />
            </div>
-           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', flex: '1 1 140px' }}>
               <span style={{ fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }}>End Period</span>
-              <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold' }} />
+              <input type="date" value={plEndDate} onChange={e => setPlEndDate(e.target.value)} style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ddd', fontSize: '13px', color: '#3b5160', fontWeight: 'bold', width: '100%' }} />
            </div>
         </div>
-        <div style={{ textAlign: 'right', padding: '0 20px', borderLeft: '1px solid #eee' }}>
+        <div className="pnl-net-section" style={{ textAlign: 'right', padding: '0 20px', borderLeft: '1px solid #eee', minWidth: '150px' }}>
            <span style={{ display: 'block', fontSize: '10px', color: '#7e97a7', fontWeight: 'bold', marginBottom: '4px', textTransform: 'uppercase' }}>Net Profit/Loss</span>
            <span style={{ fontSize: '20px', fontWeight: '900', color: totalPL >= 0 ? '#508d0e' : '#c0392b' }}>PTH {totalPL.toLocaleString()}</span>
         </div>
-        <button onClick={fetchHistoryAndPL} style={{ background: '#3b5160', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', transition: 'all', textTransform: 'uppercase', letterSpacing: '1px' }}>Apply Filter</button>
+        <button className="pnl-apply-btn" onClick={fetchHistoryAndPL} style={{ background: '#3b5160', color: '#fff', border: 'none', padding: '12px 30px', borderRadius: '4px', fontWeight: 'bold', cursor: 'pointer', transition: 'all', textTransform: 'uppercase', letterSpacing: '1px', flex: '1 1 auto' }}>Apply Filter</button>
       </div>
 
       <div className="pnl-cards" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>

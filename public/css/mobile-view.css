@@ -895,4 +895,51 @@
     display: none !important;
   }
 
+  /* Bets History & P&L Responsive Fixes */
+  .bets-history-filter {
+    padding: 10px !important;
+  }
+
+  .bets-history-filter > div {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .get-history-btn {
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  .pnl-filter-bar {
+    padding: 15px !important;
+    gap: 15px !important;
+  }
+
+  .pnl-date-inputs {
+    flex: 1 1 100% !important;
+    gap: 10px !important;
+  }
+
+  .pnl-net-section {
+    flex: 1 1 100% !important;
+    text-align: left !important;
+    padding: 10px 0 !important;
+    border-left: none !important;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .pnl-apply-btn {
+    width: 100%;
+  }
+
+  /* Table responsiveness */
+  .data-table-wrapper {
+    overflow-x: auto !important;
+  }
+
+  .data-table-wrapper table {
+    min-width: 450px;
+  }
+
 }
