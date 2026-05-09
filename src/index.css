@@ -339,11 +339,16 @@ body {
 /* sub tabs (In-Play | Today | Tomorrow and Search) */
 .subtabs {
   display: flex;
-  width: 320px;
+  width: 100%;
+  max-width: 320px;
   border-radius: 4px 4px 0 0;
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
   background-color: #172832;
+}
+
+.subtab:last-of-type {
+  border-right: none;
 }
 
 .subtab {

@@ -8493,8 +8493,6 @@ hr {
 }
 
 .player .bets-wrap {
-  *height: auto !important;
-  *height: 650px;
   min-height: 650px;
   margin-bottom: 10px;
 }
@@ -25256,8 +25254,6 @@ hr {
 }
 
 .player .bets-wrap {
-  *height: auto !important;
-  *height: 650px;
   min-height: 650px;
   margin-bottom: 10px;
 }

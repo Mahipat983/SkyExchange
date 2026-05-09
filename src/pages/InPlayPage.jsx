@@ -466,7 +466,6 @@ function InPlayPage() {
             <div className={`subtab ${activeTab === 'inplay' ? 'active' : ''}`} onClick={() => setActiveTab('inplay')}>In-Play</div>
             <div className={`subtab ${activeTab === 'today' ? 'active' : ''}`} onClick={() => setActiveTab('today')}>Today</div>
             <div className={`subtab ${activeTab === 'tomorrow' ? 'active' : ''}`} onClick={() => setActiveTab('tomorrow')}>Tomorrow</div>
-            <div className="subtab-search"></div>
           </div>
 
           <div className="tab-content" style={{ display: activeTab === 'inplay' ? 'block' : 'none' }}>
