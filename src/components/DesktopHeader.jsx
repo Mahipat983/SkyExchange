@@ -460,6 +460,9 @@ function DesktopHeader() {
               <li className="li-login">
                 <a className="btn-login" onClick={validateLogin} style={{ cursor: 'pointer' }}>{loading ? '...' : 'Login'}<img className="icon-login" src="/images/transparent.gif" alt="" /></a>
               </li>
+              <li className="li-login">
+                <a className="btn-login" style={{ cursor: 'pointer', marginLeft: '5px' }}>Demo</a>
+              </li>
               <li className="li-signup">
                 <a 
                   className="btn-signup" 

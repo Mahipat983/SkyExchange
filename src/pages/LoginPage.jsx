@@ -97,7 +97,7 @@ function LoginPage() {
           <form className="login-form" onSubmit={handleLogin}>
             <input
               type="text"
-              placeholder="Username"
+              placeholder="kabira00025"
               className="form-input"
               value={loginName}
               onChange={(e) => setLoginName(e.target.value)}
@@ -125,9 +125,10 @@ function LoginPage() {
             <div className="forgot-password-wrap">
               <a href="#" className="forgot-password-link">Forgot Password?</a>
             </div>
-            <button type="submit" className="login-btn">Login</button>
-            
-            <button type="button" className="demo-login-btn">Demo Login</button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="submit" className="login-btn" style={{ flex: 1 }}>Login</button>
+              <button type="button" className="login-btn" style={{ flex: 1 }}>Demo</button>
+            </div>
 
             <div className="signup-prompt">
               Don't have an account? <a href="/signup" className="signup-link">Sign up</a>

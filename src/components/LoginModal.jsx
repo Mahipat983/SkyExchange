@@ -73,7 +73,7 @@ function LoginModal({ isOpen, onClose }) {
           <form onSubmit={handleLogin} className="login-modal-form">
             <input
               type="text"
-              placeholder="Username"
+              placeholder="kabira00025"
               className="login-modal-input"
               value={loginName}
               onChange={(e) => setLoginName(e.target.value)}
@@ -102,9 +102,14 @@ function LoginModal({ isOpen, onClose }) {
                 {validationCode}
               </span>
             </div>
-            <button type="submit" className="login-modal-btn">
-              Login<span className="login-modal-btn-icon">🚪</span>
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="submit" className="login-modal-btn" style={{ flex: 1 }}>
+                Login<span className="login-modal-btn-icon">🚪</span>
+              </button>
+              <button type="button" className="login-modal-btn" style={{ flex: 1 }}>
+                Demo<span className="login-modal-btn-icon">🚪</span>
+              </button>
+            </div>
           </form>
         </div>
       </div>

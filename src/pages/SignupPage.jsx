@@ -154,7 +154,7 @@ function SignupPage() {
 
             <input
               type="text"
-              placeholder="Username"
+              placeholder="kabira00025"
               className="form-input"
               value={username}
               onChange={(e) => setUsername(e.target.value)}

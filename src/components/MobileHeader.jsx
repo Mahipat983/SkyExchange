@@ -148,7 +148,7 @@ function MobileHeader() {
 
   const accountMenuItems = [
     { label: 'My Profile', to: '/profile', icon: '👤' },
-    { label: 'Balance Overview', to: '/balance-overview', icon: '💰' },
+    { label: 'Balance Overview', to: '/balance-overview', icon: '👛' },
     { label: 'Account Statement', to: '/statement', icon: '📄' },
     { label: 'My Bets', to: '/bets?tab=current', icon: '🎯' },
     { label: 'Bets History', to: '/bets?tab=history', icon: '📋' },
@@ -463,6 +463,7 @@ function MobileHeader() {
           <div className="btn-wrap">
             <Link className="btn-signup ui-link" to="/signup">Sign up</Link>
             <Link className="login-index ui-link" to="/login">Login</Link>
+            <button className="login-index ui-link" style={{ background: 'linear-gradient(180deg, #555, #333)', marginLeft: '5px' }}>Demo</button>
           </div>
         ) : (
           /* ===== LOGGED IN: Bets | Search | Wallet | Setting | User ===== */
@@ -638,7 +639,7 @@ function MobileHeader() {
             <div className="mhdr-sidebar-header">
               <div className="mhdr-sidebar-username">{username}</div>
               <div className="mhdr-sidebar-balance">
-                Balance: <strong>USD {balance}</strong>
+                Balance: <strong>{balance}</strong>
                 &nbsp;&nbsp;Exposure: <strong>{exposure}</strong>
               </div>
             </div>
