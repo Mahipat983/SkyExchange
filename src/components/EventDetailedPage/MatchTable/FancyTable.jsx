@@ -13,7 +13,6 @@ import InlineBetBox from './InlineBetBox';
  * - Each row: market name | no cell (pink) | yes cell (blue) | Min/Max info
  */
 
-const FILTER_TABS = ['All', 'Fancy', 'Ball by Ball', 'Khadda', 'Lottery', 'Odd/Even'];
 
 const DEMO_MARKETS = [
   { id: 1, name: '20 Over UAE', no: 137, noRate: 100, yes: 139, yesRate: 100, min: '1.00', max: '781.00' },
@@ -44,7 +43,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
         yesRate: '-',
         min: m.min,
         max: m.max,
-        subType: m.SubType,
+        subType: (m.SubType || m.subtype || '').toUpperCase(),
         Type: m.Type,
         msg: combinedMsg,
         Chart: m.Chart,
@@ -54,18 +53,62 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
     })
     : DEMO_MARKETS;
 
+  // Map of API SubType to Display Tab Name
+  const SUBTYPE_MAP = {
+    'SINGLE_OVER': 'Ball by Ball',
+    'OVERS': 'Over',
+    'BATSMAN': 'Batsman',
+    'KHADDA': 'Khadda',
+    'LOTTERY': 'Lottery',
+    'ODD_EVEN': 'Odd/Even'
+  };
+
+  // Determine dynamic tabs based on allMarkets data
+  const dynamicTabs = ['All'];
+  const foundSubTypes = new Set();
+  
+  allMarkets.forEach(m => {
+    let tabName = SUBTYPE_MAP[m.subType];
+    
+    // Fallback for names
+    if (!tabName) {
+      const lowerName = m.name?.toLowerCase() || '';
+      if (lowerName.includes('odd run bhav')) tabName = 'Odd/Even';
+      else if (lowerName.includes('khadda')) tabName = 'Khadda';
+      else if (lowerName.includes('lottery')) tabName = 'Lottery';
+    }
+    
+    if (tabName) {
+      foundSubTypes.add(tabName);
+    } else {
+      foundSubTypes.add('Fancy');
+    }
+  });
+
+  // Add tabs in preferred order if they exist
+  const tabOrder = ['Fancy', 'Over', 'Batsman', 'Ball by Ball', 'Khadda', 'Lottery', 'Odd/Even'];
+  tabOrder.forEach(tab => {
+    if (foundSubTypes.has(tab)) {
+      dynamicTabs.push(tab);
+    }
+  });
+
   const markets = allMarkets.filter(m => {
     if (activeTab === 'All') return true;
-    if (activeTab === 'Ball by Ball') return m.subType === 'SINGLE_OVER';
-    if (activeTab === 'Odd/Even') return m.name?.toLowerCase().includes('odd run bhav');
-    if (activeTab === 'Fancy') {
-      const isBallByBall = m.subType === 'SINGLE_OVER';
-      const isOddEven = m.name?.toLowerCase().includes('odd run bhav');
-      return !isBallByBall && !isOddEven;
+    
+    let mTabName = SUBTYPE_MAP[m.subType];
+    if (!mTabName) {
+      const lowerName = m.name?.toLowerCase() || '';
+      if (lowerName.includes('odd run bhav')) mTabName = 'Odd/Even';
+      else if (lowerName.includes('khadda')) mTabName = 'Khadda';
+      else if (lowerName.includes('lottery')) mTabName = 'Lottery';
     }
-    if (activeTab === 'Khadda') return m.name?.toLowerCase().includes('khadda');
-    if (activeTab === 'Lottery') return m.name?.toLowerCase().includes('lottery');
-    return false;
+    
+    if (activeTab === 'Fancy') {
+      return !mTabName || mTabName === 'Fancy';
+    }
+    
+    return mTabName === activeTab;
   });
 
   const suspensionOverlayStyle = {
@@ -163,7 +206,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           gap: '0',
           height: '24px',
         }}>
-          {FILTER_TABS.map((tab) => (
+          {dynamicTabs.map((tab) => (
             <li
               key={tab}
               onClick={() => setActiveTab(tab)}

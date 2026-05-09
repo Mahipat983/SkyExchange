@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
@@ -10,34 +10,35 @@ function SignupPage() {
   const [password, setPassword] = useState('');
   const [mobile, setMobile] = useState('');
   const [otp, setOtp] = useState('');
-  const [promoCode, setPromoCode] = useState('');
+  const [campaignCode, setCampaignCode] = useState('');
+  const [isOtpMode, setIsOtpMode] = useState(false);
+  const [isAgreed, setIsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [otpStatus, setOtpStatus] = useState('');
-  const [userCheckStatus, setUserCheckStatus] = useState('');
   
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
   const showSnackbar = useSnackbarStore(state => state.show);
 
-  const checkUsernameAvailability = async () => {
-    if (!username.trim()) return;
-    try {
-      const resp = await authController.checkUsername(username);
-      setUserCheckStatus(resp.msg || (resp.error === '0' ? 'Available' : 'Taken'));
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, []);
 
-   const handleSendOtp = async () => {
+  const handleSendOtp = async (e) => {
+    if (e) e.preventDefault();
     if (!mobile.trim()) { showSnackbar('Please enter mobile number', 'error'); return; }
+    if (!isAgreed) { showSnackbar('Please agree to terms and conditions', 'error'); return; }
+    
     try {
       setLoading(true);
       const resp = await authController.sendOtp(mobile);
       if (resp.error === '0') {
         showSnackbar(resp.msg || 'OTP Sent Successfully', 'success');
-        setOtpStatus('OTP Sent');
+        setIsOtpMode(true);
       } else {
         showSnackbar(resp.msg || 'Failed to send OTP', 'error');
       }
@@ -50,21 +51,29 @@ function SignupPage() {
   };
 
   const handleSignup = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
+    if (!isOtpMode) {
+      handleSendOtp();
+      return;
+    }
+    if (!otp) { showSnackbar('Please enter OTP', 'error'); return; }
+    if (!username) { showSnackbar('Please enter username', 'error'); return; }
+    if (!password) { showSnackbar('Please enter password', 'error'); return; }
+
     try {
       setLoading(true);
       const data = {
         username,
         password,
         mobile,
-        otp
+        otp,
+        campaignCode
       };
       
       const response = await authController.createUser(data);
 
       if (response.error === '0') {
         showSnackbar(response.msg || 'Signup Successful!', 'success');
-        // Ideally the createuser response contains a token, if so we login directly
         if (response.apitoken || response.LoginToken) {
             loginAction(response.username || username, response.apitoken || response.LoginToken);
             navigate('/');
@@ -85,50 +94,71 @@ function SignupPage() {
   return (
     <div className="login-page-wrap">
       <div className="mobile-container">
-        {/* Header with logo + background */}
         <div className="header-section">
-          <button
-            className="close-btn"
-            onClick={() => navigate(-1)}
-            aria-label="Close"
-          >
+          <button className="close-btn" onClick={() => navigate(-1)} aria-label="Close">
             <i className="fa-solid fa-xmark"></i>
           </button>
           <div className="logo-container">
-            <img src="/images/logo.png" width="170" alt="Sky247 Logo" className="logo-img" />
+            <img src="/images/logo.png" alt="Sky247 Logo" className="logo-img" />
           </div>
         </div>
 
-        {/* Signup Form */}
         <main className="content-section">
           <form className="login-form" onSubmit={handleSignup}>
             <div className="validation-input-wrapper">
-              <input
-                type="text"
-                placeholder="Username"
-                className="form-input"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                onBlur={checkUsernameAvailability}
-                required
-              />
-              <button
-                type="button"
-                onClick={checkUsernameAvailability}
-                className="captcha-code"
-                style={{
-                  background: '#ff7a00', color: '#fff', border: 'none', borderRadius: '4px', padding: '0 10px', height: '30px', marginTop: '5px'
-                }}
-              >
-                Check
-              </button>
+              {isOtpMode ? (
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%', position: 'relative' }}>
+                  <input
+                    type="text"
+                    placeholder="Enter OTP"
+                    className="form-input"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                  />
+                  <span 
+                    onClick={() => setIsOtpMode(false)}
+                    style={{ position: 'absolute', right: '15px', color: '#007bff', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
+                  >
+                    Change?
+                  </span>
+                </div>
+              ) : (
+                <div className="phone-input-group">
+                  <div className="country-code-picker">
+                    <img src="https://flagcdn.com/w20/in.png" alt="IN" />
+                    <span>+91</span>
+                    <span className="arrow-down">▼</span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Mobile Number"
+                    className="form-input"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                  />
+                </div>
+              )}
             </div>
 
-            {userCheckStatus && (
-              <p style={{ fontSize: '10px', color: userCheckStatus === 'Available' ? 'green' : 'red', marginTop: '-15px', marginBottom: '10px' }}>
-                {userCheckStatus}
-              </p>
-            )}
+            <div className="signup-modal-checkbox-row">
+              <input 
+                type="checkbox" 
+                id="terms" 
+                checked={isAgreed}
+                onChange={e => setIsAgreed(e.target.checked)}
+              />
+              <label htmlFor="terms">
+                I agree to the <a href="#" onClick={e => e.preventDefault()}>Terms and Conditions</a>
+              </label>
+            </div>
+
+            <input
+              type="text"
+              placeholder="Username"
+              className="form-input"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
 
             <div className="validation-input-wrapper">
               <input
@@ -137,91 +167,41 @@ function SignupPage() {
                 className="form-input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
               />
               <span
                 className="captcha-code"
                 onClick={() => setShowPassword(!showPassword)}
-                style={{ cursor: 'pointer', color: '#ff7a00', fontSize: '13px', fontWeight: 'bold' }}
+                style={{ cursor: 'pointer', color: '#333', fontSize: '16px' }}
               >
-                {showPassword ? "Hide" : "Show"}
+                <i className={`fas ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
               </span>
             </div>
 
-            <p
-              style={{
-                fontSize: '11px',
-                fontWeight: 900,
-                color: '#ff5100',
-                marginTop: '-5px',
-                marginBottom: '5px'
-              }}
-            >
-              (Must be contained alphanumeric and more than 6 letters)
-            </p>
+            <input
+              type="text"
+              placeholder="Campaign Code (Optional)"
+              className="form-input"
+              value={campaignCode}
+              onChange={(e) => setCampaignCode(e.target.value)}
+            />
 
-            <div className="validation-input-wrapper">
-              <input
-                type="text"
-                placeholder="Mobile No."
-                className="form-input"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-                required
-              />
-              <button
-                type="button"
-                onClick={handleSendOtp}
-                className="captcha-code"
-                disabled={loading}
-                style={{
-                  background: '#28a745', color: '#fff', border: 'none', borderRadius: '4px', padding: '0 8px', height: '30px', marginTop: '5px', fontSize: '11px'
-                }}
-              >
-                {otpStatus || 'Send OTP'}
-              </button>
+            <button type="submit" className="login-btn" disabled={loading}>
+              {loading ? 'Processing...' : (isOtpMode ? 'Sign Up' : 'Send OTP')}
+            </button>
+
+            <div className="signup-prompt">
+              Already have an account? <a href="/login" className="signup-link">Sign in</a>
             </div>
 
-            <input
-              type="text"
-              placeholder="One Time Password (OTP)"
-              className="form-input"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              required
-            />
-            <input
-              type="text"
-              placeholder="Enter Promo code"
-              className="form-input"
-              value={promoCode}
-              onChange={(e) => setPromoCode(e.target.value)}
-            />
-
-            {/* Button row */}
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? 'Processing...' : 'Signup'}
-            </button>
-
-            <button
-              type="button"
-              className="login-btn"
-              onClick={() => navigate('/login')}
-              style={{ marginTop: '10px' }}
-            >
-              Back to Login
-            </button>
+            <div className="extra-buttons-row">
+              <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
+                <i className="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="/download/app.apk" className="extra-btn apk-btn">
+                <i className="fas fa-download"></i> Download APK
+              </a>
+            </div>
           </form>
-
-          {/* Policy Links */}
-          <div className="footer-links" style={{ marginTop: '30px' }}>
-            <a href="#">Privacy Policy</a> |{' '}
-            <a href="#">Terms and Conditions</a> |{' '}
-            <a href="#">Rules and Regulations</a> | <a href="#">KYC</a> |{' '}
-            <a href="#">Responsible Gaming</a> | <a href="#">About Us</a> |{' '}
-            <a href="#">Self-exclusion Policy</a> |{' '}
-            <a href="#">Underage Policy</a>
-          </div>
         </main>
       </div>
     </div>

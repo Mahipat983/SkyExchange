@@ -7,23 +7,25 @@
 
 .login-page-wrap {
     background-color: #ffc629;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
 }
 
 .login-bg {
     background-color: #ffc629;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
 }
 
 .mobile-container {
     max-width: 480px;
-    /* Limit width to simulate mobile on desktop if needed */
     margin: 0 auto;
     background-color: #ffc629;
-    min-height: 100vh;
+    height: 100vh;
+    height: 100dvh;
     position: relative;
-    padding-bottom: 60px;
-    /* Space for bottom bar */
+    overflow: hidden;
 }
 
 
@@ -33,7 +35,7 @@
     background: url('/images/KV-pic-login.png');
     background-size: 100% 100%;
     background-position: center;
-    height: 300px;
+    height: 240px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -64,15 +66,14 @@
 
 .logo-container {
     text-align: center;
-    margin-top: -20px;
+    margin-top: 0;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
 .logo-img {
-    max-width: 200px;
-    /* Adjust based on preference, ensuring it fits well */
+    max-width: 160px;
     height: auto;
 }
 
@@ -80,7 +81,7 @@
 /* Content Section */
 
 .content-section {
-    padding: 20px 30px;
+    padding: 10px 25px;
 }
 
 
@@ -89,17 +90,99 @@
 .login-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 20px;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 .form-input {
     width: 100%;
-    padding: 12px 15px;
+    padding: 10px 15px;
     border-radius: 6px;
     border: none;
     font-size: 16px;
     outline: none;
+}
+
+.country-code-picker {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #eee;
+    padding: 0 10px;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    height: 44px;
+    border-right: 1px solid #ccc;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.country-code-picker img {
+    width: 20px;
+    height: auto;
+}
+
+.arrow-down {
+    font-size: 8px;
+    margin-left: 2px;
+}
+
+.phone-input-group {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.phone-input-group .form-input {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    flex: 1;
+    min-width: 0;
+}
+
+.form-input:focus {
+    padding: 10px 15px; /* Maintain padding on focus to prevent shrinking */
+}
+
+.signup-modal-checkbox-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin: 10px 0 !important;
+    position: relative !important;
+    z-index: 9999 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.signup-modal-checkbox-row input[type="checkbox"] {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    min-height: 22px !important;
+    flex-shrink: 0 !important;
+    cursor: pointer !important;
+    appearance: checkbox !important;
+    -webkit-appearance: checkbox !important;
+    accent-color: #000 !important;
+    margin: 0 !important;
+    position: relative !important;
+    z-index: 10000 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    border: 2px solid #000 !important;
+    outline: none !important;
+}
+
+.signup-modal-checkbox-row label {
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+    user-select: none;
+    line-height: 1.2;
 }
 
 .validation-input-wrapper {
@@ -127,6 +210,77 @@
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     margin-top: 5px;
+}
+
+.demo-login-btn {
+    background: linear-gradient(to bottom, #333, #000);
+    color: #ffc629;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.extra-buttons-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.extra-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 5px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    color: #fff;
+    text-decoration: none;
+}
+
+.whatsapp-btn {
+    background-color: #25D366;
+}
+
+.apk-btn {
+    background-color: #007bff;
+}
+
+.forgot-password-wrap {
+    text-align: right;
+    margin-top: -5px;
+    margin-bottom: 5px;
+}
+
+.forgot-password-link {
+    color: #333;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-prompt {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #333;
+}
+
+.signup-link {
+    color: #1a8a8a;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
 }
 
 

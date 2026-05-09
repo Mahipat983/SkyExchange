@@ -18,7 +18,13 @@ function LoginPage() {
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
   useEffect(() => {
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     setValidationCode(generateCode());
+    
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
   }, []);
 
   const handleLogin = async (e) => {
@@ -116,74 +122,30 @@ function LoginPage() {
                 {validationCode}
               </span>
             </div>
+            <div className="forgot-password-wrap">
+              <a href="#" className="forgot-password-link">Forgot Password?</a>
+            </div>
             <button type="submit" className="login-btn">Login</button>
+            
+            <button type="button" className="demo-login-btn">Demo Login</button>
+
+            <div className="signup-prompt">
+              Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
+            </div>
+            
+            <div className="extra-buttons-row">
+              <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
+                <i className="fab fa-whatsapp"></i> WhatsApp
+              </a>
+              <a href="/download/app.apk" className="extra-btn apk-btn">
+                <i className="fas fa-download"></i> Download APK
+              </a>
+            </div>
           </form>
 
-          {/* Policy Links */}
-          <div className="footer-links">
-            <a href="#">Privacy Policy</a> |{' '}
-            <a href="#">Terms and Conditions</a> |{' '}
-            <a href="#">Rules and Regulations</a> | <a href="#">KYC</a> |{' '}
-            <a href="#">Responsible Gaming</a> | <a href="#">About Us</a> |{' '}
-            <a href="#">Self-Exclusion Policy</a> |{' '}
-            <a href="#">Underage Policy</a>
-          </div>
-
-          {/* Support Section */}
-          <div className="support-section">
-            <div className="support-card full-width">
-              <div className="icon-circle">
-                <img src="/images/transparent.gif" className="support-customer" alt="" style={{ width: '24px', height: '24px' }} />
-              </div>
-              <div className="support-text">
-                <span>Customer support1</span>
-                <span className="separator">|</span>
-                <span>support2</span>
-              </div>
-            </div>
-
-            <div className="support-card full-width">
-              <div className="icon-circle">
-                <img src="/images/transparent.gif" className="support-whatsapp" alt="" style={{ width: '24px', height: '24px' }} />
-              </div>
-              <div className="support-text">
-                <span>WhatsApp 3</span>
-                <span className="separator">|</span>
-                <span>WhatsApp 4</span>
-              </div>
-            </div>
-
-            <div className="spacer-bar"></div>
-
-            <div className="support-grid">
-              <div className="support-card small">
-                <img src="/images/transparent.gif" className="support-skype" alt="" style={{ width: '20px', height: '20px' }} />
-                <span>Skype</span>
-              </div>
-              <div className="support-card small">
-                <img src="/images/transparent.gif" className="support-mail" alt="" style={{ width: '20px', height: '20px' }} />
-                <span>Email</span>
-              </div>
-              <div className="support-card small">
-                <img src="/images/transparent.gif" className="support-ig" alt="" style={{ width: '20px', height: '20px' }} />
-                <span>Sky247india</span>
-              </div>
-            </div>
-          </div>
         </main>
-
-        {/* Bottom Support Bar */}
-        <footer className="bottom-support-bar">
-          <div className="support-bar-content">
-            <img src="/images/transparent.gif" className="support-customer" alt="" style={{ width: '18px', height: '18px' }} />
-            <span>Customer support1</span>
-            <span className="separator">|</span>
-            <span>support2</span>
-          </div>
-        </footer>
       </div>
     </div>
-
   );
 }
 
