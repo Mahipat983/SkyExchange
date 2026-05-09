@@ -75,8 +75,12 @@ function MobileMatchRow({ match, sport }) {
         {/* Row 3: Time | Status */}
         <div className="match-status-row">
           <span className="match-time">{formatDateTime(parseDate(match.startTime))}</span>
-          <span className="pipe">|</span>
-          <span className={`match-status ${isLive ? 'inplay' : ''}`}>{match.status}</span>
+          {isLive && (
+            <>
+              <span className="pipe">|</span>
+              <span className="match-status inplay">{match.status}</span>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -122,9 +122,9 @@ function AccountStatementPage() {
       <div className="filters-row" style={{ display: 'flex', gap: '15px', marginBottom: '20px', alignItems: 'flex-end', flexWrap: 'wrap', background: '#fcfcfc', padding: '15px', borderRadius: '12px', border: '1px solid #eee' }}>
         <div className="filter-group">
           <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', color: '#999', marginBottom: '6px' }}>From</label>
-          <input 
-            type="date" 
-            value={startDate} 
+          <input
+            type="date"
+            value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             className="filter-input"
             style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '13px' }}
@@ -132,24 +132,49 @@ function AccountStatementPage() {
         </div>
         <div className="filter-group">
           <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', color: '#999', marginBottom: '6px' }}>To</label>
-          <input 
-            type="date" 
-            value={endDate} 
+          <input
+            type="date"
+            value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             className="filter-input"
             style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #ddd', fontSize: '13px' }}
           />
         </div>
-        <button 
+        <div className="filter-group">
+          <label style={{ display: 'block', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', color: '#999', marginBottom: '6px' }}>Type</label>
+          <select
+            value={activeFilter}
+            onChange={(e) => setActiveFilter(e.target.value)}
+            style={{
+              padding: '0 12px',
+              height: '38px',
+              borderRadius: '6px',
+              border: '1px solid #ddd',
+              fontSize: '14px',
+              background: '#fff',
+              cursor: 'pointer',
+              minWidth: '120px',
+              color: '#333',
+              lineHeight: '38px'
+            }}
+          >
+            <option value="All">All</option>
+            <option value="Deposit">Deposit</option>
+            <option value="Withdraw">Withdraw</option>
+            <option value="Win">Win</option>
+            <option value="Loss">Loss</option>
+          </select>
+        </div>
+        <button
           onClick={fetchStatement}
           className="btn-search"
-          style={{ 
-            padding: '9px 25px', 
-            background: '#ffb400', 
+          style={{
+            padding: '9px 25px',
+            background: '#ffb400',
             color: '#000',
-            border: 'none', 
-            borderRadius: '6px', 
-            fontWeight: '900', 
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: '900',
             textTransform: 'uppercase',
             fontSize: '12px',
             cursor: 'pointer',
@@ -160,18 +185,6 @@ function AccountStatementPage() {
         >
           {loading ? 'Searching...' : 'Search'}
         </button>
-      </div>
-
-      <div className="statement-tabs-container">
-        {['All', 'Deposit', 'Withdraw', 'Win', 'Loss'].map(filter => (
-          <div 
-            key={filter}
-            className={`statement-tab ${activeFilter === filter ? 'active' : ''}`}
-            onClick={() => setActiveFilter(filter)}
-          >
-            {filter}
-          </div>
-        ))}
       </div>
 
       <div className="data-table-wrapper" style={{ boxShadow: '0 4px 15px rgba(0,0,0,0.05)', borderRadius: '12px', overflow: 'hidden' }}>
@@ -190,29 +203,41 @@ function AccountStatementPage() {
               filteredData.map((row, idx) => {
                 const date = row["0"];
                 const amount = parseFloat(row["1"]);
-                const type = row["2"]; 
+                const type = row["2"];
                 const remark = row["3"];
                 const gid = row["4"];
                 const txInfo = getTxTypeLabel(type, remark);
 
                 return (
-                  <tr 
-                    key={idx} 
+                  <tr
+                    key={idx}
                     onClick={() => handleTransactionClick(row)}
                     style={{ cursor: gid ? 'pointer' : 'default', transition: 'background 0.2s' }}
                     className={gid ? 'hover-row' : ''}
                   >
-                    <td style={{ textAlign: 'left', padding: '15px' }}>
-                      <div style={{ fontSize: '13px', fontWeight: '600' }}>{date}</div>
-                      {gid && <div style={{ fontSize: '10px', color: '#ffb400', fontWeight: '800', marginTop: '2px' }}>ID: {gid}</div>}
+                    <td style={{ textAlign: 'left', padding: '10px 15px' }}>
+                      <div style={{ fontSize: '12px', fontWeight: '700', color: '#1a2d3b', whiteSpace: 'nowrap' }}>
+                        {row["0"]?.split(' ')[0]}
+                      </div>
+                      <div style={{ fontSize: '11px', color: '#777', fontWeight: '600', marginTop: '2px', whiteSpace: 'nowrap' }}>
+                        {(() => {
+                          const timeStr = row["0"]?.split(' ')[1];
+                          if (!timeStr) return '';
+                          let [h, m, s] = timeStr.split(':');
+                          h = parseInt(h);
+                          const ampm = h >= 12 ? 'PM' : 'AM';
+                          h = h % 12 || 12;
+                          return `${h}:${m} ${ampm}`;
+                        })()}
+                      </div>
                     </td>
                     <td style={{ textAlign: 'center' }}>
                       <span className={`tx-type-badge ${txInfo.class}`}>{txInfo.label}</span>
                     </td>
-                    <td style={{ textAlign: 'right', fontWeight: '800', color: (type === 'CR' || type === 'O') ? '#2ecc71' : '#e74c3c' }}>
+                    <td style={{ textAlign: 'right', fontWeight: '800', whiteSpace: 'nowrap', color: (type === 'CR' || type === 'O') ? '#2ecc71' : '#e74c3c' }}>
                       {(type === 'CR' || type === 'O') ? '+' : '-'}₹{Math.abs(amount).toLocaleString()}
                     </td>
-                    <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#666' }}>
+                    <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#666', whiteSpace: 'nowrap' }}>
                       {type === 'O' ? amount.toLocaleString() : '-'}
                     </td>
                     <td style={{ textAlign: 'left', fontSize: '12px', color: '#555' }} dangerouslySetInnerHTML={{ __html: remark }}></td>
@@ -280,17 +305,17 @@ function AccountStatementPage() {
                         </div>
                       </div>
                     ))}
-                  
-                  <button 
+
+                  <button
                     onClick={() => setIsModalOpen(false)}
-                    style={{ 
-                      width: '100%', 
-                      padding: '12px', 
-                      background: '#1a2d3b', 
-                      color: '#fff', 
-                      border: 'none', 
-                      borderRadius: '8px', 
-                      fontWeight: '800', 
+                    style={{
+                      width: '100%',
+                      padding: '12px',
+                      background: '#1a2d3b',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontWeight: '800',
                       marginTop: '10px',
                       cursor: 'pointer'
                     }}
@@ -306,6 +331,9 @@ function AccountStatementPage() {
 
       <style>{`
         .hover-row:hover { background: #fffcf0 !important; }
+        .bet-detail-header { background: #1a2d3b; color: #fff; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .bet-detail-header h3 { margin: 0; background : transparent; font-size: 16px; font-weight: 800; color: #fff !important; text-transform: uppercase; letter-spacing: 0.5px; }
+        .bet-detail-close { background: none; border: none; color: #fff; font-size: 28px; cursor: pointer; line-height: 1; padding: 0; }
         .ios-spinner { display: inline-block; position: relative; width: 40px; height: 40px; }
         .ios-spinner div { transform-origin: 20px 20px; animation: ios-spinner 1.2s linear infinite; }
         .ios-spinner div:after { content: " "; display: block; position: absolute; top: 3px; left: 18px; width: 3px; height: 10px; border-radius: 20%; background: #ffb400; }
