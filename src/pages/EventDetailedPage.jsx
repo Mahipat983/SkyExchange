@@ -179,9 +179,9 @@ const EventDetailedPage = () => {
       console.log('Toggling favourite for EID:', eidToUse);
       const res = await marketController.toggleFavourite(loginToken, eidToUse.toString());
       if (res && res.error === '0') {
-        showSnackbar(res.msg || 'Favourite updated', 'success');
+        showSnackbar('Event added in Multi Market', 'success');
       } else {
-        showSnackbar(res?.msg || 'Failed to update favourite', 'error');
+        showSnackbar('Failed to add in Multi Market', 'error');
       }
     } catch (err) {
       console.error('Favourite error:', err);

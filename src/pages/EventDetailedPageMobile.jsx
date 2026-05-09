@@ -148,9 +148,14 @@ const EventDetailedPageMobile = () => {
       const eidToUse = gameData?.events?.['0']?.eid || gameData?.eid || matchId;
       const res = await marketController.toggleFavourite(loginToken, eidToUse.toString());
       if (res && res.error === '0') {
-        showSnackbar(res.msg || 'Favourite updated', 'success');
+        showSnackbar('Event added in Multi Market', 'success');
+      } else {
+        showSnackbar('Failed to add in Multi Market', 'error');
       }
-    } catch (err) { console.error(err); }
+    } catch (err) { 
+      console.error(err); 
+      showSnackbar('Failed to add in Multi Market', 'error');
+    }
   };
 
   const toggleTv = async () => {
