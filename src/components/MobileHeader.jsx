@@ -584,7 +584,7 @@ function MobileHeader() {
 
           <div className="mhdr-settings-content">
             <div className="mhdr-stake-section">
-              <h3 style={{ margin: '0 0 15px', fontSize: '15px', color: '#1a2a35' }}>Edit Stake Buttons</h3>
+              <h3 style={{ margin: '0 0 15px', fontSize: '15px', color: '#fff', fontWeight: '800', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Edit Stake Buttons</h3>
 
               <div className="mhdr-stake-grid-header">
                 <span>Label</span>

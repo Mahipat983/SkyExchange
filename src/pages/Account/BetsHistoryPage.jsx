@@ -182,7 +182,7 @@ function BetsHistoryPage() {
                   </td>
                   <td style={{ padding: '12px', textAlign: 'center', fontWeight: '900', color: '#ffb400' }}>{bet.Rate}</td>
                   <td style={{ padding: '12px', textAlign: 'center', fontWeight: 'bold' }}>₹{parseFloat(bet.Stake).toLocaleString()}</td>
-                  <td style={{ padding: '12px', textAlign: 'right', color: '#888', fontSize: '11px' }}>{bet.Date || bet.datetime}</td>
+                  <td style={{ padding: '12px', textAlign: 'right', color: '#666', fontSize: '11px' }}>{formatTime12h(bet.Date || bet.datetime)}</td>
                 </tr>
               ))
             ) : (
@@ -251,7 +251,7 @@ function BetsHistoryPage() {
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid #eee', fontSize: '13px' }}>
                     <td style={{ padding: '12px', fontWeight: 'bold', color: '#3b5160' }}>{row.GameName}</td>
-                    <td style={{ padding: '12px', textAlign: 'right', color: '#888', fontSize: '11px' }}>{row.DateTime}</td>
+                    <td style={{ padding: '12px', textAlign: 'right', color: '#666', fontSize: '11px' }}>{formatTime12h(row.DateTime)}</td>
                     <td style={{ padding: '12px', textAlign: 'right', fontWeight: '900', color: amt >= 0 ? '#508d0e' : '#c0392b' }}>
                       {amt >= 0 ? '+' : ''}{amt.toFixed(2)}
                     </td>
@@ -342,7 +342,7 @@ function BetsHistoryPage() {
                     </div>
                     <div>
                       <h4 style={{ margin: 0, fontSize: '14px', fontWeight: 'bold', color: '#3b5160' }}>{item.GameName}</h4>
-                      <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>{item.DateTime}</p>
+                      <p style={{ margin: 0, fontSize: '11px', color: '#888' }}>{formatTime12h(item.DateTime)}</p>
                     </div>
                   </div>
                   <div style={{ textAlign: 'right', display: 'flex', alignItems: 'center', gap: '20px' }}>
@@ -438,7 +438,7 @@ function BetsHistoryPage() {
                     <div key={idx} style={{ background: '#fff', padding: '20px', borderRadius: '8px', border: '1px solid #7e97a7' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px', borderBottom: '1px solid #eee', paddingBottom: '10px' }}>
                         <span style={{ fontSize: '11px', fontWeight: '900', color: (bet.Type || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545', textTransform: 'uppercase' }}>{bet.Type}</span>
-                        <span style={{ fontSize: '11px', color: '#888', fontWeight: 'bold' }}>{bet.Date}</span>
+                        <span style={{ fontSize: '11px', color: '#888', fontWeight: 'bold' }}>{formatTime12h(bet.Date)}</span>
                       </div>
                       <p style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#3b5160' }}>{bet.Game?.replace(/&nbsp;/g, ' ')}</p>
                       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>

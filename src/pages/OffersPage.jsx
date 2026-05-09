@@ -147,8 +147,8 @@ function OffersPage() {
         {selectedOffer && (
           <div className="offer-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(5px)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
             <div className="offer-modal" style={{ background: '#fff', width: '100%', maxWidth: '500px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
-              <div className="modal-header" style={{ background: '#3b5160', color: '#fff', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: 'bold', textTransform: 'uppercase' }}>{selectedOffer.Title}</h3>
+              <div className="modal-header" style={{ background: '#1a2d3b', color: '#fff', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{selectedOffer.Title}</h3>
                 <button className="close-btn" style={{ background: 'none', border: 'none', color: '#fff', fontSize: '28px', cursor: 'pointer', lineHeight: '1' }} onClick={() => setSelectedOffer(null)}>×</button>
               </div>
               <div className="modal-body" style={{ padding: '0', maxHeight: '70vh', overflowY: 'auto' }}>
@@ -164,7 +164,7 @@ function OffersPage() {
                       )}
                     </div>
                     <div className="modal-meta" style={{ padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #eee' }}>
-                      <span style={{ fontSize: '10px', fontWeight: 'bold', background: '#f4f7f9', color: '#3b5160', padding: '4px 10px', borderRadius: '4px', textTransform: 'uppercase' }}>{selectedOffer.Category || 'Promotion'}</span>
+                      <span style={{ fontSize: '10px', fontWeight: '900', background: '#1a2d3b', color: '#fff', padding: '6px 12px', borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{selectedOffer.Category || 'Promotion'}</span>
                       <span style={{ fontSize: '11px', fontWeight: 'bold', padding: '4px 12px', borderRadius: '4px', background: selectedOffer.Eligible?.toUpperCase() === 'Y' ? '#e8f5e9' : '#ffebee', color: selectedOffer.Eligible?.toUpperCase() === 'Y' ? '#2e7d32' : '#c62828' }}>
                         {selectedOffer.Eligible?.toUpperCase() === 'Y' ? '✓ Eligible' : '! Not Eligible'}
                       </span>
