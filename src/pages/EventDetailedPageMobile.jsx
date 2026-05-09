@@ -272,7 +272,8 @@ const EventDetailedPageMobile = () => {
               {(() => {
                 const eventList = Object.values(gameData?.events || {});
                 const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');
-                const otherMarkets = eventList.filter(e => e.Type !== 'FANCY');
+                const lineMarkets = eventList.filter(e => (e.Type === 'LINE' || (e.name && e.name.toUpperCase().includes('LINE'))));
+                const otherMarkets = eventList.filter(e => e.Type !== 'FANCY' && e.Type !== 'LINE' && !(e.name && e.name.toUpperCase().includes('LINE')));
 
                 return (
                   <>
@@ -308,6 +309,32 @@ const EventDetailedPageMobile = () => {
                       }
                       return null;
                     })}
+
+                    {/* Grouped Line Markets */}
+                    {lineMarkets.length > 0 && (
+                      <div id="market-LINE-MARKET">
+                        <OddsTable
+                          marketName="LINE MARKET"
+                          marketData={{
+                            name: 'LINE MARKET',
+                            runners: lineMarkets.map(m => ({
+                              ...m,
+                              RunnerName: m.name,
+                              selectionId: m.eid || m.MarketId || m.marketid || 0
+                            })),
+                            Type: 'LINE'
+                          }}
+                          liveRates={liveRates}
+                          selectedBet={selectedBet}
+                          onCancelBet={() => setSelectedBet(null)}
+                          onBetClick={(runner, side, price, runnerIdx, selId, mkt) => handleBetClick(runner, side, price, mkt?.name || 'Line Market', runnerIdx, mkt, selId)}
+                          sport={sport}
+                          isInPlay={isInPlay}
+                          isGrouped={true}
+                          mobileView={true}
+                        />
+                      </div>
+                    )}
 
                     {fancyMarkets.length > 0 && (
                       <FancyTable 

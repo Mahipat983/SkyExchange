@@ -422,10 +422,12 @@ const EventDetailedPage = () => {
                 gameData?.inplay === 'true' || gameData?.inplay === 'Y' || gameData?.inplay === true ||
                 (startTime && startTime <= now) || isWinnerMarket;
 
-              // Group Fancy markets to show them together at the bottom or top
+              // Group Fancy markets
               const fancyMarkets = eventList.filter(e => e.Type === 'FANCY');
+              // Group Line markets
+              const lineMarkets = eventList.filter(e => (e.Type === 'LINE' || (e.name && e.name.toUpperCase().includes('LINE'))));
               // Other markets to render individually
-              const otherMarkets = eventList.filter(e => e.Type !== 'FANCY');
+              const otherMarkets = eventList.filter(e => e.Type !== 'FANCY' && e.Type !== 'LINE' && !(e.name && e.name.toUpperCase().includes('LINE')));
 
               return (
                 <>
@@ -481,6 +483,31 @@ const EventDetailedPage = () => {
                       </div>
                     );
                   })}
+
+                  {/* Grouped Line Markets */}
+                  {lineMarkets.length > 0 && (
+                    <div id="market-LINE-MARKET">
+                      <OddsTable
+                        marketName="LINE MARKET"
+                        marketData={{
+                          name: 'LINE MARKET',
+                          runners: lineMarkets.map(m => ({
+                            ...m,
+                            RunnerName: m.name,
+                            selectionId: m.eid || m.MarketId || m.marketid || 0
+                          })),
+                          Type: 'LINE'
+                        }}
+                        liveRates={liveRates}
+                        selectedBet={selectedBet}
+                        onCancelBet={() => setSelectedBet(null)}
+                        onBetClick={(runner, side, price, runnerIndex, selectionId, mkt) => handleBetClick(runner, side, price, mkt?.name || 'Line Market', runnerIndex, mkt, selectionId)}
+                        sport={sport}
+                        isInPlay={isInPlay}
+                        isGrouped={true}
+                      />
+                    </div>
+                  )}
 
                   {/* Grouped Fancy Markets */}
                   {fancyMarkets.length > 0 && (
