@@ -468,30 +468,19 @@ function MobileHeader() {
         ) : (
           /* ===== LOGGED IN: Bets | Search | Wallet | Setting | User ===== */
           <div className="mhdr-logged-in-row">
-            {/* 1. Bets button */}
-            <Link className="mhdr-bets-header-btn" to="/bets">
-              Bets
+            {/* 1. Deposit shortcut */}
+            <Link className="mhdr-icon-btn" to="/wallet/deposit" style={{ fontWeight: '800', fontSize: '14px' }}>
+              D
             </Link>
 
-            {/* 2. Search icon */}
-            <button
-              className="mhdr-icon-btn"
-              onClick={openSearch}
-              aria-label="Search"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-              </svg>
-            </button>
+            {/* 2. Withdraw shortcut */}
+            <Link className="mhdr-icon-btn" to="/wallet/withdrawal" style={{ fontWeight: '800', fontSize: '14px' }}>
+              W
+            </Link>
 
-            {/* 3. Wallet icon → /balance-overview */}
-            <Link className="mhdr-icon-btn" to="/balance-overview" aria-label="Wallet">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="2" y="5" width="20" height="14" rx="2" />
-                <path d="M16 13a1 1 0 1 0 2 0 1 1 0 0 0-2 0z" fill="currentColor" stroke="none" />
-                <path d="M2 10h20" />
-              </svg>
+            {/* 3. Balance Overview button (replaces Bets) */}
+            <Link className="mhdr-bets-header-btn" to="/balance-overview" style={{ minWidth: '60px' }}>
+              {balance}
             </Link>
 
             {/* 4. Setting icon */}

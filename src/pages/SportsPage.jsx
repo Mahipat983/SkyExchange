@@ -413,19 +413,7 @@ function SportsPage() {
                       </div>
                     ))}
                   </div>
-                  {/* Indicators */}
-                  <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
-                    {banners.map((_, idx) => (
-                      <div
-                        key={idx}
-                        onClick={() => { setCurrentIndex(idx); resetTimer(); }}
-                        style={{
-                          width: '8px', height: '8px', borderRadius: '50%', cursor: 'pointer',
-                          background: currentIndex === idx ? '#ffb400' : 'rgba(255,255,255,0.5)'
-                        }}
-                      />
-                    ))}
-                  </div>
+
                 </>
               ) : null}
             </div>

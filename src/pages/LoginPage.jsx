@@ -21,7 +21,7 @@ function LoginPage() {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     setValidationCode(generateCode());
-    
+
     return () => {
       document.body.style.overflow = originalOverflow;
     };
@@ -97,7 +97,7 @@ function LoginPage() {
           <form className="login-form" onSubmit={handleLogin}>
             <input
               type="text"
-              placeholder="kabira00025"
+              placeholder="Username"
               className="form-input"
               value={loginName}
               onChange={(e) => setLoginName(e.target.value)}
@@ -133,7 +133,7 @@ function LoginPage() {
             <div className="signup-prompt">
               Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
             </div>
-            
+
             <div className="extra-buttons-row">
               <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
                 <i className="fab fa-whatsapp"></i> WhatsApp
