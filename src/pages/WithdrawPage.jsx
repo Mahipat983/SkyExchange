@@ -39,6 +39,7 @@ export default function WithdrawPage() {
   const [newWqr, setNewWqr] = useState('');
   const [newWqrName, setNewWqrName] = useState('');
   const [usdtLoading, setUsdtLoading] = useState(false);
+  const [sellPrice, setSellPrice] = useState(0);
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -84,11 +85,15 @@ export default function WithdrawPage() {
       }
 
       // USDT Wallet normalization
-      if (usdtRes && !usdtRes.error) {
-        const wallet = usdtRes.data || (typeof usdtRes === 'object' && usdtRes.address ? usdtRes : null);
-        if (wallet && wallet.address) {
-          setUsdtWallet(wallet);
-          setNewWaddress(wallet.address);
+      if (usdtRes && usdtRes.error === '0') {
+        const address = usdtRes.Waddress || usdtRes.address || (usdtRes.data && usdtRes.data.address);
+        const qr = usdtRes.WQr || usdtRes.qr || (usdtRes.data && usdtRes.data.qr);
+        const price = parseFloat(usdtRes.SellPrice || 0);
+
+        if (address) {
+          setUsdtWallet({ address, qr });
+          setNewWaddress(address);
+          setSellPrice(price);
         }
       }
     } catch (err) {
@@ -190,8 +195,12 @@ export default function WithdrawPage() {
     }
     try {
       setUsdtLoading(true);
-      const res = await walletController.updateUSDTWallet(loginToken, newWaddress, newWqr);
-      if (res && !res.error) {
+      const res = await walletController.updateUSDTWallet({
+        LoginToken: loginToken,
+        Waddress: newWaddress,
+        WQr: newWqr
+      });
+      if (res && res.error === '0') {
         showSnackbar('USDT Wallet updated', 'success');
         setIsEditingUSDT(false);
         fetchData();
@@ -232,21 +241,7 @@ export default function WithdrawPage() {
             {/* ── LEFT AREA: Withdrawal Form ── */}
             <div className="xl:col-span-12 2xl:col-span-7 space-y-8 animate-in fade-in duration-500">
               {/* Promotional Banner */}
-              <div className="w-full overflow-hidden rounded-xl bg-white border border-[#ccc] shadow-md relative group">
-                <div className="w-full flex items-center gap-6 px-8 py-10 bg-gradient-to-br from-white to-[#f9f9f9] border border-[#ffb400]/20 relative overflow-hidden">
-                  <div className="absolute right-0 top-0 opacity-5 scale-150 rotate-12 transition-transform group-hover:rotate-0 duration-700">
-                    <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#ffb400" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="2" y1="12" x2="22" y2="12" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
-                  </div>
-                  <div className="text-5xl drop-shadow-md">💰</div>
-                  <div className="relative z-10">
-                    <p className="font-black text-black uppercase text-2xl tracking-tighter leading-tight">24/7 Instant Withdrawals</p>
-                    <div className="mt-3 bg-[#ffb400] text-black px-4 py-1.5 rounded-full inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest border border-black/5">
-                      <div className="w-1.5 h-1.5 rounded-full bg-black animate-pulse" />
-                      No Limits • Secure Portal
-                    </div>
-                  </div>
-                </div>
-              </div>
+
 
               {/* Category Selector */}
               <div className="bg-white p-4 rounded-xl border border-[#ccc] flex gap-4 shadow-md">
@@ -447,6 +442,18 @@ export default function WithdrawPage() {
                         placeholder="Enter amount"
                         className="w-full h-16 bg-[#f4f4f4] border border-[#ddd] rounded-xl px-6 text-2xl font-black text-[#111] focus:outline-none focus:border-[#ffb400] transition-all"
                       />
+                      {activeCategory === 'USDT' && sellPrice > 0 && amount && (
+                        <div className="mt-2 ml-2 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+                          <div className="px-2 py-1 bg-[#ffb400]/10 border border-[#ffb400]/20 rounded-md">
+                            <span className="text-[11px] font-black text-[#ffb400] uppercase tracking-wider">
+                              Calculation: {(parseFloat(amount) / sellPrice).toFixed(2)} USDT × {sellPrice} = <span className="text-black">₹{parseFloat(amount).toLocaleString()}</span>
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-bold text-[#888] italic">
+                            (Sell Price: ₹{sellPrice})
+                          </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="space-y-3">
