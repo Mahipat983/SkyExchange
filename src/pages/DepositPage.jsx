@@ -284,7 +284,7 @@ export default function DepositPage() {
           </div>
         </div>
 
-        <div className="w-full mx-auto px-4 md:px-8 lg:px-10 py-6">
+        <div className="w-full max-w-[1600px] mx-auto px-4 md:px-8 lg:px-10 py-6">
           <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-start">
 
             {/* ── LEFT AREA: Deposit Step 1 or 2 ── */}
@@ -305,13 +305,13 @@ export default function DepositPage() {
                               setAmount(e.target.value);
                               if (!e.target.value) setUserHasSelectedManually(false);
                             }}
-                            className="w-full h-14 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-xl font-black text-[#111] focus:outline-none transition-all placeholder:text-black/10"
+                            className="w-full h-11 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-lg font-black text-[#111] focus:outline-none transition-all placeholder:text-black/10"
                           />
 
                         </div>
                         <button
                           onClick={() => parseFloat(amount) > 0 ? setStep(2) : showSnackbar('Please enter valid amount', 'error')}
-                          className="h-14 w-full md:w-auto px-10 bg-[#ffb400] hover:bg-[#ffc800] text-black rounded-xl font-black tracking-widest uppercase shadow-md active:scale-[0.98] transition-all"
+                          className="h-11 w-full md:w-auto px-10 bg-[#ffb400] hover:bg-[#ffc800] text-black rounded-xl font-black tracking-widest uppercase shadow-md active:scale-[0.98] transition-all"
                         >
                           SUBMIT
                         </button>
