@@ -440,14 +440,13 @@ export default function WithdrawPage() {
                    <div className="space-y-3">
                       <label className="text-[11px] font-black uppercase tracking-widest text-[#666] ml-2">Amount to Withdraw</label>
                       <div className="relative group">
-                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-black text-[#ffb400] pointer-events-none group-focus-within:scale-110 transition-transform">₹</span>
-                         <input 
-                           type="number"
-                           value={amount}
-                           onChange={(e) => setAmount(e.target.value)}
-                           placeholder="Min. 500"
-                           className="w-full h-16 bg-[#f4f4f4] border border-[#ddd] rounded-xl pl-14 pr-6 text-2xl font-black text-[#111] focus:outline-none focus:border-[#ffb400] transition-all"
-                         />
+                          <input 
+                            type="number"
+                            value={amount}
+                            onChange={(e) => setAmount(e.target.value)}
+                            placeholder="Enter amount"
+                            className="w-full h-16 bg-[#f4f4f4] border border-[#ddd] rounded-xl px-6 text-2xl font-black text-[#111] focus:outline-none focus:border-[#ffb400] transition-all"
+                          />
                       </div>
                    </div>
                    <div className="space-y-3">
