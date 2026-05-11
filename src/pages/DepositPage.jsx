@@ -118,8 +118,8 @@ export default function DepositPage() {
       const aName = (a.Name || a.bankname || '').toUpperCase();
       const bName = (b.Name || b.bankname || '').toUpperCase();
 
-      const isACrypto = aType === 'CRYPTO' || aType === 'USDT' || aName.includes('USDT');
-      const isBCrypto = bType === 'CRYPTO' || bType === 'USDT' || bName.includes('USDT');
+      const isACrypto = aType === 'CRYPTO' || aType === 'USDT' || aName.includes('USDT') || aName.includes('CRYPTO');
+      const isBCrypto = bType === 'CRYPTO' || bType === 'USDT' || bName.includes('USDT') || bName.includes('CRYPTO');
 
       if (isACrypto && !isBCrypto) return 1;
       if (!isACrypto && isBCrypto) return -1;
@@ -139,24 +139,23 @@ export default function DepositPage() {
   }, [amount, depositMethods]);
 
   useEffect(() => {
-    if (filteredMethods.length > 0) {
-      const currentSelected = filteredMethods.find(m => String(m.Bank_Id || m.Id || m.id) === activeMethodId);
-      const firstRealMethod = filteredMethods.find(m => !m.isWhatsapp);
-      const firstRealId = firstRealMethod ? String(firstRealMethod.Bank_Id || firstRealMethod.Id || firstRealMethod.id) : null;
+    // Standard flow: WhatsApp is always #1, so we default select #2 (index 1)
+    if (filteredMethods.length > 1) {
+      const secondOption = filteredMethods[1];
+      const secondOptionId = String(secondOption.Bank_Id || secondOption.Id || secondOption.id);
 
-      const isCurrentValid = !!currentSelected && !currentSelected.isWhatsapp;
-
-      if (!isCurrentValid || (!userHasSelectedManually && activeMethodId !== firstRealId)) {
-        if (firstRealId) {
-          setActiveMethodId(firstRealId);
-        } else {
-          setActiveMethodId(null);
-        }
+      // Auto-select if nothing is selected or if the user hasn't made a manual choice yet
+      if (!activeMethodId || (!userHasSelectedManually && activeMethodId !== secondOptionId)) {
+        setActiveMethodId(secondOptionId);
       }
-    } else {
-      setActiveMethodId(null);
+    } else if (filteredMethods.length === 1 && !filteredMethods[0].isWhatsapp) {
+      // Fallback: If only one method exists and it's not WhatsApp, select it
+      const firstId = String(filteredMethods[0].Bank_Id || filteredMethods[0].Id || filteredMethods[0].id);
+      if (!activeMethodId || !userHasSelectedManually) {
+        setActiveMethodId(firstId);
+      }
     }
-  }, [filteredMethods, userHasSelectedManually]);
+  }, [filteredMethods, userHasSelectedManually, activeMethodId]);
 
   const activeMethod = filteredMethods.find(m => String(m.Bank_Id || m.Id || m.id) === activeMethodId);
 
@@ -308,6 +307,7 @@ export default function DepositPage() {
                             }}
                             className="w-full h-16 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-2xl font-black text-[#111] focus:outline-none transition-all placeholder:text-black/10"
                           />
+
                         </div>
                         <button
                           onClick={() => parseFloat(amount) > 0 ? setStep(2) : showSnackbar('Please enter valid amount', 'error')}
@@ -342,7 +342,7 @@ export default function DepositPage() {
                       "Modification: payment valid for 1 hour after change."
                     ].map((text, i) => (
                       <div key={i} className="flex gap-4 text-[#333]">
-                        <span className="font-black text-sm text-[#ffb400] shrink-0">{i + 1}.</span>
+                        <span className="font-black text-[14px] text-[#ffb400] shrink-0">{i + 1}.</span>
                         <p className="font-bold text-[14px] opacity-90">{text}</p>
                       </div>
                     ))}
@@ -517,7 +517,6 @@ export default function DepositPage() {
                         </div>
                         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
                       </div>
-
                       <div className="space-y-1.5 pt-1">
                         <p className="text-[12px] font-black uppercase tracking-widest text-[#666] ml-1">Confirm Amount</p>
                         <input
@@ -526,6 +525,14 @@ export default function DepositPage() {
                           readOnly
                           className="w-full h-12 bg-[#f4f4f4] border border-[#ddd] rounded-xl px-4 text-sm font-black text-[#111] focus:outline-none cursor-not-allowed opacity-60"
                         />
+                        {activeMethod && ['CRYPTO', 'USDT'].includes((activeMethod.Type || activeMethod.type || '').toUpperCase()) && activeMethod.BuyPrice && (
+                          <div className="px-2 pt-1.5 flex items-center justify-between text-[10px] font-black uppercase tracking-wider italic">
+                            <span className="text-[#666]">Rate Conversion:</span>
+                            <span className="text-[#444]">
+                              {amount || '0'} × {activeMethod.BuyPrice} = <span className="text-[#ffb400]">₹{(parseFloat(amount || 0) * parseFloat(activeMethod.BuyPrice)).toLocaleString()}</span>
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-start gap-3 pt-2">
@@ -585,12 +592,13 @@ export default function DepositPage() {
                 <div className="flex-1 overflow-y-auto no-scrollbar pb-10">
                   <div className="min-w-[600px]">
                     {/* Table Header */}
-                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_2fr] px-6 py-4 bg-[#eee] text-[10px] font-black text-[#666] uppercase tracking-[0.1em] sticky top-0 z-10 border-b border-[#ddd]">
-                      <span>TXN ID / UTR</span>
+                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr_1fr] px-6 py-4 bg-[#eee] text-[10px] font-black text-[#666] uppercase tracking-[0.1em] sticky top-0 z-10 border-b border-[#ddd]">
+                      <span className="text-left">TXN ID / UTR</span>
                       <span className="text-center">METHOD</span>
                       <span className="text-center">AMOUNT</span>
                       <span className="text-center">STATUS</span>
-                      <span className="text-right">DATE & TIME</span>
+                      <span className="text-center">DATE & TIME</span>
+                      <span className="text-center">REASON</span>
                     </div>
 
                     {historyLoading ? (
@@ -611,8 +619,8 @@ export default function DepositPage() {
                         const amt = parseFloat(item.Amount || item.amount || 0);
 
                         return (
-                          <div key={i} className={`grid grid-cols-[1.5fr_1fr_1fr_1fr_2fr] items-center px-6 py-4 border-b border-[#eee] transition-all hover:bg-black/[0.02] ${i % 2 === 0 ? 'bg-transparent' : 'bg-[#fcfcfc]'}`}>
-                            <div className="flex items-center gap-2 min-w-0 group/utr">
+                          <div key={i} className={`grid grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr_1fr] items-center px-6 py-4 border-b border-[#eee] transition-all hover:bg-black/[0.02] ${i % 2 === 0 ? 'bg-transparent' : 'bg-[#fcfcfc]'}`}>
+                            <div className="flex items-center gap-2 min-w-0 group/utr text-left">
                               <span className="text-[11px] font-black text-black uppercase tracking-tighter break-all">{utr}</span>
                               <button
                                 onClick={() => handleCopy(utr)}
@@ -634,12 +642,10 @@ export default function DepositPage() {
                                 {item.Status || 'Pending'}
                               </span>
                             </div>
-                            <div className="text-[11px] font-black text-[#888] text-right leading-tight uppercase tracking-tighter">
+                            <div className="text-[11px] font-black text-[#888] text-center leading-tight uppercase tracking-tighter">
                               {(() => {
                                 const dStr = item.Date || item.date || item.created_at;
                                 if (!dStr) return '---';
-
-                                // Manual parse for DD-MM-YYYY HH:mm:ss
                                 let date;
                                 const parts = dStr.split(/[-/ :]/);
                                 if (parts.length >= 3) {
@@ -649,27 +655,15 @@ export default function DepositPage() {
                                   const hour = parseInt(parts[3] || '0', 10);
                                   const minute = parseInt(parts[4] || '0', 10);
                                   const second = parseInt(parts[5] || '0', 10);
-
-                                  if (year > 1000) {
-                                    date = new Date(year, month, day, hour, minute, second);
-                                  } else {
-                                    date = new Date(dStr);
-                                  }
-                                } else {
-                                  date = new Date(dStr);
-                                }
+                                  if (year > 1000) date = new Date(year, month, day, hour, minute, second);
+                                  else date = new Date(dStr);
+                                } else date = new Date(dStr);
 
                                 if (isNaN(date.getTime())) return dStr;
-
                                 const formatted = date.toLocaleString('en-GB', {
-                                  day: '2-digit',
-                                  month: 'short',
-                                  year: 'numeric',
-                                  hour: '2-digit',
-                                  minute: '2-digit',
-                                  hour12: true
+                                  day: '2-digit', month: 'short', year: 'numeric',
+                                  hour: '2-digit', minute: '2-digit', hour12: true
                                 }).toUpperCase();
-
                                 const [d, m, y, time, ampm] = formatted.replace(',', '').split(' ');
                                 return (
                                   <>
@@ -678,6 +672,9 @@ export default function DepositPage() {
                                   </>
                                 );
                               })()}
+                            </div>
+                            <div className="text-[11px] font-black text-[#666] text-center tracking-tighter break-words">
+                              {item.Remarks || item.remarks || '---'}
                             </div>
                           </div>
                         );
