@@ -18,6 +18,12 @@ function LoginPage() {
   const generateCode = () => String(Math.floor(1000 + Math.random() * 9000));
 
   useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      navigate('/?login=true', { replace: true });
+      return;
+    }
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     setValidationCode(generateCode());
@@ -25,7 +31,7 @@ function LoginPage() {
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, []);
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -74,7 +80,7 @@ function LoginPage() {
         <div className="header-section">
           <button
             className="close-btn"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
             aria-label="Close"
             style={{
               position: 'absolute',

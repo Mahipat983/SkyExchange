@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import DesktopHeader from './DesktopHeader';
 import MobileHeader from './MobileHeader';
 import LoginModal from './LoginModal';
@@ -12,8 +13,34 @@ function Layout({ children }) {
     isLoginModalOpen, closeLoginModal, 
     isSignupModalOpen, closeSignupModal, 
     overlay, closeOverlay,
-    isEditStakeModalOpen, closeEditStakeModal
+    isEditStakeModalOpen, closeEditStakeModal,
+    openLoginModal, openSignupModal
   } = useUIStore();
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    let changed = false;
+    if (params.get('login') === 'true') {
+      openLoginModal();
+      params.delete('login');
+      changed = true;
+    }
+    if (params.get('signup') === 'true') {
+      openSignupModal();
+      params.delete('signup');
+      changed = true;
+    }
+    if (changed) {
+      const newSearch = params.toString();
+      navigate({
+        pathname: location.pathname,
+        search: newSearch ? `?${newSearch}` : ''
+      }, { replace: true });
+    }
+  }, [location.search, location.pathname, openLoginModal, openSignupModal, navigate]);
 
   return (
     <>

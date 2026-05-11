@@ -21,12 +21,18 @@ function SignupPage() {
   const showSnackbar = useSnackbarStore(state => state.show);
 
   useEffect(() => {
+    const isMobile = window.innerWidth <= 768;
+    if (!isMobile) {
+      navigate('/?signup=true', { replace: true });
+      return;
+    }
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = originalOverflow;
     };
-  }, []);
+  }, [navigate]);
 
   const handleSendOtp = async (e) => {
     if (e) e.preventDefault();

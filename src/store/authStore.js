@@ -43,8 +43,14 @@ export const useAuthStore = create(
           console.error('Storage clear error:', e);
         }
 
-        // Force a clean redirect to login page
-        window.location.replace('/login');
+        // Force a clean redirect based on device type
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+          window.location.replace('/login');
+        } else {
+          // On desktop, go home and we will trigger login modal via query param or other means
+          window.location.replace('/?login=true');
+        }
       },
 
       // Helper to update balance etc separately if needed

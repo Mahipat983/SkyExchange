@@ -31,7 +31,6 @@ const SessionWatchdog = () => {
           console.warn('Session expired (error 3). Logging out...');
           logout();
           showSnackbar('Session expired. Please login again.', 'error');
-          navigate('/login');
           return;
         }
 
@@ -41,7 +40,6 @@ const SessionWatchdog = () => {
              console.warn('Session invalidated (error 2). Logging out...');
              logout();
              showSnackbar('Session invalidated. Please login again.', 'error');
-             navigate('/login');
              return;
         }
 
