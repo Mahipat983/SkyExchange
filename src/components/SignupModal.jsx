@@ -73,7 +73,7 @@ const SignupModal = () => {
         otp,
         campaignCode
       };
-      
+
       const response = await authController.createUser(data);
 
       if (response.error === '0') {
@@ -103,14 +103,14 @@ const SignupModal = () => {
         <div className="signup-modal-left">
           <div className="signup-modal-left-overlay"></div>
           <div className="signup-modal-logo-container">
-             <img src="/images/logo.png" alt="SKYEXCH" className="signup-modal-logo" />
+            <img src="/images/logo.png" alt="SKYEXCH" className="signup-modal-logo" />
           </div>
         </div>
 
         {/* Right Section */}
         <div className="signup-modal-right">
           <button className="signup-modal-close" onClick={closeSignupModal}>✕</button>
-          
+
           <div className="signup-modal-header-container">
             <h2 className="signup-modal-main-title">Sign Up</h2>
             <p className="signup-modal-sub-title">Create your account by following these simple steps.</p>
@@ -128,23 +128,23 @@ const SignupModal = () => {
               <div style={{ flex: 1 }}>
                 {isOtpMode ? (
                   <div style={{ display: 'flex', alignItems: 'center', width: '100%', height: '100%' }}>
-                    <input 
-                      type="text" 
-                      placeholder="Enter OTP" 
+                    <input
+                      type="text"
+                      placeholder="Enter OTP"
                       value={otp}
                       onChange={e => setOtp(e.target.value)}
                       className="signup-modal-input no-border"
                     />
-                    <button 
-                      type="button" 
+                    <button
+                      type="button"
                       onClick={() => setIsOtpMode(false)}
-                      style={{ 
-                        background: 'none', 
-                        border: 'none', 
-                        color: '#007bff', 
-                        fontSize: '11px', 
-                        fontWeight: 'bold', 
-                        cursor: 'pointer', 
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#007bff',
+                        fontSize: '11px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
                         padding: '0 10px',
                         whiteSpace: 'nowrap'
                       }}
@@ -153,9 +153,9 @@ const SignupModal = () => {
                     </button>
                   </div>
                 ) : (
-                  <input 
-                    type="text" 
-                    placeholder="Enter Phone Number" 
+                  <input
+                    type="text"
+                    placeholder="Enter Phone Number"
                     value={phone}
                     onChange={e => setPhone(e.target.value)}
                     className="signup-modal-input no-border"
@@ -166,7 +166,7 @@ const SignupModal = () => {
 
             {isOtpMode && (
               <div style={{ textAlign: 'right', marginTop: '-10px' }}>
-                <span 
+                <span
                   onClick={handleSendOtp}
                   style={{ fontSize: '12px', color: '#333', cursor: 'pointer', fontWeight: '600', textDecoration: 'underline' }}
                 >
@@ -176,9 +176,9 @@ const SignupModal = () => {
             )}
 
             <div className="signup-modal-checkbox-row">
-              <input 
-                type="checkbox" 
-                id="terms" 
+              <input
+                type="checkbox"
+                id="terms"
                 checked={isAgreed}
                 onChange={e => setIsAgreed(e.target.checked)}
               />
@@ -187,18 +187,18 @@ const SignupModal = () => {
               </label>
             </div>
 
-            <input 
-              type="text" 
-              placeholder="kabira00025" 
+            <input
+              type="text"
+              placeholder="ex. Kabira0025"
               className="signup-modal-input bg-blue-tint"
               value={username}
               onChange={e => setUsername(e.target.value)}
             />
 
             <div className="signup-modal-password-wrap">
-              <input 
-                type={showPassword ? "text" : "password"} 
-                placeholder="Ex: Password@123" 
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Ex: Password@123"
                 className="signup-modal-input bg-blue-tint"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
@@ -208,9 +208,9 @@ const SignupModal = () => {
               </span>
             </div>
 
-            <input 
-              type="text" 
-              placeholder="Enter Campaign Code" 
+            <input
+              type="text"
+              placeholder="Enter Campaign Code"
               className="signup-modal-input"
               value={campaignCode}
               onChange={e => setCampaignCode(e.target.value)}

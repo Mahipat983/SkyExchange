@@ -15,7 +15,7 @@ function SignupPage() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
   const showSnackbar = useSnackbarStore(state => state.show);
@@ -38,7 +38,7 @@ function SignupPage() {
     if (e) e.preventDefault();
     if (!mobile.trim()) { showSnackbar('Please enter mobile number', 'error'); return; }
     if (!isAgreed) { showSnackbar('Please agree to terms and conditions', 'error'); return; }
-    
+
     try {
       setLoading(true);
       const resp = await authController.sendOtp(mobile);
@@ -75,16 +75,16 @@ function SignupPage() {
         otp,
         campaignCode
       };
-      
+
       const response = await authController.createUser(data);
 
       if (response.error === '0') {
         showSnackbar(response.msg || 'Signup Successful!', 'success');
         if (response.apitoken || response.LoginToken) {
-            loginAction(response.username || username, response.apitoken || response.LoginToken);
-            navigate('/');
+          loginAction(response.username || username, response.apitoken || response.LoginToken);
+          navigate('/');
         } else {
-            navigate('/login');
+          navigate('/login');
         }
       } else {
         showSnackbar(response.msg || 'Signup failed', 'error');
@@ -121,7 +121,7 @@ function SignupPage() {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
                   />
-                  <span 
+                  <span
                     onClick={() => setIsOtpMode(false)}
                     style={{ position: 'absolute', right: '15px', color: '#007bff', fontSize: '12px', fontWeight: 'bold', cursor: 'pointer' }}
                   >
@@ -147,9 +147,9 @@ function SignupPage() {
             </div>
 
             <div className="signup-modal-checkbox-row">
-              <input 
-                type="checkbox" 
-                id="terms" 
+              <input
+                type="checkbox"
+                id="terms"
                 checked={isAgreed}
                 onChange={e => setIsAgreed(e.target.checked)}
               />
@@ -160,7 +160,7 @@ function SignupPage() {
 
             <input
               type="text"
-              placeholder="kabira00025"
+              placeholder="ex. Kabira0025#"
               className="form-input"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
