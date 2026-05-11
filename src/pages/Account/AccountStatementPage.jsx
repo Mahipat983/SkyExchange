@@ -283,7 +283,7 @@ function AccountStatementPage() {
                       <div key={key} className="bet-receipt-item">
                         <div className="bet-receipt-row" style={{ borderBottom: '1px solid #eee', paddingBottom: '10px', marginBottom: '12px' }}>
                           <span style={{ fontSize: '14px', fontWeight: '900', color: '#1a2d3b' }}>{bet.Game?.replace(/&nbsp;/g, ' ')}</span>
-                          <span className={`tx-type-badge ${bet.Side?.toLowerCase() === 'back' ? 'tx-type-cr' : 'tx-type-dr'}`}>
+                          <span className={`tx-type-badge ${bet.Side?.toLowerCase() === 'back' ? 'tx-type-back' : 'tx-type-lay'}`}>
                             {bet.Side}
                           </span>
                         </div>

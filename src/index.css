@@ -1082,9 +1082,11 @@ body {
   text-transform: uppercase;
 }
 
-.tx-type-cr { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
-.tx-type-dr { background: rgba(231, 76, 60, 0.1); color: #e74c3c; }
-.tx-type-o { background: rgba(52, 152, 219, 0.1); color: #3498db; }
+.tx-type-cr { background: rgba(46, 204, 113, 0.25); color: #2ecc71; }
+.tx-type-dr { background: rgba(231, 76, 60, 0.25); color: #e74c3c; }
+.tx-type-o { background: rgba(52, 152, 219, 0.25); color: #3498db; }
+.tx-type-back { background: #a5d8ff; color: #007bff; }
+.tx-type-lay { background: #f8b9c6; color: #dc3545; }
 
 /* Modal for Bet Statement */
 .bet-detail-modal-overlay {

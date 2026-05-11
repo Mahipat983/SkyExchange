@@ -125,7 +125,7 @@ const BetSlip = ({ sport }) => {
                   {gameBets.map((bet, idx) => {
                     const sideRaw = bet.Side || bet.type || bet.Type || '';
                     const isBack = sideRaw.toLowerCase() === 'back' || sideRaw.toLowerCase() === 'yes';
-                    const bgColor = isBack ? 'bg-[#e2f2ff]' : 'bg-[#fdf1f3]';
+                    const bgColor = isBack ? 'bg-[#a5d8ff]' : 'bg-[#f8b9c6]';
                     const rawDate = bet.Matched_Date || bet.Date || bet.datetime;
                     const dateStr = formatTime12h(rawDate);
 

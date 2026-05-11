@@ -173,7 +173,7 @@ function BetsHistoryPage() {
                       borderRadius: '4px',
                       fontSize: '10px',
                       fontWeight: 'bold',
-                      background: (bet.Side || '').toLowerCase() === 'back' ? '#d4eaff' : '#fcd4d4',
+                      background: (bet.Side || '').toLowerCase() === 'back' ? '#a5d8ff' : '#f8b9c6',
                       color: (bet.Side || '').toLowerCase() === 'back' ? '#007bff' : '#dc3545'
                     }}>
                       {(bet.Side || 'BACK').toUpperCase()}
