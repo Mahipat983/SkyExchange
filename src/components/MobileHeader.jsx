@@ -536,10 +536,10 @@ function MobileHeader() {
               }}
             >
               <div style={{ color: '#ffb400', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Bal: <span style={{ color: '#ffb400' }}>{balance}</span>
+                Bal: <span style={{ color: '#ffb400' }}>₹{balance}</span>
               </div>
               <div style={{ color: '#ffb400', fontSize: '10px', fontWeight: 'bold', whiteSpace: 'nowrap' }}>
-                Exp: <span style={{ color: '#ffb400' }}>{exposure || '0.00'}</span>
+                Exp: <span style={{ color: '#ffb400' }}>₹{exposure || '0.00'}</span>
               </div>
             </Link>
 
@@ -688,8 +688,8 @@ function MobileHeader() {
             <div className="mhdr-sidebar-header">
               <div className="mhdr-sidebar-username">{username}</div>
               <div className="mhdr-sidebar-balance">
-                Balance: <strong>{balance}</strong>
-                &nbsp;&nbsp;Exposure: <strong>{exposure}</strong>
+                Balance: <strong>₹{balance}</strong>
+                &nbsp;&nbsp;Exposure: <strong>₹{exposure}</strong>
               </div>
             </div>
             <div className="mhdr-sidebar-deposit-row">

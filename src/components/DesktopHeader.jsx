@@ -260,9 +260,9 @@ function DesktopHeader() {
               <Link to="/">SKYEXCHANGE</Link>
             </h1>
             <div id="searchWrap" style={{ display: 'flex', alignItems: 'center', margin: 0, height: '100%', position: 'relative' }}>
-              <div className="custom-search-container" style={{ 
-                position: 'relative', 
-                display: 'flex', 
+              <div className="custom-search-container" style={{
+                position: 'relative',
+                display: 'flex',
                 alignItems: 'center',
                 width: '300px',
                 height: '30px',
@@ -387,24 +387,24 @@ function DesktopHeader() {
           {!isLoggedIn ? (
             <ul className="login-wrap">
               <li className="user error">
-                <input 
-                  type="text" 
-                  placeholder="Username" 
-                  value={loginName} 
-                  onChange={(e) => setLoginName(e.target.value)} 
+                <input
+                  type="text"
+                  placeholder="Username"
+                  value={loginName}
+                  onChange={(e) => setLoginName(e.target.value)}
                   onKeyDown={handleKeyDown}
                 />
               </li>
               <li style={{ position: 'relative' }}>
-                <input 
-                  type={showPassword ? "text" : "password"} 
-                  placeholder="Password" 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={handleKeyDown}
                   style={{ paddingRight: '30px' }}
                 />
-                <span 
+                <span
                   onClick={() => setShowPassword(!showPassword)}
                   style={{
                     position: 'absolute',
@@ -464,8 +464,8 @@ function DesktopHeader() {
                 <a className="btn-login" style={{ cursor: 'pointer', marginLeft: '5px' }}>Demo</a>
               </li>
               <li className="li-signup">
-                <a 
-                  className="btn-signup" 
+                <a
+                  className="btn-signup"
                   style={{ cursor: 'pointer' }}
                   onClick={(e) => {
                     e.preventDefault();
@@ -539,30 +539,32 @@ function DesktopHeader() {
                   onClick={() => setIsBalanceModalOpen(!isBalanceModalOpen)}
                 >
                   <div className="balance-info" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 10px', borderRight: '1px solid #555' }}>
-                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Main Balance <strong style={{ color: '#ffb400' }}>PTH {balance}</strong></span>
-                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Exposure <strong style={{ color: '#ffb400' }}>{exposure}</strong></span>
+                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Main Balance <strong style={{ color: '#ffb400' }}>₹{balance}</strong></span>
+                    <span style={{ fontSize: '12px', color: '#ffb400' }}>Exposure <strong style={{ color: '#ffb400' }}>₹{exposure}</strong></span>
                   </div>
                   <button onClick={(e) => { e.stopPropagation(); /* Refresh handled by watchdog */ }} style={{ background: 'none', border: 'none', color: '#ffb400', width: '30px', cursor: 'pointer' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"></path></svg>
                   </button>
                 </div>
                 {isBalanceModalOpen && (
-                  <div 
-                    className="balance-modal-content" 
-                    style={{ position: 'absolute', top: '36px', right: '0', background: '#ecf0f1', width: '320px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 1001, cursor: 'pointer' }} 
+                  <div
+                    className="balance-modal-content"
+                    style={{ position: 'absolute', top: '36px', right: '0', background: '#ecf0f1', width: '320px', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 10px 25px rgba(0,0,0,0.3)', zIndex: 1001, cursor: 'pointer' }}
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate('/bets');
+                      navigate('/bets?tab=history');
                       setIsBalanceModalOpen(false);
                     }}
                   >
                     <div style={{ padding: '15px' }}>
                       <div style={{ background: '#fff', borderRadius: '4px', padding: '12px', marginBottom: '10px', border: '1px solid #ddd' }}>
-                        <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>Main Balance</p>
-                        <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}><span style={{ color: '#7f8c8d', fontSize: '14px', marginRight: '5px' }}>PTH</span> {balance}</p>
-                        <div style={{ borderTop: '1px solid #eee', marginTop: '10px', paddingTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
-                          <span style={{ fontSize: '13px', color: '#666' }}>Exposure</span>
-                          <span style={{ fontSize: '13px', color: '#333' }}>{exposure}</span>
+                        <div style={{ marginBottom: '12px' }}>
+                          <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>Main Balance</p>
+                          <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#2c3e50' }}>₹{balance}</p>
+                        </div>
+                        <div style={{ borderTop: '1px solid #eee', marginTop: '10px', paddingTop: '10px' }}>
+                          <p style={{ margin: '0', fontSize: '13px', color: '#666' }}>Exposure</p>
+                          <p style={{ margin: '5px 0', fontSize: '20px', fontWeight: 'bold', color: '#e74c3c' }}>₹{exposure}</p>
                         </div>
                       </div>
                     </div>
@@ -645,15 +647,15 @@ function DesktopHeader() {
             <ul className="setting-wrap" style={{ display: 'flex', alignItems: 'center', listStyle: 'none', margin: 0, padding: 0 }}>
               <li className="time_zone" style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}><span>Time Zone :</span> GMT+5:30</li>
               <li style={{ display: 'flex', alignItems: 'center' }}>
-                <a 
-                  className="setting" 
+                <a
+                  className="setting"
                   onClick={() => {
                     if (!isLoggedIn) {
                       openLoginModal();
                     } else {
                       setIsEditStakeModalOpen(true);
                     }
-                  }} 
+                  }}
                   style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}
                 >
                   Setting <img src="/images/transparent.gif" alt="" style={{ marginLeft: '5px', display: 'inline-block' }} />
