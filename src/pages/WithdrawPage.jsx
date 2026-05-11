@@ -267,13 +267,13 @@ export default function WithdrawPage() {
               </div>
 
               {/* Balance Pill */}
-              <div className="animate-in slide-in-from-bottom-4 duration-500 delay-100">
+              <div className="animate-in slide-in-from-bottom-4 flex items-center justify-center duration-500 delay-100">
                 <div className="inline-flex items-center gap-3 bg-white rounded-xl px-6 py-3 text-[#111] shadow-md border border-[#ccc] group overflow-hidden relative">
                   <div className="absolute inset-0 bg-[#ffb400]/5 -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
                   <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center shadow-sm relative z-10">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffb400" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4" /><path d="M4 6v12c0 1.1.9 2 2 2h14v-4" /><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z" /></svg>
                   </div>
-                  <span className="text-[14px] font-black uppercase tracking-tight relative z-10">
+                  <span className="text-[14px] flex    font-black uppercase tracking-tight relative z-10">
                     Wallet Balance : <span className="text-[#ffb400] ml-1">₹ {balance.available_balance.toLocaleString()}</span>
                   </span>
                 </div>
