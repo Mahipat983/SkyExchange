@@ -11,6 +11,9 @@ function LoginPage() {
   const [password, setPassword] = useState('');
   const [validationInput, setValidationInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [view, setView] = useState('login'); // 'login' or 'forgot'
+  const [forgotMobile, setForgotMobile] = useState('');
+
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
   const showSnackbar = useSnackbarStore(state => state.show);
@@ -27,6 +30,7 @@ function LoginPage() {
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     setValidationCode(generateCode());
+    setView('login');
 
     return () => {
       document.body.style.overflow = originalOverflow;
@@ -34,7 +38,7 @@ function LoginPage() {
   }, [navigate]);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     if (!loginName.trim()) { showSnackbar('Username is empty', 'error'); return; }
     if (!password.trim()) { showSnackbar('Password is empty', 'error'); return; }
     if (validationInput.trim() !== validationCode) {
@@ -46,8 +50,7 @@ function LoginPage() {
 
     try {
       setLoading(true);
-      // Fetch user's current logic IP or just pass a mock if not available
-      const ip = '127.0.0.1'; // Simple placeholder if no IP fetcher
+      const ip = '127.0.0.1';
       const response = await authController.login({
         username: loginName,
         password: password,
@@ -55,19 +58,42 @@ function LoginPage() {
       });
 
       if (response.error === '0') {
-        // Success
-        loginAction(response.username || loginName, response.LoginToken);
+        const token = response.LoginToken || response.apitoken || response.token;
+        loginAction(response.username || loginName, token);
         showSnackbar('Login Successful', 'success');
         navigate('/');
       } else {
-        // Error from API
-        showSnackbar(response.msg || 'Login failed. Please check your credentials.', 'error');
+        showSnackbar(response.msg || 'Login failed.', 'error');
         setValidationCode(generateCode());
         setValidationInput('');
       }
     } catch (error) {
       console.error('Login Error:', error);
-      showSnackbar('An expected error occurred during login.', 'error');
+      showSnackbar('An unexpected error occurred during login.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    if (e) e.preventDefault();
+    if (!forgotMobile.trim()) {
+      showSnackbar('Please enter mobile number', 'error');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await authController.forgotPassword(forgotMobile);
+      if (response.error === '0') {
+        showSnackbar(response.msg || 'Password reset request sent!', 'success');
+        setView('login');
+      } else {
+        showSnackbar(response.msg || 'Failed to request password reset', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showSnackbar('Error processing request', 'error');
     } finally {
       setLoading(false);
     }
@@ -100,55 +126,90 @@ function LoginPage() {
 
         {/* Login Form */}
         <main className="content-section">
-          <form className="login-form" onSubmit={handleLogin}>
-            <input
-              type="text"
-              placeholder="Username"
-              className="form-input"
-              value={loginName}
-              onChange={(e) => setLoginName(e.target.value)}
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="form-input"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <div className="validation-input-wrapper">
+          {view === 'login' ? (
+            <form className="login-form" onSubmit={handleLogin}>
               <input
                 type="text"
-                placeholder="Validation Code"
+                placeholder="Username"
                 className="form-input"
-                value={validationInput}
-                onChange={(e) => setValidationInput(e.target.value)}
-                maxLength="4"
+                value={loginName}
+                onChange={(e) => setLoginName(e.target.value)}
               />
-              <span className="captcha-code" onClick={() => setValidationCode(generateCode())}>
-                {validationCode}
-              </span>
-            </div>
-            <div className="forgot-password-wrap">
-              <a href="#" className="forgot-password-link">Forgot Password?</a>
-            </div>
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button type="submit" className="login-btn" style={{ flex: 1 }}>Login</button>
-              <button type="button" className="login-btn" style={{ flex: 1 }}>Demo</button>
-            </div>
+              <input
+                type="password"
+                placeholder="Password"
+                className="form-input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <div className="validation-input-wrapper">
+                <input
+                  type="text"
+                  placeholder="Validation Code"
+                  className="form-input"
+                  value={validationInput}
+                  onChange={(e) => setValidationInput(e.target.value)}
+                  maxLength="4"
+                />
+                <span className="captcha-code" onClick={() => setValidationCode(generateCode())}>
+                  {validationCode}
+                </span>
+              </div>
+              <div className="forgot-password-wrap">
+                <span 
+                  className="forgot-password-link" 
+                  onClick={() => setView('forgot')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  Forgot Password?
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button type="submit" className="login-btn" style={{ flex: 1 }} disabled={loading}>
+                  {loading ? '...' : 'Login'}
+                </button>
+                <button type="button" className="login-btn" style={{ flex: 1 }}>Demo</button>
+              </div>
 
-            <div className="signup-prompt">
-              Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
-            </div>
+              <div className="signup-prompt">
+                Don't have an account? <a href="/signup" className="signup-link">Sign up</a>
+              </div>
 
-            <div className="extra-buttons-row">
-              <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
-                <i className="fab fa-whatsapp"></i> WhatsApp
-              </a>
-              <a href="/download/app.apk" className="extra-btn apk-btn">
-                <i className="fas fa-download"></i> Download APK
-              </a>
-            </div>
-          </form>
+              <div className="extra-buttons-row">
+                <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
+                  <i className="fab fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="/download/app.apk" className="extra-btn apk-btn">
+                  <i className="fas fa-download"></i> Download APK
+                </a>
+              </div>
+            </form>
+          ) : (
+            <form className="login-form" onSubmit={handleForgotPassword}>
+              <h2 style={{ color: '#ffc107', marginBottom: '10px' }}>Forgot Password</h2>
+              <p style={{ color: '#fff', fontSize: '14px', marginBottom: '20px' }}>Enter your mobile number to reset your password.</p>
+              <input
+                type="text"
+                placeholder="Mobile Number"
+                className="form-input"
+                value={forgotMobile}
+                onChange={(e) => setForgotMobile(e.target.value)}
+              />
+              <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                <button type="submit" className="login-btn" style={{ flex: 1 }} disabled={loading}>
+                  {loading ? '...' : 'Submit'}
+                </button>
+                <button 
+                  type="button" 
+                  className="login-btn" 
+                  style={{ flex: 1, backgroundColor: '#6c757d' }} 
+                  onClick={() => setView('login')}
+                >
+                  Back
+                </button>
+              </div>
+            </form>
+          )}
 
         </main>
       </div>
