@@ -536,13 +536,22 @@ export default function DepositPage() {
                       </div>
 
                       <div className="flex items-start gap-3 pt-2">
-                        <input
-                          type="checkbox"
-                          id="agree-terms"
-                          checked={agreed}
-                          onChange={(e) => setAgreed(e.target.checked)}
-                          className="w-5 h-5 rounded border-[#ddd] bg-[#f4f4f4] accent-[#ffb400] mt-0.5 cursor-pointer focus:ring-0 focus:ring-offset-0"
-                        />
+                        <div className="relative w-5 h-5 mt-0.5 shrink-0">
+                          <input
+                            type="checkbox"
+                            id="agree-terms"
+                            checked={agreed}
+                            onChange={(e) => setAgreed(e.target.checked)}
+                            className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                          />
+                          <div className={`absolute inset-0 border-2 rounded transition-all flex items-center justify-center ${agreed ? 'bg-[#ffb400] border-[#ffb400]' : 'bg-white border-[#ddd]'}`}>
+                            {agreed && (
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            )}
+                          </div>
+                        </div>
                         <label htmlFor="agree-terms" className="text-[11px] font-bold text-[#666] leading-relaxed cursor-pointer select-none">
                           I confirm that I have transferred ₹{amount} and agree with the terms of payment.
                         </label>
