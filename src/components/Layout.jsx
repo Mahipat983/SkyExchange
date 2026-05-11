@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import DesktopHeader from './DesktopHeader';
 import MobileHeader from './MobileHeader';
@@ -7,11 +7,12 @@ import SignupModal from './SignupModal';
 import GameOverlay from './GameOverlay';
 import EditStakeModal from './EditStakeModal';
 import { useUIStore } from '../store/uiStore';
+import { userController } from '../controllers';
 
 function Layout({ children }) {
-  const { 
-    isLoginModalOpen, closeLoginModal, 
-    isSignupModalOpen, closeSignupModal, 
+  const {
+    isLoginModalOpen, closeLoginModal,
+    isSignupModalOpen, closeSignupModal,
     overlay, closeOverlay,
     isEditStakeModalOpen, closeEditStakeModal,
     openLoginModal, openSignupModal
@@ -19,6 +20,25 @@ function Layout({ children }) {
 
   const location = useLocation();
   const navigate = useNavigate();
+  const [whatsappLink, setWhatsappLink] = useState('https://go.wa.link/ambikaexchangesupport');
+
+  useEffect(() => {
+    const fetchWhatsApp = async () => {
+      try {
+        const res = await userController.getWhatsAppLink();
+        if (res && res.error === '0' && res.Link) {
+          setWhatsappLink(res.Link);
+        } else if (res && res.url) {
+          setWhatsappLink(res.url);
+        } else if (res && typeof res === 'string' && res.startsWith('http')) {
+          setWhatsappLink(res);
+        }
+      } catch (err) {
+        console.error('Failed to fetch WhatsApp link:', err);
+      }
+    };
+    fetchWhatsApp();
+  }, []);
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -66,15 +86,76 @@ function Layout({ children }) {
       <EditStakeModal isOpen={isEditStakeModalOpen} onClose={closeEditStakeModal} />
 
       {/* Global Game Overlay */}
-      <GameOverlay 
-        isOpen={overlay.isOpen} 
-        url={overlay.url} 
-        title={overlay.title} 
-        onClose={closeOverlay} 
+      <GameOverlay
+        isOpen={overlay.isOpen}
+        url={overlay.url}
+        title={overlay.title}
+        onClose={closeOverlay}
       />
 
       {/* Page content */}
       {children}
+
+      {/* Floating Buttons (Mobile Only) */}
+      <div className="mobile-only">
+        {location.pathname === '/' && (
+          <a
+            href="/casino"
+            className="floating-btn casino-float"
+            style={{ left: '20px' }}
+          >
+            <img src="/images/promot.svg" alt="Casino" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          </a>
+        )}
+        <a
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="floating-btn whatsapp-float"
+          style={{ right: '20px' }}
+        >
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="35" height="35" />
+        </a>
+
+        <style>{`
+          .floating-btn {
+            position: fixed;
+            bottom: 100px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            z-index: 9999;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+          }
+          .floating-btn:active {
+            transform: scale(0.9);
+          }
+          .casino-float {
+            background: none;
+            box-shadow: none;
+            animation: pulse-gold 2s infinite;
+          }
+          .whatsapp-float {
+            background: #25d366;
+            animation: pulse-green 2s infinite;
+          }
+          @keyframes pulse-gold {
+            0% { box-shadow: 0 0 0 0 rgba(255, 180, 0, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 180, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 180, 0, 0); }
+          }
+          @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+          }
+        `}</style>
+      </div>
     </>
   );
 }

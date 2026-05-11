@@ -753,10 +753,6 @@ function MobileHeader() {
       )}
 
       <div className="mobile-bottom-nav">
-        <Link to="/casino" className={`mobile-bottom-nav-item ${getActive('/casino')}`}>
-          <img className="icon-promote" src="/images/promot.svg" alt="casino" width="24px" height="24px" />
-          {/* <span>Casino</span> */}
-        </Link>
         <Link to="/sports" className={`mobile-bottom-nav-item ${getActive('/sports')}`}>
           <img className="icon-sports" src="/images/transparent.gif" alt="sports" width="24px" height="24px" />
           <span>Sports</span>

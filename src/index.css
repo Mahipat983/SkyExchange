@@ -801,34 +801,39 @@ body {
 
 /* ======= CASINO & NEW TAG STYLES ======= */
 .menu li {
-    overflow: visible !important;
+  overflow: visible !important;
 }
 
-.menu .tag-new, .setting-wrap .tag-new {
-    position: relative;
+.menu .tag-new,
+.setting-wrap .tag-new {
+  position: relative;
 }
 
-.menu .tag-new:before, .setting-wrap .tag-new:before {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: -2px;
-    width: 29px;
-    height: 29px;
-    background: url(/images/menu-tagnew.png) no-repeat;
-    background-size: contain;
-    z-index: 10;
+.menu .tag-new:before,
+.setting-wrap .tag-new:before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  width: 29px;
+  height: 29px;
+  background: url(/images/menu-tagnew.png) no-repeat;
+  background-size: contain;
+  z-index: 10;
 }
 
-.menu .casino:after, .setting-wrap .casino:after, .menu .bet-game:after, .setting-wrap .bet-game:after {
-    content: "";
-    display: inline-block;
-    position: relative;
-    top: 4px;
-    left: 2px;
-    width: 18px;
-    height: 18px;
-    background: url(/images/menu-casino.png) no-repeat;
+.menu .casino:after,
+.setting-wrap .casino:after,
+.menu .bet-game:after,
+.setting-wrap .bet-game:after {
+  content: "";
+  display: inline-block;
+  position: relative;
+  top: 4px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: url(/images/menu-casino.png) no-repeat;
 }
 
 .menu li a.tag-new {
@@ -1041,6 +1046,7 @@ body {
   padding-bottom: 5px;
   scrollbar-width: none;
 }
+
 .statement-tabs-container::-webkit-scrollbar {
   display: none;
 }
@@ -1082,11 +1088,30 @@ body {
   text-transform: uppercase;
 }
 
-.tx-type-cr { background: rgba(46, 204, 113, 0.25); color: #2ecc71; }
-.tx-type-dr { background: rgba(231, 76, 60, 0.25); color: #e74c3c; }
-.tx-type-o { background: rgba(52, 152, 219, 0.25); color: #3498db; }
-.tx-type-back { background: #a5d8ff; color: #007bff; }
-.tx-type-lay { background: #f8b9c6; color: #dc3545; }
+.tx-type-cr {
+  background: rgba(46, 204, 113, 0.25);
+  color: #2ecc71;
+}
+
+.tx-type-dr {
+  background: rgba(231, 76, 60, 0.25);
+  color: #e74c3c;
+}
+
+.tx-type-o {
+  background: rgba(52, 152, 219, 0.25);
+  color: #3498db;
+}
+
+.tx-type-back {
+  background: #a5d8ff;
+  color: #007bff;
+}
+
+.tx-type-lay {
+  background: #f8b9c6;
+  color: #dc3545;
+}
 
 /* Modal for Bet Statement */
 .bet-detail-modal-overlay {
@@ -1095,7 +1120,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.7);
+  background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(5px);
   z-index: 10000;
   display: flex;
@@ -1111,7 +1136,7 @@ body {
   max-width: 500px;
   max-height: 80vh;
   overflow-y: auto;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
@@ -1185,7 +1210,7 @@ body {
 
 .signup-modal-logo {
   width: 150px;
-  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
 }
 
 .signup-modal-right {
@@ -1255,10 +1280,11 @@ body {
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: border-color 0.2s, box-shadow 0.2s;
   height: 44px;
-  line-height: 44px; /* Matches height for centering text */
+  line-height: 44px;
+  /* Matches height for centering text */
   vertical-align: middle;
 }
 
@@ -1277,8 +1303,9 @@ body {
   border: 1px solid #ccc;
   border-radius: 6px;
   overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-  height: 44px; /* Fixed height to match inputs */
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  height: 44px;
+  /* Fixed height to match inputs */
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -1352,7 +1379,7 @@ body {
   font-weight: 800;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   margin-top: 10px;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -1490,10 +1517,12 @@ body {
     transform: scale(0.95);
     opacity: 0.7;
   }
+
   50% {
     transform: scale(1.05);
     opacity: 1;
   }
+
   100% {
     transform: scale(0.95);
     opacity: 0.7;
@@ -1501,8 +1530,13 @@ body {
 }
 
 @keyframes ticker {
-  0% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+  0% {
+    transform: translateX(100%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
 .animate-ticker {
@@ -1514,12 +1548,16 @@ body {
 /* Fix for Greyhound Racing being cut off in Live board */
 .on_live {
   width: 145px !important;
+  top: 2px !important;
+  bottom: auto !important;
+  z-index: 10 !important;
 }
 
 .on_live dd {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
+  margin-bottom: 1px !important;
 }
 
 .on_live dd p {
@@ -1528,6 +1566,7 @@ body {
   white-space: nowrap !important;
   overflow: visible !important;
   text-overflow: clip !important;
+  margin-bottom: 0 !important;
 }
 
 /* ======= MOBILE HEADER RESPONSIVE FIXES ======= */
@@ -1540,7 +1579,7 @@ body {
     padding: 0 10px !important;
     background-image: linear-gradient(180deg, #474747 0%, #070707 100%) !important;
     border-bottom: 1px solid #333 !important;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3) !important;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
   }
 
   .mobile-only header .top-logo {
@@ -1582,19 +1621,20 @@ body {
     margin-top: 0 !important;
     text-indent: 0 !important;
     font-family: Tahoma, Helvetica, sans-serif !important;
-    flex: 0 0 auto !important; /* prevent flex-grow distortion */
+    flex: 0 0 auto !important;
+    /* prevent flex-grow distortion */
   }
 
   .mobile-only header .btn-signup {
     background-image: linear-gradient(180deg, #5a5a5a 0%, #333333 100%) !important;
     border: 1px solid #555 !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   }
 
   .mobile-only header .login-index {
     background-image: linear-gradient(180deg, #f72424 0%, #bb1c00 100%) !important;
     border: 1px solid #820110 !important;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.2) !important;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
   }
 
   /* The :before pseudo adds the SVG user icon — keep it but fix its size */
@@ -1620,7 +1660,7 @@ body {
   align-items: stretch;
   gap: 20px;
   background-color: #ffffff;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .footer-logo-container {
@@ -1686,7 +1726,8 @@ body {
 @media screen and (max-width: 768px) {
   .footer-license-section {
     flex-direction: column;
-    align-items: center; /* Horizontally center the stacked boxes */
+    align-items: center;
+    /* Horizontally center the stacked boxes */
     max-width: 95%;
     padding: 15px;
     gap: 15px;
@@ -1696,7 +1737,8 @@ body {
     width: 100%;
     max-width: 280px;
     height: 80px;
-    margin: 0 auto; /* Extra insurance for centering */
+    margin: 0 auto;
+    /* Extra insurance for centering */
   }
 
   .footer-description-container {
@@ -1722,6 +1764,7 @@ body {
 
 /* ======= GLOBAL MOBILE OVERLAP FIX ======= */
 @media screen and (max-width: 768px) {
+
   /* Applying padding primarily to body to avoid double-padding issues */
   body {
     padding-bottom: 80px !important;
@@ -1742,7 +1785,7 @@ body {
   .full-wrap {
     padding-bottom: 80px !important;
   }
-  
+
   /* Ensure individual match lists don't add extra space if they are inside padded containers */
   .mobile-match-list,
   #centerColumn,
@@ -1750,4 +1793,3 @@ body {
     padding-bottom: 0 !important;
   }
 }
-
