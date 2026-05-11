@@ -130,7 +130,7 @@ export default function DepositPage() {
 
     const whatsapp = {
       Bank_Id: 'whatsapp',
-      Name: 'Whatsapp Deposite',
+      Name: 'Whatsapp Deposit',
       Type: 'WHATSAPP',
       isWhatsapp: true
     };
@@ -375,7 +375,7 @@ export default function DepositPage() {
 
                             let displayName = '';
                             if (pm.isWhatsapp) {
-                              displayName = 'Whatsapp Deposite';
+                              displayName = 'Whatsapp Deposit';
                             } else {
                               typeCounters[baseType] = (typeCounters[baseType] || 0) + 1;
                               displayName = `${baseType} - ${typeCounters[baseType]}`;
