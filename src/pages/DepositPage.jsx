@@ -291,11 +291,11 @@ export default function DepositPage() {
             <div className="xl:col-span-12 2xl:col-span-7 space-y-8 animate-in fade-in duration-500">
               {step === 1 ? (
                 /* Step 1 Content */
-                <div className="space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
-                  <div className="bg-white border border-[#ccc] rounded-xl p-8 shadow-md space-y-6">
+                <div className="space-y-6 md:space-y-8 animate-in fade-in slide-in-from-left-4 duration-500">
+                  <div className="bg-white border border-[#ccc] rounded-xl p-6 md:p-8 shadow-md space-y-6">
                     <div className="space-y-3">
                       <label className="text-[14px] font-black uppercase tracking-wider text-[#444] ml-1">Deposit Amount</label>
-                      <div className="flex flex-col md:flex-row gap-4">
+                      <div className="flex flex-col xl:flex-row gap-4">
                         <div className="relative flex-1 group">
                           <input
                             type="number"
@@ -305,13 +305,13 @@ export default function DepositPage() {
                               setAmount(e.target.value);
                               if (!e.target.value) setUserHasSelectedManually(false);
                             }}
-                            className="w-full h-16 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-2xl font-black text-[#111] focus:outline-none transition-all placeholder:text-black/10"
+                            className="w-full h-14 bg-[#f4f4f4] border-2 border-[#ddd] rounded-xl px-5 text-xl font-black text-[#111] focus:outline-none transition-all placeholder:text-black/10"
                           />
 
                         </div>
                         <button
                           onClick={() => parseFloat(amount) > 0 ? setStep(2) : showSnackbar('Please enter valid amount', 'error')}
-                          className="h-16 w-full md:w-auto px-10 bg-[#ffb400] hover:bg-[#ffc800] text-black rounded-xl font-black tracking-widest uppercase shadow-md active:scale-[0.98] transition-all"
+                          className="h-14 w-full md:w-auto px-10 bg-[#ffb400] hover:bg-[#ffc800] text-black rounded-xl font-black tracking-widest uppercase shadow-md active:scale-[0.98] transition-all"
                         >
                           SUBMIT
                         </button>
@@ -324,7 +324,7 @@ export default function DepositPage() {
                         <button
                           key={amt}
                           onClick={() => setAmount(amt.toString())}
-                          className={`h-12 rounded-xl text-[12px] font-black transition-all ${amount === amt.toString() ? 'bg-[#ffb400] text-black shadow-md' : 'bg-black/5 hover:bg-black/10 text-[#555]'}`}
+                          className={`h-10 rounded-xl text-[12px] font-black transition-all ${amount === amt.toString() ? 'bg-[#ffb400] text-black shadow-md' : 'bg-black/5 hover:bg-black/10 text-[#555]'}`}
                         >
                           +₹{amt.toLocaleString()}
                         </button>
@@ -363,7 +363,7 @@ export default function DepositPage() {
                         NO BANKS AVAILABLE FOR ₹{parseFloat(amount).toLocaleString()}
                       </div>
                     ) : (
-                      <div className="flex gap-2 md:gap-4 overflow-x-auto no-scrollbar pb-2">
+                      <div className="grid grid-cols-4 sm:grid-cols-6 md:flex gap-2 md:gap-4 md:overflow-x-auto no-scrollbar pb-2">
                         {(() => {
                           const typeCounters = {};
                           return filteredMethods.map((pm) => {
@@ -401,12 +401,12 @@ export default function DepositPage() {
                                     setUserHasSelectedManually(true);
                                   }
                                 }}
-                                className={`flex flex-col items-center justify-center gap-1.5 p-1 pt-2 rounded-xl border-2 transition-all flex-shrink-0 min-w-[95px] ${isActive ? 'bg-[#ffb400]/10 border-[#ffb400] text-black shadow-sm' : 'border-[#ddd] bg-white text-[#666] hover:border-[#ccc]'}`}
+                                className={`flex flex-col items-center justify-center gap-1.5 p-1 pt-2 rounded-xl border-2 transition-all w-full md:w-auto md:min-w-[95px] ${isActive ? 'bg-[#ffb400]/10 border-[#ffb400] text-black shadow-sm' : 'border-[#ddd] bg-white text-[#666] hover:border-[#ccc]'}`}
                               >
-                                <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center p-1.5 shadow-sm overflow-hidden border border-black/5">
+                                <div className="w-9 h-9 md:w-12 md:h-12 bg-white rounded-lg flex items-center justify-center p-1.5 shadow-sm overflow-hidden border border-black/5">
                                   <img src={iconPath} alt="" className="w-full h-full object-contain" />
                                 </div>
-                                <span className="text-[10px] font-black uppercase tracking-tight text-center truncate w-full px-1">{displayName}</span>
+                                <span className="text-[9px] md:text-[10px] font-black uppercase tracking-tight text-center leading-[1.1] w-full px-1">{displayName}</span>
                               </button>
                             );
                           });
@@ -415,7 +415,7 @@ export default function DepositPage() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 md:gap-8">
                     {/* Bank Details Card */}
                     <div className="space-y-6">
                       <div className="bg-white border border-[#ccc] rounded-xl overflow-hidden p-6 space-y-1 shadow-md min-h-[300px] flex flex-col justify-center relative">
@@ -429,7 +429,7 @@ export default function DepositPage() {
                                   <>
                                     <AccountDetailRow label="Wallet Name" value={activeMethod.Name || activeMethod.bankname} onCopy={handleCopy} />
                                     <AccountDetailRow label="Wallet Address" value={activeMethod.Id || activeMethod.id} onCopy={handleCopy} />
-                                    <AccountDetailRow label="Limits" value={`Min: ₹${activeMethod.Min || '100'} | Max: ₹${activeMethod.Max || '10000'}`} />
+                                    <AccountDetailRow label="Limits" value={`Min: ${activeMethod.Min || '100'} | Max: ${activeMethod.Max || '10000'}`} />
                                   </>
                                 );
                               }
@@ -503,16 +503,16 @@ export default function DepositPage() {
 
                       <div className="space-y-2">
                         <p className="text-[12px] font-black uppercase tracking-widest text-[#666] ml-1">Payment Proof <span className="text-red-500 font-medium">[Required]</span></p>
-                        <div className="flex items-center gap-3">
+                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                           <button
                             onClick={() => fileRef.current?.click()}
-                            className="h-10 px-6 bg-[#f4f4f4] border border-[#ddd] rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-[#eee] transition-all flex items-center gap-2 text-black"
+                            className="h-10 px-6 bg-black/5 border border-black/10 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-black/10 transition-all flex items-center gap-2 text-black shrink-0"
                           >
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2-2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
                             {screenshotName ? 'Change' : 'Choose file'}
                           </button>
-                          <span className="text-[10px] font-bold text-[#888] truncate max-w-[150px]">
-                            {screenshotName || 'No file chosen'}
+                          <span className="text-[10px] font-bold text-[#888] truncate max-w-full">
+                            {screenshotName || 'No file selected'}
                           </span>
                         </div>
                         <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
@@ -523,7 +523,7 @@ export default function DepositPage() {
                           type="number"
                           value={amount}
                           readOnly
-                          className="w-full h-12 bg-[#f4f4f4] border border-[#ddd] rounded-xl px-4 text-sm font-black text-[#111] focus:outline-none cursor-not-allowed opacity-60"
+                          className="w-full h-11 bg-[#f4f4f4] border border-[#ddd] rounded-xl px-4 text-sm font-black text-[#111] focus:outline-none cursor-not-allowed opacity-60"
                         />
                         {activeMethod && ['CRYPTO', 'USDT'].includes((activeMethod.Type || activeMethod.type || '').toUpperCase()) && activeMethod.BuyPrice && (
                           <div className="px-2 pt-1.5 flex items-center justify-between text-[10px] font-black uppercase tracking-wider italic">
@@ -551,7 +551,7 @@ export default function DepositPage() {
                       <button
                         disabled={submitting}
                         onClick={handleSubmit}
-                        className={`w-full h-14 rounded-xl font-black uppercase tracking-widest transition-all ${submitting ? 'bg-black/5 text-black/20' : 'bg-[#ffb400] hover:bg-[#ffc800] text-black shadow-md active:scale-[0.98]'}`}
+                        className={`w-full h-12 rounded-xl font-black uppercase tracking-widest transition-all ${submitting ? 'bg-black/5 text-black/20' : 'bg-[#ffb400] hover:bg-[#ffc800] text-black shadow-md active:scale-[0.98]'}`}
                       >
                         {submitting ? 'Processing...' : 'SUBMIT REQUEST'}
                       </button>
@@ -581,8 +581,8 @@ export default function DepositPage() {
             {/* ── RIGHT AREA: Transaction History ── */}
             <div className="xl:col-span-12 2xl:col-span-5 flex flex-col min-h-[855px]">
               <div className="flex-1 flex flex-col bg-white border border-[#ccc] rounded-xl overflow-hidden shadow-md relative">
-                <div className="p-6 border-b border-[#eee] flex items-center justify-between bg-[#f9f9f9]">
-                  <h3 className="text-xs font-black uppercase tracking-[0.2em] text-[#111]">Transaction History</h3>
+                <div className="p-6 border-b border-[#eee] flex items-center justify-between bg-white">
+                  <div style={{ background: 'transparent !important', color: 'black !important', backgroundColor: 'transparent !important' }} className="text-xs font-black uppercase tracking-[0.2em] text-black !bg-transparent">Transaction History</div>
                   <div className="flex items-center gap-1.5 text-[9px] font-black text-[#ffb400] uppercase tracking-widest">
                     <div className="w-1 h-1 rounded-full bg-current animate-pulse" />
                     Live Activity
@@ -592,7 +592,7 @@ export default function DepositPage() {
                 <div className="flex-1 overflow-y-auto no-scrollbar pb-10">
                   <div className="min-w-[600px]">
                     {/* Table Header */}
-                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr_1fr] px-6 py-4 bg-[#eee] text-[10px] font-black text-[#666] uppercase tracking-[0.1em] sticky top-0 z-10 border-b border-[#ddd]">
+                    <div className="grid grid-cols-[1.5fr_1fr_1fr_1fr_1.5fr_1fr] px-6 py-4 bg-white text-[10px] font-black text-[#666] uppercase tracking-[0.1em] sticky top-0 z-10 border-b border-[#eee]">
                       <span className="text-left">TXN ID / UTR</span>
                       <span className="text-center">METHOD</span>
                       <span className="text-center">AMOUNT</span>
