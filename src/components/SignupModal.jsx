@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useUIStore } from '../store/uiStore';
 import { useSnackbarStore } from '../store/snackbarStore';
+import { authController } from '../controllers';
+import { useAuthStore } from '../store/authStore';
 
 const SignupModal = () => {
   const { isSignupModalOpen, closeSignupModal, openLoginModal } = useUIStore();
   const showSnackbar = useSnackbarStore(state => state.show);
+  const loginAction = useAuthStore(state => state.login);
 
   const [isOtpMode, setIsOtpMode] = useState(false);
   const [phone, setPhone] = useState('');
@@ -14,12 +17,13 @@ const SignupModal = () => {
   const [campaignCode, setCampaignCode] = useState('');
   const [isAgreed, setIsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   if (!isSignupModalOpen) return null;
 
-  const handleSendOtp = (e) => {
-    e.preventDefault();
-    if (!phone) {
+  const handleSendOtp = async (e) => {
+    if (e) e.preventDefault();
+    if (!phone.trim()) {
       showSnackbar('Please enter phone number', 'error');
       return;
     }
@@ -27,26 +31,69 @@ const SignupModal = () => {
       showSnackbar('Please agree to terms and conditions', 'error');
       return;
     }
-    setIsOtpMode(true);
-    showSnackbar('OTP sent successfully', 'success');
+
+    try {
+      setLoading(true);
+      const resp = await authController.sendOtp(phone);
+      if (resp.error === '0') {
+        showSnackbar(resp.msg || 'OTP Sent Successfully', 'success');
+        setIsOtpMode(true);
+      } else {
+        showSnackbar(resp.msg || 'Failed to send OTP', 'error');
+      }
+    } catch (err) {
+      console.error(err);
+      showSnackbar('Error sending OTP', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    if (!otp) {
+  const handleSignup = async (e) => {
+    if (e) e.preventDefault();
+    if (!otp.trim()) {
       showSnackbar('Please enter OTP', 'error');
       return;
     }
-    if (!username) {
+    if (!username.trim()) {
       showSnackbar('Please enter username', 'error');
       return;
     }
-    if (!password) {
+    if (!password.trim()) {
       showSnackbar('Please enter password', 'error');
       return;
     }
-    showSnackbar('Signup successful', 'success');
-    closeSignupModal();
+
+    try {
+      setLoading(true);
+      const data = {
+        username,
+        password,
+        mobile: phone,
+        otp,
+        campaignCode
+      };
+      
+      const response = await authController.createUser(data);
+
+      if (response.error === '0') {
+        showSnackbar(response.msg || 'Signup Successful!', 'success');
+        if (response.apitoken || response.LoginToken) {
+          loginAction(response.username || username, response.apitoken || response.LoginToken);
+          closeSignupModal();
+        } else {
+          closeSignupModal();
+          openLoginModal();
+        }
+      } else {
+        showSnackbar(response.msg || 'Signup failed', 'error');
+      }
+    } catch (err) {
+      console.error('Signup Error:', err);
+      showSnackbar('An unexpected error occurred during signup.', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -120,7 +167,7 @@ const SignupModal = () => {
             {isOtpMode && (
               <div style={{ textAlign: 'right', marginTop: '-10px' }}>
                 <span 
-                  onClick={() => showSnackbar('OTP Resent', 'success')}
+                  onClick={handleSendOtp}
                   style={{ fontSize: '12px', color: '#333', cursor: 'pointer', fontWeight: '600', textDecoration: 'underline' }}
                 >
                   Resend OTP
@@ -169,8 +216,8 @@ const SignupModal = () => {
               onChange={e => setCampaignCode(e.target.value)}
             />
 
-            <button type="submit" className="signup-modal-btn">
-              {isOtpMode ? "Sign Up" : "Send OTP"}
+            <button type="submit" className="signup-modal-btn" disabled={loading}>
+              {loading ? "Processing..." : (isOtpMode ? "Sign Up" : "Send OTP")}
             </button>
           </form>
 
