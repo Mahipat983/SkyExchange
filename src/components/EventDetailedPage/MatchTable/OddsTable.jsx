@@ -148,8 +148,31 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             position: 'relative',
             ...baseFont
           }}>
-            <th style={{ textAlign: 'left', paddingLeft: '12px', width: 'auto', fontSize: mobileView ? '10px' : '12px' }}>
+            <th style={{ textAlign: 'left', paddingLeft: '12px', width: '100%', fontSize: mobileView ? '10px' : '12px', position: 'relative' }}>
               {Object.keys(marketData?.runners || {}).length} selections
+
+              {/* Floating Min/Max on the right of the header - Moved inside th to be valid HTML */}
+              {!mobileView && (
+                <div style={{
+                  position: 'absolute',
+                  right: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  display: 'flex',
+                  gap: '8px',
+                  alignItems: 'center',
+                  zIndex: 5
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                    <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
+                    <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
+                    <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
+                    <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
+                  </div>
+                </div>
+              )}
             </th>
 
             {/* Fixed Rate Columns */}
@@ -181,29 +204,6 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                 <th style={{ width: oddsWidth }}></th>
               </>
             )}
-
-            {/* Floating Min/Max on the right of the header */}
-            {!mobileView && (
-              <div style={{
-                position: 'absolute',
-                right: '12px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                display: 'flex',
-                gap: '8px',
-                alignItems: 'center',
-                zIndex: 5
-              }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
-                  <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                  <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
-                  <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
-                </div>
-              </div>
-            )}
           </tr>
         </thead>
 
@@ -233,7 +233,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             return (
               <React.Fragment key={idx}>
                 <tr style={{ height: uniformHeight, borderBottom: '1px solid #e4e7ed' }}>
-                  <td style={{ paddingLeft: mobileView ? '8px' : '16px', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed', wordBreak: 'break-word', overflow: 'hidden' }}>
+                  <td style={{ paddingLeft: mobileView ? '8px' : '16px', width: '100%', fontWeight: '700', color: '#2b3a47', borderRight: '1px solid #e4e7ed', wordBreak: 'break-word', overflow: 'hidden' }}>
                     <div style={{ fontSize: mobileView ? '12px' : '14px', lineHeight: '1.2' }}>{runner.RunnerName}</div>
                     {(() => {
                       const chartVal = rates?.chart ??
@@ -258,7 +258,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                   </td>
 
                   <td colSpan={mobileView ? 2 : 6} style={{ padding: 0, position: 'relative' }}>
-                    <div style={{ display: 'flex', width: '100%', height: uniformHeight }}>
+                    <div style={{ display: 'flex', width: '100%', height: uniformHeight, justifyContent: 'flex-end' }}>
                       {!mobileView && (
                         <>
                           {/* Back 3 */}

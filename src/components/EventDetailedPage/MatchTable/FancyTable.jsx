@@ -66,10 +66,10 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
   // Determine dynamic tabs based on allMarkets data
   const dynamicTabs = ['All'];
   const foundSubTypes = new Set();
-  
+
   allMarkets.forEach(m => {
     let tabName = SUBTYPE_MAP[m.subType];
-    
+
     // Fallback for names
     if (!tabName) {
       const lowerName = m.name?.toLowerCase() || '';
@@ -77,7 +77,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
       else if (lowerName.includes('khadda')) tabName = 'Khadda';
       else if (lowerName.includes('lottery')) tabName = 'Lottery';
     }
-    
+
     if (tabName) {
       foundSubTypes.add(tabName);
     } else {
@@ -95,7 +95,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
 
   const markets = allMarkets.filter(m => {
     if (activeTab === 'All') return true;
-    
+
     let mTabName = SUBTYPE_MAP[m.subType];
     if (!mTabName) {
       const lowerName = m.name?.toLowerCase() || '';
@@ -103,11 +103,11 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
       else if (lowerName.includes('khadda')) mTabName = 'Khadda';
       else if (lowerName.includes('lottery')) mTabName = 'Lottery';
     }
-    
+
     if (activeTab === 'Fancy') {
       return !mTabName || mTabName === 'Fancy';
     }
-    
+
     return mTabName === activeTab;
   });
 
@@ -137,7 +137,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
 
       {/* ── Header row ── */}
       <div style={{
-        background: '#243a48',
+        // background: '#243a48',
         display: 'flex',
         alignItems: 'center',
         padding: '4px 8px',
@@ -161,6 +161,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '10px',
+
             flexShrink: 0,
           }}>⏱</span>
           <span style={{ fontWeight: 'bold', fontSize: '13px', letterSpacing: '0.3px', whiteSpace: 'nowrap' }}>
@@ -168,7 +169,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           </span>
         </div>
         <span style={{
-          border: '1px solid rgba(255,255,255,0.5)',
+          border: '1px solid #000',
           borderRadius: '50%',
           width: '16px',
           height: '16px',
@@ -177,7 +178,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           justifyContent: 'center',
           fontSize: '11px',
           cursor: 'pointer',
-          color: 'rgba(255,255,255,0.75)',
+          color: "#000",
           flexShrink: 0,
         }}>i</span>
       </div>

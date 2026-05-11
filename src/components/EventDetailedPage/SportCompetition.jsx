@@ -89,11 +89,11 @@ const SportCompetition = ({ sport, competition, matchName, events }) => {
       {sportList.map((s) => {
         const isActive = sport?.toLowerCase() === s.slug;
         return (
-          <Link 
-            key={s.name} 
+          <Link
+            key={s.name}
             to={`/${s.slug}`}
-            style={{ 
-              ...linkStyle, 
+            style={{
+              ...linkStyle,
               backgroundColor: isActive ? '#f0f4f8' : '#fff',
               borderLeft: isActive ? '4px solid #ffb400' : 'none',
               color: isActive ? '#000' : '#333',
@@ -127,10 +127,10 @@ const SportCompetition = ({ sport, competition, matchName, events }) => {
       </div>
 
       {/* Informational Market List */}
-      <div style={{ backgroundColor: '#fcfcfc', flex: 1 }}>
+      <div style={{ backgroundColor: 'rgba(0,0,0,.6) !important', flex: 1 }}>
         {marketList.map((market) => (
-          <div 
-            key={market} 
+          <div
+            key={market}
             onClick={() => {
               const id = `market-${market.replace(/\s+/g, '-').toUpperCase()}`;
               const element = document.getElementById(id);
@@ -138,11 +138,12 @@ const SportCompetition = ({ sport, competition, matchName, events }) => {
                 element.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }
             }}
-            style={{ 
-              padding: '8px 12px 8px 25px', 
-              fontSize: '11px', 
-              color: '#4b5965', 
-              fontWeight: '700', 
+            style={{
+              background: "rgba(0,0,0,.6) !important",
+              padding: '8px 12px 8px 25px',
+              fontSize: '11px',
+              color: '#4b5965',
+              fontWeight: '700',
               borderBottom: '1px solid #f1f5f9',
               display: 'flex',
               alignItems: 'center',
@@ -151,11 +152,11 @@ const SportCompetition = ({ sport, competition, matchName, events }) => {
               transition: 'all 0.2s'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#f1f5f9';
-              e.currentTarget.style.color = '#ffb400';
+              // e.currentTarget.style.backgroundColor = '#f1f5f9';
+              e.currentTarget.style.color = '#ffff';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
+              // e.currentTarget.style.backgroundColor = 'transparent';
               e.currentTarget.style.color = '#4b5965';
             }}
           >
