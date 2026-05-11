@@ -257,7 +257,7 @@ export default function WithdrawPage() {
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors ${activeCategory === 'BANK' ? 'bg-[#ffb400] text-black' : 'bg-black/5 text-[#888] group-hover:bg-black/10'}`}>
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M11 10v11M15 10v11M20 10v11" /></svg>
                   </div>
-                  <span className={`text-[11px] font-black uppercase tracking-widest leading-tight transition-colors ${activeCategory === 'BANK' ? 'text-black' : 'text-[#888]'}`}>Bank Transfer</span>
+                  <span className={`text-[11px] font-black text-center   uppercase tracking-widest leading-tight transition-colors ${activeCategory === 'BANK' ? 'text-black' : 'text-[#888]'}`}>Bank Transfer</span>
                 </div>
 
                 <div
