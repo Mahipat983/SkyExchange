@@ -463,7 +463,15 @@ function MobileHeader() {
           /* ===== LOGGED OUT: Sign up / Login ===== */
           <div className="btn-wrap">
             <Link className="btn-signup ui-link" to="/signup">Sign up</Link>
-            <Link className="login-index ui-link" to="/login">Login</Link>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '2px' }}>
+              <Link className="login-index ui-link" to="/login">Login</Link>
+              <span 
+                onClick={() => openLoginModal('forgot')}
+                style={{ fontSize: '9px', color: '#ffb400', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
+              >
+                Forgot?
+              </span>
+            </div>
             <button className="login-index ui-link" style={{ background: 'linear-gradient(180deg, #555, #333)', marginLeft: '5px' }}>Demo</button>
           </div>
         ) : (

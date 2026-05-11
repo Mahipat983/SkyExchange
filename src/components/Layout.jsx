@@ -33,6 +33,11 @@ function Layout({ children }) {
       params.delete('signup');
       changed = true;
     }
+    if (params.get('forgot') === 'true') {
+      openLoginModal('forgot');
+      params.delete('forgot');
+      changed = true;
+    }
     if (changed) {
       const newSearch = params.toString();
       navigate({

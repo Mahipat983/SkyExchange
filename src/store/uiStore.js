@@ -2,7 +2,8 @@ import { create } from 'zustand';
 
 export const useUIStore = create((set) => ({
   isLoginModalOpen: false,
-  openLoginModal: () => set({ isLoginModalOpen: true }),
+  loginModalView: 'login', // 'login' or 'forgot'
+  openLoginModal: (view = 'login') => set({ isLoginModalOpen: true, loginModalView: view }),
   closeLoginModal: () => set({ isLoginModalOpen: false }),
 
   isSignupModalOpen: false,

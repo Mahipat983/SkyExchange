@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { authController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
 import { useSnackbarStore } from '../store/snackbarStore';
+import { useUIStore } from '../store/uiStore';
 
 function LoginModal({ isOpen, onClose }) {
+  const loginModalView = useUIStore(state => state.loginModalView);
   const [validationCode, setValidationCode] = useState('');
   const [loginName, setLoginName] = useState('');
   const [password, setPassword] = useState('');
@@ -20,9 +22,9 @@ function LoginModal({ isOpen, onClose }) {
   useEffect(() => {
     if (isOpen) {
       setValidationCode(generateCode());
-      setView('login'); // Reset to login view when opening
+      setView(loginModalView || 'login'); // Use view from store
     }
-  }, [isOpen]);
+  }, [isOpen, loginModalView]);
 
   const handleLogin = async (e) => {
     if (e) e.preventDefault();
@@ -135,22 +137,22 @@ function LoginModal({ isOpen, onClose }) {
                   </span>
                 </div>
 
-                <div style={{ textAlign: 'right', marginBottom: '10px' }}>
-                  <span
-                    onClick={() => setView('forgot')}
-                    style={{ fontSize: '12px', color: '#333', cursor: 'pointer', fontWeight: 'bold' }}
-                  >
-                    Forgot Password?
-                  </span>
-                </div>
-
-                <div style={{ display: 'flex', gap: '10px' }}>
+                <div style={{ display: 'flex', gap: '10px', marginBottom: '15px' }}>
                   <button type="submit" className="login-modal-btn" style={{ flex: 1 }} disabled={loading}>
                     {loading ? '...' : 'Login'}
                   </button>
                   <button type="button" className="login-modal-btn" style={{ flex: 1 }}>
                     Demo
                   </button>
+                </div>
+
+                <div style={{ textAlign: 'center' }}>
+                  <span
+                    onClick={() => setView('forgot')}
+                    style={{ fontSize: '11px', color: '#333', cursor: 'pointer', fontWeight: 'bold', textDecoration: 'underline' }}
+                  >
+                    Forgot Password?
+                  </span>
                 </div>
               </form>
             </>
