@@ -393,9 +393,18 @@ export default function DepositPage() {
                             return (
                               <button
                                 key={id}
-                                onClick={() => {
+                                onClick={async () => {
                                   if (pm.isWhatsapp) {
-                                    window.open('https://wa.me/your_number', '_blank');
+                                    try {
+                                      const res = await userController.getWhatsAppLink();
+                                      if (res && res.error === '0' && res.Link) {
+                                        window.open(res.Link, '_blank');
+                                      } else {
+                                        window.open('https://go.wa.link/ambikaexchangesupport', '_blank');
+                                      }
+                                    } catch (err) {
+                                      window.open('https://go.wa.link/ambikaexchangesupport', '_blank');
+                                    }
                                   } else {
                                     setActiveMethodId(id);
                                     setUserHasSelectedManually(true);
@@ -577,9 +586,9 @@ export default function DepositPage() {
                       "NEFT receiving time varies from 40 minutes to 2 hours.",
                       "Modification: payment valid for 1 hour after change."
                     ].map((text, i) => (
-                      <div key={i} className="flex gap-4">
-                        <span className="shrink-0 font-black text-sm text-[#ffb400]">{i + 1}.</span>
-                        <p className="text-[14px] font-bold text-[#444] leading-relaxed">{text}</p>
+                      <div key={i} className="flex gap-4 text-[#333]">
+                        <span className="font-black text-[14px] text-[#ffb400] shrink-0">{i + 1}.</span>
+                        <p className="font-bold text-[14px] opacity-90">{text}</p>
                       </div>
                     ))}
                   </div>
