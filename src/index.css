@@ -1547,26 +1547,46 @@ body {
 
 /* Fix for Greyhound Racing being cut off in Live board */
 .on_live {
-  width: 145px !important;
-  top: 2px !important;
-  bottom: auto !important;
-  z-index: 10 !important;
+  width: 180px !important; /* Larger on desktop */
+  padding: 10px !important;
+}
+
+.on_live dt {
+  margin-bottom: 12px !important; /* Standard spacing for desktop */
 }
 
 .on_live dd {
-  display: flex !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  margin-bottom: 1px !important;
+  margin-bottom: 8px !important; /* Standard spacing for desktop */
 }
 
-.on_live dd p {
-  width: auto !important;
-  flex: 1 !important;
-  white-space: nowrap !important;
-  overflow: visible !important;
-  text-overflow: clip !important;
-  margin-bottom: 0 !important;
+@media screen and (max-width: 768px) {
+  .on_live {
+    width: 145px !important; /* Shrink on mobile */
+    top: 5px !important;
+    bottom: auto !important;
+    z-index: 10 !important;
+    padding: 6px !important;
+  }
+
+  .on_live dt {
+    margin-bottom: 6px !important; /* Tighter on mobile */
+  }
+
+  .on_live dd {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 1px !important;
+  }
+
+  .on_live dd p {
+    width: auto !important;
+    flex: 1 !important;
+    white-space: nowrap !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    margin-bottom: 0 !important;
+  }
 }
 
 /* ======= MOBILE HEADER RESPONSIVE FIXES ======= */
