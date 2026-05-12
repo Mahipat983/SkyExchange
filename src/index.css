@@ -13,6 +13,14 @@ body {
   background: #eee;
 }
 
+.over-wrap {
+  overflow-y: auto !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
 .mobile-only {
   display: none !important;
 }

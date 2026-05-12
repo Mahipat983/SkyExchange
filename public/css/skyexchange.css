@@ -1145,7 +1145,7 @@ td .fancy-info dt,
 
 .over-wrap {
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .pop-warp,
@@ -18052,7 +18052,7 @@ td .fancy-info dt,
 
 .over-wrap {
   overflow: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .pop-warp,
