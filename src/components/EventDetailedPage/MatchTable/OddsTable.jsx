@@ -168,7 +168,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             </th>
 
             {/* Fixed Rate Columns */}
-            {!mobileView && (
+            {(!mobileView && marketData?.Type !== 'LINE') && (
               <>
                 <th style={{ width: oddsWidth }}></th>
                 <th style={{ width: oddsWidth }}></th>
@@ -177,20 +177,20 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             
             <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
               <div style={{ overflow: 'hidden', borderTopLeftRadius: '6px' }}>
-                <div style={headerTabStyle('#72bbef', '#1e1e1e', true)}>
-                  {mobileView ? (marketData?.Type === 'LINE' ? 'Yes' : 'Back') : 'Back all'}
+                <div style={headerTabStyle(marketData?.Type === 'LINE' ? '#faa9ba' : '#72bbef', '#1e1e1e', true)}>
+                  {marketData?.Type === 'LINE' ? 'No' : (mobileView ? 'Back' : 'Back all')}
                 </div>
               </div>
             </th>
             <th style={{ width: oddsWidth, padding: 0, verticalAlign: 'bottom' }}>
               <div style={{ overflow: 'hidden', borderTopRightRadius: '6px' }}>
-                <div style={headerTabStyle('#faa9ba', '#1e1e1e', false)}>
-                  {mobileView ? (marketData?.Type === 'LINE' ? 'No' : 'Lay') : 'Lay all'}
+                <div style={headerTabStyle(marketData?.Type === 'LINE' ? '#72bbef' : '#faa9ba', '#1e1e1e', false)}>
+                  {marketData?.Type === 'LINE' ? 'Yes' : (mobileView ? 'Lay' : 'Lay all')}
                 </div>
               </div>
             </th>
 
-            {!mobileView && (
+            {(!mobileView && marketData?.Type !== 'LINE') && (
               <>
                 <th style={{ width: oddsWidth }}></th>
                 <th style={{ width: oddsWidth }}></th>
@@ -217,10 +217,7 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             const isSuspended = isMarketSuspendedInner || rates?.isRunnerSuspended;
             const suspensionMsg = rates?.suspensionMsg || marketSuspensionMsgInner;
 
-            // For Line Markets: Left is NO, Right is YES
-            // But we display them as Back/Lay cells for consistency
-            const backLabel = currentMarketType === 'LINE' ? 'Yes' : 'Back';
-            const layLabel = currentMarketType === 'LINE' ? 'No' : 'Lay';
+            const isLine = currentMarketType === 'LINE';
 
             return (
               <React.Fragment key={idx}>
@@ -249,9 +246,9 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                     })()}
                   </td>
 
-                  <td colSpan={mobileView ? 2 : 6} style={{ padding: 0, position: 'relative' }}>
+                  <td colSpan={mobileView || isLine ? 2 : 6} style={{ padding: 0, position: 'relative' }}>
                     <div style={{ display: 'flex', width: '100%', height: uniformHeight, justifyContent: 'flex-end' }}>
-                      {!mobileView && (
+                      {(!mobileView && !isLine) && (
                         <>
                           {/* Back 3 */}
                           <div style={cellStyle('#e2f2fe')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p3, idx, runnerId, isGrouped ? runner : null)}>
@@ -267,19 +264,25 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
                         </>
                       )}
 
-                      {/* Back 1 */}
-                      <div style={cellStyle('#72bbef', mobileView ? '50%' : null)} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'back', rates?.back?.p1, idx, runnerId, isGrouped ? runner : null)}>
-                        <div style={{ fontWeight: '900', fontSize: mobileView ? '14px' : '12px' }}>{rates?.back?.p1 || '-'}</div>
+                      {/* Back 1 / NO for Line */}
+                      <div 
+                        style={cellStyle(isLine ? '#faa9ba' : '#72bbef', mobileView || isLine ? '50%' : null)} 
+                        onClick={() => !isSuspended && onBetClick(isLine ? 'No' : runner.RunnerName, isLine ? 'lay' : 'back', rates?.back?.p1, idx, runnerId, isGrouped ? runner : null)}
+                      >
+                        <div style={{ fontWeight: '900', fontSize: mobileView || isLine ? '14px' : '12px' }}>{rates?.back?.p1 || '-'}</div>
                         <div style={{ fontSize: '10px' }}>{rates?.back?.v1 || '-'}</div>
                       </div>
 
-                      {/* Lay 1 */}
-                      <div style={cellStyle('#faa9ba', mobileView ? '50%' : null)} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p1, idx, runnerId, isGrouped ? runner : null)}>
-                        <div style={{ fontWeight: '900', fontSize: mobileView ? '14px' : '12px' }}>{rates?.lay?.p1 || '-'}</div>
+                      {/* Lay 1 / YES for Line */}
+                      <div 
+                        style={cellStyle(isLine ? '#72bbef' : '#faa9ba', mobileView || isLine ? '50%' : null)} 
+                        onClick={() => !isSuspended && onBetClick(isLine ? 'Yes' : runner.RunnerName, isLine ? 'back' : 'lay', rates?.lay?.p1, idx, runnerId, isGrouped ? runner : null)}
+                      >
+                        <div style={{ fontWeight: '900', fontSize: mobileView || isLine ? '14px' : '12px' }}>{rates?.lay?.p1 || '-'}</div>
                         <div style={{ fontSize: '10px' }}>{rates?.lay?.v1 || '-'}</div>
                       </div>
 
-                      {!mobileView && (
+                      {(!mobileView && !isLine) && (
                         <>
                           {/* Lay 2 */}
                           <div style={cellStyle('#fbcbd5')} onClick={() => !isSuspended && onBetClick(runner.RunnerName, 'lay', rates?.lay?.p2, idx, runnerId, isGrouped ? runner : null)}>
