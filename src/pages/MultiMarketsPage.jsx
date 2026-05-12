@@ -13,6 +13,12 @@ function MultiMarketsPage() {
   const [liveRates, setLiveRates] = useState({});
   const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
   // 1. Fetch Followed Markets (Favorites)
   useEffect(() => {
     const fetchFavorites = async () => {

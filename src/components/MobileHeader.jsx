@@ -765,7 +765,7 @@ function MobileHeader() {
           <img className="icon-home" src="/images/transparent.gif" alt="Home" width="24px" height="24px" />
           <span>Home</span>
         </Link>
-        <Link to="/multi-markets" className={`mobile-bottom-nav-item ${getActive('/multi-markets')}`}>
+        <Link to={isLoggedIn ? "/multi-markets" : "/login"} className={`mobile-bottom-nav-item ${getActive('/multi-markets')}`}>
           <img className="icon-multi-markets" src="/images/transparent (3).gif" alt="multi-markets" width="24px" height="24px" />
           <span>Multi...</span>
         </Link>
