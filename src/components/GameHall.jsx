@@ -20,7 +20,7 @@ const gameItems = [
     cls: 'entrance',
     title: null,
     img: '/images/banner_skyexchangeBlog.png',
-    href: 'https://go.wa.link/skyexchange',
+    href: 'https://go.wa.link/ambikaexchangesupport',
     external: true,
     isWhatsApp: true,
   },
@@ -431,18 +431,28 @@ function GameHall() {
   };
 
   const handleWhatsAppClick = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     try {
       const res = await userController.getWhatsAppLink();
-      if (res && res.url) {
-        window.open(res.url, '_blank');
-      } else {
-        // Fallback to static link if API fails
-        window.open('https://go.wa.link/skyexchange', '_blank');
+      // Use the project fallback from Layout/Deposit if API fails completely
+      let targetLink = 'https://go.wa.link/ambikaexchangesupport'; 
+
+      if (res) {
+        if (res.error === '0' && res.Link) {
+          targetLink = res.Link;
+        } else if (res.url) {
+          targetLink = res.url;
+        } else if (typeof res === 'string' && res.startsWith('http')) {
+          targetLink = res;
+        } else if (res.link) {
+          targetLink = res.link;
+        }
       }
+      
+      window.open(targetLink, '_blank');
     } catch (err) {
       console.error('WhatsApp redirect error:', err);
-      window.open('https://go.wa.link/skyexchange', '_blank');
+      window.open('https://go.wa.link/ambikaexchangesupport', '_blank');
     }
   };
 
@@ -482,8 +492,8 @@ function GameHall() {
         <img src="/images/banner_sports.png" alt="" draggable="false" />
       </a>
 
-      {/* Blog */}
-      <a className="entrance" href="https://go.wa.link/skyexchange" onClick={handleWhatsAppClick} target="_blank" rel="noreferrer">
+      {/* Blog / WhatsApp */}
+      <a className="entrance" href="https://go.wa.link/ambikaexchangesupport" onClick={handleWhatsAppClick} target="_blank" rel="noreferrer">
         <img src="/images/banner_skyexchangeBlog.png" alt="" draggable="false" />
       </a>
 

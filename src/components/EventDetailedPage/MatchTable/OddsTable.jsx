@@ -112,14 +112,19 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             </div>
           </div>
 
-          {/* Right Section - Min/Max only for non-mobile or simplified for mobile */}
-          {!mobileView && (
-            <div style={{ display: 'flex', gap: '15px', alignItems: 'center', paddingRight: '10px' }}>
+          <div style={{ display: 'flex', gap: mobileView ? '8px' : '15px', alignItems: 'center', paddingRight: mobileView ? '8px' : '15px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: mobileView ? '10px' : '11px' }}>
+              <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '9px' }}>Min</span>
+              <span style={{ fontWeight: '700', color: '#2b3a47' }}>{marketData?.min || '0'}</span>
             </div>
-          )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: mobileView ? '10px' : '11px' }}>
+              <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '9px' }}>Max</span>
+              <span style={{ fontWeight: '700', color: '#2b3a47' }}>{marketData?.max || '0'}</span>
+            </div>
+          </div>
         </div>
       ) : (
-        <div className="bg-[#1f2933] text-white flex items-center px-3 py-2">
+        <div className="bg-[#1f2933] text-white flex items-center justify-between px-3 py-2">
           <div className="flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-gray-300" viewBox="0 0 20 20" fill="currentColor">
               <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
@@ -127,6 +132,16 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
             <span className="font-bold text-sm">{displayName}</span>
             <span className="mx-2 text-gray-400">|</span>
             <span className="text-sm text-gray-300">Zero Commission</span>
+          </div>
+          <div className="flex gap-2 sm:gap-4 items-center pr-1 sm:pr-2">
+            <div className="flex items-center gap-1 text-[10px] sm:text-[11px]">
+              <span className="bg-gray-600 px-1 rounded-sm text-[9px]">Min</span>
+              <span className="font-bold">{marketData?.min || '0'}</span>
+            </div>
+            <div className="flex items-center gap-1 text-[10px] sm:text-[11px]">
+              <span className="bg-gray-600 px-1 rounded-sm text-[9px]">Max</span>
+              <span className="font-bold">{marketData?.max || '0'}</span>
+            </div>
           </div>
         </div>
       )}
@@ -150,29 +165,6 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
           }}>
             <th style={{ textAlign: 'left', paddingLeft: '12px', width: '100%', fontSize: mobileView ? '10px' : '12px', position: 'relative' }}>
               {Object.keys(marketData?.runners || {}).length} selections
-
-              {/* Floating Min/Max on the right of the header - Moved inside th to be valid HTML */}
-              {!mobileView && (
-                <div style={{
-                  position: 'absolute',
-                  right: '12px',
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  display: 'flex',
-                  gap: '8px',
-                  alignItems: 'center',
-                  zIndex: 5
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                    <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Min</span>
-                    <span style={{ fontWeight: '700' }}>{marketData?.min || '0'}</span>
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '2px', fontSize: '11px' }}>
-                    <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '10px' }}>Max</span>
-                    <span style={{ fontWeight: '700' }}>{marketData?.max || '0'}</span>
-                  </div>
-                </div>
-              )}
             </th>
 
             {/* Fixed Rate Columns */}

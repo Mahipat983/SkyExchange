@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authController } from '../controllers';
+import { authController, userController } from '../controllers';
 import { useAuthStore } from '../store/authStore';
 import { useSnackbarStore } from '../store/snackbarStore';
 import '../styles/style-login.css';
@@ -72,6 +72,22 @@ function LoginPage() {
       showSnackbar('An unexpected error occurred during login.', 'error');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleWhatsAppClick = async (e) => {
+    if (e) e.preventDefault();
+    try {
+      const res = await userController.getWhatsAppLink();
+      let targetLink = 'https://go.wa.link/ambikaexchangesupport';
+      if (res) {
+        if (res.error === '0' && res.Link) targetLink = res.Link;
+        else if (res.url) targetLink = res.url;
+        else if (typeof res === 'string' && res.startsWith('http')) targetLink = res;
+      }
+      window.open(targetLink, '_blank');
+    } catch (err) {
+      window.open('https://go.wa.link/ambikaexchangesupport', '_blank');
     }
   };
 
@@ -176,7 +192,7 @@ function LoginPage() {
               </div>
 
               <div className="extra-buttons-row">
-                <a href="https://wa.me/yournumber" className="extra-btn whatsapp-btn">
+                <a href="https://go.wa.link/ambikaexchangesupport" onClick={handleWhatsAppClick} className="extra-btn whatsapp-btn">
                   <i className="fab fa-whatsapp"></i> WhatsApp
                 </a>
                 <a href="/download/app.apk" className="extra-btn apk-btn">

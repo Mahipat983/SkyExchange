@@ -135,7 +135,7 @@ const BetSlip = ({ sport }) => {
                         <div className="font-black text-black truncate pr-1 uppercase" title={bet.Selection}>{bet.Selection}</div>
                         <div className="text-center font-black text-black">{bet.Rate}</div>
                         <div className="text-center font-black text-black">{bet.Stake}</div>
-                        <div className="text-right font-bold text-gray-500 whitespace-nowrap overflow-hidden text-[7.5px]">{dateStr}</div>
+                        <div className="text-right font-bold text-black whitespace-nowrap overflow-hidden text-[7.5px]">{dateStr}</div>
                       </div>
                     );
                   })}

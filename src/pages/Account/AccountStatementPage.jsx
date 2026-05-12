@@ -219,7 +219,7 @@ function AccountStatementPage() {
                       <div style={{ fontSize: '12px', fontWeight: '700', color: '#1a2d3b', whiteSpace: 'nowrap' }}>
                         {row["0"]?.split(' ')[0]}
                       </div>
-                      <div style={{ fontSize: '11px', color: '#777', fontWeight: '600', marginTop: '2px', whiteSpace: 'nowrap' }}>
+                      <div style={{ fontSize: '11px', color: '#000', fontWeight: '600', marginTop: '2px', whiteSpace: 'nowrap' }}>
                         {(() => {
                           const timeStr = row["0"]?.split(' ')[1];
                           if (!timeStr) return '';
@@ -301,7 +301,7 @@ function AccountStatementPage() {
                         </div>
                         <div className="bet-receipt-row">
                           <span className="bet-receipt-label">Date</span>
-                          <span className="bet-receipt-value" style={{ fontSize: '11px', color: '#999' }}>{bet.Date}</span>
+                          <span className="bet-receipt-value" style={{ fontSize: '11px', color: '#000' }}>{bet.Date}</span>
                         </div>
                       </div>
                     ))}
