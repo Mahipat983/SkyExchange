@@ -100,7 +100,8 @@
     border-radius: 6px;
     border: none;
     font-size: 16px;
-    outline: none;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .country-code-picker {
@@ -145,6 +146,17 @@
 
 .form-input:focus {
     padding: 10px 15px; /* Maintain padding on focus to prevent shrinking */
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* Fix for Chrome's yellow autofill background */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover, 
+.form-input:-webkit-autofill:focus, 
+.form-input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px white inset !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .signup-modal-checkbox-row {

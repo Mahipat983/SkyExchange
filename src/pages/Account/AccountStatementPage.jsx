@@ -234,8 +234,8 @@ function AccountStatementPage() {
                     <td style={{ textAlign: 'center' }}>
                       <span className={`tx-type-badge ${txInfo.class}`}>{txInfo.label}</span>
                     </td>
-                    <td style={{ textAlign: 'right', fontWeight: '800', whiteSpace: 'nowrap', color: (type === 'CR' || type === 'O') ? '#2ecc71' : '#e74c3c' }}>
-                      {(type === 'CR' || type === 'O') ? '+' : '-'}₹{Math.abs(amount).toLocaleString()}
+                    <td style={{ textAlign: 'right', fontWeight: '800', whiteSpace: 'nowrap', color: (type === 'CR' || type === 'O' || type === 'D') ? '#2ecc71' : '#e74c3c' }}>
+                      {(type === 'CR' || type === 'O' || type === 'D') ? '+' : '-'}₹{Math.abs(amount).toLocaleString()}
                     </td>
                     <td style={{ textAlign: 'center', fontWeight: 'bold', color: '#666', whiteSpace: 'nowrap' }}>
                       {type === 'O' ? amount.toLocaleString() : '-'}
