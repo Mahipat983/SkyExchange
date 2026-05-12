@@ -447,6 +447,16 @@ function InPlayPage() {
             letter-spacing: 0.5px;
         }
 
+        @media (min-width: 981px) {
+            .subtabs {
+                width: fit-content !important;
+            }
+            .subtab {
+                flex: none !important;
+                width: 150px !important;
+            }
+        }
+
         @media (max-width: 980px) {
             .col-odds-header, .col-odds-wrap, .right-area {
                 display: none;
