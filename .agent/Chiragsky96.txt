@@ -1,1 +1,110 @@
-Chiragsky96
+1. Once a session/fancy bet is settled, it will not be reversed even if the match is tied or abandoned. Test match innings declaration/all-out rules decide over completion validity.
+
+2. Advance Session, Player Runs, and Fancy bets are valid only in full 20/50-over matches. Advance Session applies only to the first innings.
+
+3. All advance fancy markets are suspended and settled 60 minutes before match start.
+
+4. If a fancy/session market gets suspended and never resumes, all previous bets remain valid as HAAR/JEET bets.
+
+5. Incomplete session/fancy bets are cancelled, but completed sessions are settled.
+
+6. If a match is cancelled, abandoned, or no-result after a session completes, that session still gets settled.
+
+7. Retired Hurt/Retired Out bets remain valid if one ball has been completed after placing the bet.
+
+8. The company is not responsible for losses caused by software glitches.
+
+9. If power or internet failure prevents suspension of the market, company decision is final.
+
+10. Management has the final authority on wrongly offered markets and settlements.
+
+11. Suspicious bets, including stadium-side betting, may be voided anytime at company discretion.
+
+12. Cheating, fund matching, court siding, sharpening, or commission activity can lead to account fund seizure.
+
+13. Fluke hunting is prohibited. Commentary delays/mistakes are not company responsibility.
+
+14. Highest Innings Run and Lowest Innings Run fancy are valid only for the first innings.
+
+15. Certain markets settle only after the value is crossed upward (example: Total Sixes, Total Fours, Highest Score).
+
+16. Certain markets settle only after the value is crossed downward/below (example: Lowest Innings Run, Fastest Fifty).
+
+17. Bets placed on wrong commentary/rates in fancy markets may be cancelled.
+
+18. Bets placed in the wrong fancy by the customer will still be treated as confirmed bets.
+
+19. Dot Ball rules:
+
+* Wides, No Balls, Leg Byes, Bye Runs do not count.
+* Wickets also do not count as dot balls.
+
+20. Bookmaker rules:
+
+* Advantage/disadvantage situations are ignored.
+* ODI winner decided by 25-over comparison.
+* T20 winner decided by 10-over comparison.
+
+21. Penalty runs are generally not counted in fancy markets, except in newly opened markets after the penalty.
+
+22. Virtual cricket scores are checked on the Sportradar virtual cricket page.
+
+23. In Comparison Markets, ties/equal scores favor the first batting team.
+
+24. Boundary rules:
+
+* Only direct fours and sixes count for player boundary fancy.
+* If the ball reaches boundary visually, it counts as a boundary regardless of scoreboard.
+
+25. Bowler Run Session becomes valid once the bowler completes the required overs plus one ball.
+
+26. Total Match Playing Over ADV settles after match completion using rounded-down overs. Reduced overs due to rain void the market.
+
+27. “3 Wickets or More by Bowler” ADV settles after full match; rain reduction voids it.
+
+28. KHADDA fancy:
+
+* Valid only for first innings.
+* Rain/over reduction voids the market.
+* Incomplete sessions are cancelled.
+
+29. LOTTERY fancy:
+
+* Rain/over reduction voids the market.
+* Only the last digit of session total is considered.
+
+30. Closed-door match betting using groundline advantage may result in bets being voided.
+
+31. Session Odd-Even markets settle only if the over is fully completed.
+
+32. Company may void winning bets if cheating/manipulation is suspected in an event.
+
+33. If live or TV scoreboards malfunction, settlement is based on company-offered live rates.
+
+34. Super Over:
+
+* Match odds settle after final winner declaration.
+* Bookmaker markets settle/void based on that specific super over market.
+
+35. Total Match 30s market counts players scoring 30–49 only.
+
+36. Total Match Fifty market counts players scoring 50–99 only.
+
+37. Retired Hurt/Out is not considered a wicket in wicket markets.
+
+38. TOTAL OVER RUNS:
+
+* Rain-reduced overs void the market.
+* Penalty runs are counted.
+
+39. Total Match Four Hitters counts batsmen who hit at least one four.
+
+40. Total Match Six Hitters counts batsmen who hit at least one six.
+
+41. Total Match Wicket Takers counts bowlers who take wickets.
+
+42. Total No Boundary Overs excludes boundaries from wides, overthrows, leg byes, etc.
+
+43. Election results are settled according to the Election Commission of India.
+
+44. Accidental election issues are not counted in settlement.

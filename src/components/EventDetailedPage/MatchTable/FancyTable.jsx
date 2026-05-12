@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 import InlineBetBox from './InlineBetBox';
+import FancyRulesModal from './FancyRulesModal';
 
 /**
  * FancyTable Component
@@ -22,6 +23,7 @@ const DEMO_MARKETS = [
 
 const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCancelBet, matchId, onOpenFancyChart, mobileView = false }) => {
   const [activeTab, setActiveTab] = useState('All');
+  const [showRules, setShowRules] = useState(false);
 
   const cellWidth = mobileView ? '70px' : '114.688px';
   const spacerWidth = mobileView ? '0px' : '229.376px';
@@ -168,11 +170,12 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
             Fancy Bet
           </span>
         </div>
-        <span style={{
+        <span onClick={() => setShowRules(true)} style={{
           border: '1px solid #000',
           borderRadius: '50%',
           width: '16px',
           height: '16px',
+
           display: 'inline-flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -180,7 +183,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           cursor: 'pointer',
           color: "#000",
           flexShrink: 0,
-        }}>i</span>
+        }}>i </span>
       </div>
 
       {/* ── Filter tabs row ── */}
@@ -462,6 +465,7 @@ const FancyTable = ({ fancyData, onBetClick, liveRates = {}, selectedBet, onCanc
           );
         })}
       </div>
+      <FancyRulesModal isOpen={showRules} onClose={() => setShowRules(false)} />
     </div>
   );
 };
