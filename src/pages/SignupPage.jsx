@@ -15,10 +15,34 @@ function SignupPage() {
   const [isAgreed, setIsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState({
+    loading: false,
+    available: null,
+    msg: ''
+  });
 
   const navigate = useNavigate();
   const loginAction = useAuthStore((state) => state.login);
   const showSnackbar = useSnackbarStore(state => state.show);
+
+  const handleUsernameCheck = async (val) => {
+    if (!val || val.length < 3) {
+      setUsernameStatus({ loading: false, available: null, msg: '' });
+      return;
+    }
+
+    setUsernameStatus(prev => ({ ...prev, loading: true }));
+    try {
+      const res = await authController.checkUsername(val);
+      if (res.error === '0') {
+        setUsernameStatus({ loading: false, available: true, msg: 'Username available' });
+      } else {
+        setUsernameStatus({ loading: false, available: false, msg: res.msg || 'Username already exists' });
+      }
+    } catch (err) {
+      setUsernameStatus({ loading: false, available: null, msg: 'Error checking username' });
+    }
+  };
 
   useEffect(() => {
     const isMobile = window.innerWidth <= 768;
@@ -64,6 +88,10 @@ function SignupPage() {
     }
     if (!otp) { showSnackbar('Please enter OTP', 'error'); return; }
     if (!username) { showSnackbar('Please enter username', 'error'); return; }
+    if (usernameStatus.available === false) {
+      showSnackbar('Please choose a different username', 'error');
+      return;
+    }
     if (!password) { showSnackbar('Please enter password', 'error'); return; }
 
     try {
@@ -174,13 +202,40 @@ function SignupPage() {
               </label>
             </div>
 
-            <input
-              type="text"
-              placeholder="ex. Kabira0025#"
-              className="form-input"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
+            <div className="validation-input-wrapper" style={{ position: 'relative', marginBottom: usernameStatus.msg ? '20px' : '0' }}>
+              <input
+                type="text"
+                placeholder="ex. Username@123"
+                className="form-input"
+                value={username}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setUsername(val);
+                  handleUsernameCheck(val);
+                }}
+                style={{
+                  border: usernameStatus.available === false ? '1.5px solid #ff4d4f' :
+                    usernameStatus.available === true ? '1.5px solid #52c41a' : ''
+                }}
+              />
+              <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
+                {usernameStatus.loading && <div className="spinner-small"></div>}
+                {usernameStatus.available === true && <i className="fa-solid fa-circle-check" style={{ color: '#52c41a' }}></i>}
+                {usernameStatus.available === false && <i className="fa-solid fa-circle-xmark" style={{ color: '#ff4d4f' }}></i>}
+              </div>
+              {usernameStatus.msg && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-18px',
+                  left: '5px',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  color: usernameStatus.available ? '#52c41a' : '#ff4d4f'
+                }}>
+                  {usernameStatus.msg}
+                </div>
+              )}
+            </div>
 
             <div className="validation-input-wrapper">
               <input

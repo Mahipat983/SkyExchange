@@ -18,6 +18,30 @@ const SignupModal = () => {
   const [isAgreed, setIsAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState({
+    loading: false,
+    available: null,
+    msg: ''
+  });
+
+  const handleUsernameCheck = async (val) => {
+    if (!val || val.length < 3) {
+      setUsernameStatus({ loading: false, available: null, msg: '' });
+      return;
+    }
+
+    setUsernameStatus(prev => ({ ...prev, loading: true }));
+    try {
+      const res = await authController.checkUsername(val);
+      if (res.error === '0') {
+        setUsernameStatus({ loading: false, available: true, msg: 'Username available' });
+      } else {
+        setUsernameStatus({ loading: false, available: false, msg: res.msg || 'Username already exists' });
+      }
+    } catch (err) {
+      setUsernameStatus({ loading: false, available: null, msg: 'Error checking username' });
+    }
+  };
 
   if (!isSignupModalOpen) return null;
 
@@ -57,6 +81,10 @@ const SignupModal = () => {
     }
     if (!username.trim()) {
       showSnackbar('Please enter username', 'error');
+      return;
+    }
+    if (usernameStatus.available === false) {
+      showSnackbar('Please choose a different username', 'error');
       return;
     }
     if (!password.trim()) {
@@ -187,13 +215,40 @@ const SignupModal = () => {
               </label>
             </div>
 
-            <input
-              type="text"
-              placeholder="ex. Kabira0025"
-              className="signup-modal-input bg-blue-tint"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-            />
+            <div style={{ position: 'relative', marginBottom: usernameStatus.msg ? '15px' : '0' }}>
+              <input
+                type="text"
+                placeholder="ex. Username@123"
+                className="signup-modal-input bg-blue-tint"
+                value={username}
+                onChange={e => {
+                  const val = e.target.value;
+                  setUsername(val);
+                  handleUsernameCheck(val);
+                }}
+                style={{
+                  border: usernameStatus.available === false ? '1.5px solid #ff4d4f' :
+                    usernameStatus.available === true ? '1.5px solid #52c41a' : ''
+                }}
+              />
+              <div style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)', display: 'flex', alignItems: 'center' }}>
+                {usernameStatus.loading && <div className="spinner-small"></div>}
+                {usernameStatus.available === true && <i className="fa-solid fa-circle-check" style={{ color: '#52c41a' }}></i>}
+                {usernameStatus.available === false && <i className="fa-solid fa-circle-xmark" style={{ color: '#ff4d4f' }}></i>}
+              </div>
+              {usernameStatus.msg && (
+                <div style={{
+                  position: 'absolute',
+                  bottom: '-15px',
+                  left: '5px',
+                  fontSize: '10px',
+                  fontWeight: 'bold',
+                  color: usernameStatus.available ? '#52c41a' : '#ff4d4f'
+                }}>
+                  {usernameStatus.msg}
+                </div>
+              )}
+            </div>
 
             <div className="signup-modal-password-wrap">
               <input
