@@ -767,7 +767,7 @@ function MobileHeader() {
         </Link>
         <Link to={isLoggedIn ? "/multi-markets" : "/login"} className={`mobile-bottom-nav-item ${getActive('/multi-markets')}`}>
           <img className="icon-multi-markets" src="/images/transparent (3).gif" alt="multi-markets" width="24px" height="24px" />
-          <span>Multi...</span>
+          <span>Multi Market</span>
         </Link>
         {isLoggedIn ? (
           <div className="mobile-bottom-nav-item" onClick={() => logout()} style={{ cursor: 'pointer' }}>
