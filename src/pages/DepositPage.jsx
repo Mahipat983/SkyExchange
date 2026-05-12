@@ -62,7 +62,7 @@ export default function DepositPage() {
         // Extract data - check common keys, or check if the response itself is the list (object with numeric keys)
         const possibleData = methodsRes.data || methodsRes.list || methodsRes.depositlist || methodsRes.banklist || methodsRes.BankList || methodsRes.methods;
 
-        const rawData = possibleData || (typeof methodsRes === 'object' && !methodsRes.error && Object.keys(methodsRes).some(k => !isNaN(k)) ? methodsRes : null);
+        const rawData = possibleData || (typeof methodsRes === 'object' && (methodsRes.error === '0' || !methodsRes.error) && Object.keys(methodsRes).some(k => !isNaN(k)) ? methodsRes : null);
 
         if (Array.isArray(rawData)) {
           methods = rawData;
@@ -77,7 +77,7 @@ export default function DepositPage() {
       if (historyRes) {
         let historyData = [];
         const possibleHistory = historyRes.data || historyRes.list;
-        const raw = possibleHistory || (typeof historyRes === 'object' && !historyRes.error && Object.keys(historyRes).some(k => !isNaN(k)) ? historyRes : historyRes);
+        const raw = possibleHistory || (typeof historyRes === 'object' && (historyRes.error === '0' || !historyRes.error) && Object.keys(historyRes).some(k => !isNaN(k)) ? historyRes : historyRes);
 
         if (Array.isArray(raw)) {
           historyData = raw;

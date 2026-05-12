@@ -108,7 +108,7 @@ export default function WithdrawPage() {
     try {
       setHistoryLoading(true);
       const res = await walletController.getWithdrawalHistory(loginToken);
-      if (res && !res.error) {
+      if (res && (res.error === '0' || res.status === 'Success')) {
         const rawHistory = res.data || res.list || (typeof res === 'object' ? Object.values(res).filter(v => v && typeof v === 'object' && v.Amount) : []);
         setHistory(Array.isArray(rawHistory) ? rawHistory : []);
       }
@@ -120,10 +120,7 @@ export default function WithdrawPage() {
   };
 
   const handleWithdraw = async () => {
-    if (!amount || parseFloat(amount) < 500) {
-      showSnackbar('Minimum withdrawal is ₹500', 'error');
-      return;
-    }
+
     if (activeCategory === 'BANK' && !selectedBankId) {
       showSnackbar('Please select a bank account', 'error');
       return;
@@ -150,7 +147,7 @@ export default function WithdrawPage() {
         });
       }
 
-      if (res && !res.error) {
+      if (res && (res.error === '0' || res.status === 'Success')) {
         showSnackbar('Withdrawal request submitted successfully!', 'success');
         setAmount('');
         setRemark('');
@@ -169,7 +166,7 @@ export default function WithdrawPage() {
     if (!window.confirm('Remove this bank account?')) return;
     try {
       const res = await walletController.deleteBankAccount(loginToken, id);
-      if (res && !res.error) {
+      if (res && (res.error === '0' || res.status === 'Success')) {
         showSnackbar('Account removed', 'success');
         fetchData();
       }
@@ -522,7 +519,7 @@ export default function WithdrawPage() {
                           <div key={i} className={`grid grid-cols-[1fr_1fr_1.5fr_1.2fr_1.5fr] items-center px-6 py-4 border-b border-[#eee] transition-all hover:bg-black/[0.02] ${i % 2 === 0 ? 'bg-transparent' : 'bg-[#fcfcfc]'}`}>
                             <span className="text-[15px] font-black text-[#111] text-center tracking-tighter">₹{parseFloat(amount).toLocaleString()}</span>
                             <div className="flex justify-center">
-                              <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${status === 'success' || status === 'approved' || status === 'completed'
+                              <span className={`px-2.5 py-1 rounded-md text-[9px] font-black uppercase tracking-tighter shadow-sm border ${status === 'success' || status === 'approved' || status === 'completed' || status === 'done'
                                 ? 'bg-green-500/10 text-green-600 border-green-500/20'
                                 : status === 'failed' || status === 'rejected' || status === 'cancel'
                                   ? 'bg-red-500/10 text-red-600 border-red-500/20'
