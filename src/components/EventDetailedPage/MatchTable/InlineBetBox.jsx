@@ -211,25 +211,36 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport, mobileVi
 
           {/* Row 2: Stake Input & Cancel Button */}
           <div style={{ display: 'flex', gap: '8px' }}>
-            <div style={{ flex: 1, position: 'relative' }}>
+            <div style={{ flex: 1, display: 'flex', alignItems: 'center', backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px', overflow: 'hidden', height: '45px' }}>
+              <button 
+                onClick={() => setStake(prev => Math.max(0, (parseFloat(prev) || 0) - 100).toString())}
+                style={{ width: '45px', height: '100%', border: 'none', background: '#f1f1f1', fontWeight: '900', fontSize: '20px', color: '#333', cursor: 'pointer' }}
+              >
+                -
+              </button>
               <input
                 type="number"
                 value={stake}
                 onChange={(e) => setStake(e.target.value)}
                 placeholder="0.00"
                 style={{
-                  width: '100%',
-                  border: '1px solid #ccc',
-                  borderRadius: '4px',
-                  padding: '0 12px',
+                  flex: 1,
+                  border: 'none',
+                  textAlign: 'center',
                   fontWeight: '900',
                   fontSize: '18px',
-                  height: '45px',
+                  height: '100%',
                   outline: 'none',
                   backgroundColor: '#fff',
-                  boxSizing: 'border-box'
+                  width: '60px'
                 }}
               />
+              <button 
+                onClick={() => setStake(prev => ((parseFloat(prev) || 0) + 100).toString())}
+                style={{ width: '45px', height: '100%', border: 'none', background: '#f1f1f1', fontWeight: '900', fontSize: '20px', color: '#333', cursor: 'pointer' }}
+              >
+                +
+              </button>
             </div>
             <button
               onClick={onCancel}
