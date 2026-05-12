@@ -9,7 +9,7 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport, mobileVi
   const { loginToken } = useAuthStore();
   const showSnackbar = useSnackbarStore(state => state.show);
   const { stakes: globalStakes, setStakes: setGlobalStakes } = useBettingStore();
-  const [stake, setStake] = useState('');
+  const [stake, setStake] = useState(selection?.stake || '');
   const [isLoading, setIsLoading] = useState(false);
   const [acceptAnyOdds, setAcceptAnyOdds] = useState(true);
 
@@ -47,6 +47,14 @@ const InlineBetBox = ({ selection, matchId, onCancel, onSuccess, sport, mobileVi
       return (current + val).toString();
     });
   };
+
+  useEffect(() => {
+    if (selection?.stake) {
+      setStake(selection.stake);
+    } else {
+      setStake('');
+    }
+  }, [selection]);
 
   const handlePlaceBet = async () => {
     if (!stake || parseFloat(stake) <= 0) {

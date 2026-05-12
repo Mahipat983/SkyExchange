@@ -1,13 +1,14 @@
 import React from 'react';
 import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 import InlineBetBox from './InlineBetBox';
+import CashoutButton from './CashoutButton';
 
 /**
  * BookmakerTable Component
  * 
  * Renders the Bookmaker market table (0% Commission markets).
  */
-const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet, onCancelBet, mobileView = false }) => {
+const BookmakerTable = ({ bookmakerData, onBetClick, onCashout, isCashoutLoading, liveRates = {}, selectedBet, onCancelBet, mobileView = false }) => {
   // Extract runners from bookmakerData
   const runnersList = bookmakerData?.runners ? Object.values(bookmakerData.runners) : [];
   const runners = runnersList.length > 0 ? runnersList : [];
@@ -66,6 +67,13 @@ const BookmakerTable = ({ bookmakerData, onBetClick, liveRates = {}, selectedBet
             <span className="bg-[#4b5965] text-white px-2 py-0.5 rounded-sm">Max</span>
             <span className="text-gray-800">{bookmakerData?.max || '0.00'}</span>
           </div>
+          {onCashout && (
+            <CashoutButton
+              onCashout={() => onCashout(marketId, bookmakerData?.name || 'Bookmaker', Object.values(bookmakerData?.runners || {}), 'BOOKMAKER')}
+              isLoading={isCashoutLoading}
+              mobileView={mobileView}
+            />
+          )}
         </div>
       </div>
 

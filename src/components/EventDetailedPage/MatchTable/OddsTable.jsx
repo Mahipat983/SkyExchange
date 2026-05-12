@@ -1,8 +1,9 @@
 import React from 'react';
 import { getRunnerRates, getMarketStatus } from '../../../utils/rateRefiner';
 import InlineBetBox from './InlineBetBox';
+import CashoutButton from './CashoutButton';
 
-const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selectedBet, onCancelBet, sport, isInPlay, mobileView = false, isGrouped = false }) => {
+const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selectedBet, onCancelBet, sport, isInPlay, mobileView = false, isGrouped = false, onCashout, isCashoutLoading }) => {
   const displayName = marketData?.name || marketName || 'Match Odds';
   const oddsWidth = mobileView ? '50px' : '114.688px';
   const uniformHeight = mobileView ? '45px' : '35px';
@@ -121,6 +122,13 @@ const OddsTable = ({ marketData, onBetClick, marketName, liveRates = {}, selecte
               <span style={{ background: '#4b5965', color: '#fff', padding: '1px 4px', borderRadius: '2px', fontSize: '9px' }}>Max</span>
               <span style={{ fontWeight: '700', color: '#2b3a47' }}>{marketData?.max || '0'}</span>
             </div>
+            {onCashout && (
+              <CashoutButton
+                onCashout={() => onCashout(marketId, displayName, Object.values(marketData?.runners || {}), marketData?.Type)}
+                isLoading={isCashoutLoading}
+                mobileView={mobileView}
+              />
+            )}
           </div>
         </div>
       ) : (

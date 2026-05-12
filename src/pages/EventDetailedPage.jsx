@@ -54,6 +54,7 @@ const EventDetailedPage = () => {
   const [fancyChartLoading, setFancyChartLoading] = useState(false);
   const [fancyChartData, setFancyChartData] = useState(null);
   const [fancyChartTitle, setFancyChartTitle] = useState('');
+  const [cashoutLoading, setCashoutLoading] = useState(null);
 
   const groupedChartData = React.useMemo(() => {
     if (!fancyChartData || typeof fancyChartData !== 'object' || fancyChartData.error) return [];
@@ -238,8 +239,52 @@ const EventDetailedPage = () => {
       market,
       runnerIndex,
       marketData,
-      selectionId
+      selectionId,
+      stake: marketData?.cashoutAmount // Pass stake if it's a cashout
     });
+  };
+
+  const handleCashout = async (mId, mName, runners, mType) => {
+    if (!isLoggedIn || !loginToken) {
+      openLoginModal();
+      return;
+    }
+
+    const eid = mId || gameData?.Event_Id || gameData?.eventid || matchId;
+    setCashoutLoading(mId);
+    try {
+      const res = await bettingController.cashout(loginToken, eid);
+      const cashout = Array.isArray(res) ? res[0] : res;
+
+      if (cashout && cashout.Amount > 0) {
+        // Map Team "A" -> 0, Team "B" -> 1
+        const teamIdx = cashout.Team === 'B' ? 1 : 0;
+        const runner = Array.isArray(runners) ? runners[teamIdx] : Object.values(runners || {})[teamIdx];
+        if (!runner) throw new Error('Runner not found');
+
+        const selectionId = runner.selectionId || runner.id || runner.SelectionId || teamIdx;
+        const bSide = cashout.Type === 'L' ? 'lay' : 'back';
+
+        handleBetClick(
+          runner.name || runner.Name || runner.RunnerName || (teamIdx === 0 ? 'Team A' : 'Team B'),
+          bSide,
+          parseFloat(cashout.Rate),
+          mName,
+          teamIdx,
+          { Type: mType, cashoutAmount: cashout.Amount }, // Pass cashout amount
+          selectionId
+        );
+        
+        showSnackbar(`Cashout ready: Guaranteed ${cashout.Chart1 || cashout.Chart2 || ''}`, 'success');
+      } else {
+        showSnackbar('No cashout available right now', 'info');
+      }
+    } catch (err) {
+      console.error('Cashout failed:', err);
+      showSnackbar('Failed to fetch cashout', 'error');
+    } finally {
+      setCashoutLoading(null);
+    }
   };
 
   if (isLoading) {
@@ -445,6 +490,8 @@ const EventDetailedPage = () => {
                             selectedBet={selectedBet}
                             onCancelBet={() => setSelectedBet(null)}
                             onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
+                            onCashout={handleCashout}
+                            isCashoutLoading={cashoutLoading === (market.MarketId || market.marketid || market.eid)}
                             sport={sport}
                             isInPlay={isInPlay}
                           />
@@ -462,6 +509,8 @@ const EventDetailedPage = () => {
                             selectedBet={selectedBet}
                             onCancelBet={() => setSelectedBet(null)}
                             onBetClick={(runner, side, price, runnerIndex) => handleBetClick(runner, side, price, market.name, runnerIndex, market)}
+                            onCashout={handleCashout}
+                            isCashoutLoading={cashoutLoading === (market.MarketId || market.marketid || market.eid)}
                           />
                         </div>
                       );
@@ -477,6 +526,8 @@ const EventDetailedPage = () => {
                           selectedBet={selectedBet}
                           onCancelBet={() => setSelectedBet(null)}
                           onBetClick={(runner, side, price, runnerIndex, selectionId) => handleBetClick(runner, side, price, market.name, runnerIndex, market, selectionId)}
+                          onCashout={handleCashout}
+                          isCashoutLoading={cashoutLoading === (market.MarketId || market.marketid || market.eid)}
                           sport={sport}
                           isInPlay={isInPlay}
                         />
@@ -502,6 +553,8 @@ const EventDetailedPage = () => {
                         selectedBet={selectedBet}
                         onCancelBet={() => setSelectedBet(null)}
                         onBetClick={(runner, side, price, runnerIndex, selectionId, mkt) => handleBetClick(runner, side, price, mkt?.name || 'Line Market', runnerIndex, mkt, selectionId)}
+                        onCashout={(mId, mName, runners, mType) => handleCashout(matchId, mName, runners, mType)}
+                        isCashoutLoading={cashoutLoading === matchId}
                         sport={sport}
                         isInPlay={isInPlay}
                         isGrouped={true}
