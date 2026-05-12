@@ -123,7 +123,7 @@ function Layout({ children }) {
       <style>{`
         .floating-btn {
           position: fixed;
-          bottom: 100px;
+          bottom: 70px;
           width: 56px;
           height: 56px;
           border-radius: 50%;
