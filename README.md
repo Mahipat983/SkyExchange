@@ -1,16 +1,59 @@
-# React + Vite
+# SkyExchange
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A high-fidelity betting platform built with React and Vite.
 
-Currently, two official plugins are available:
+## 🚀 Deployment Requirements
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+For optimal performance and compatibility, the following environment is required for deployment:
 
-## React Compiler
+- **Node.js**: `v20.x` or higher (LTS recommended)
+- **npm**: `v10.x` or higher
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Ensure you have Node.js installed. We recommend using [nvm](https://github.com/nvm-sh/nvm) to manage your Node versions.
+
+```bash
+nvm install 20
+nvm use 20
+```
+
+### Installation
+
+```bash
+npm install
+```
+
+### Development
+
+To start the development server with Hot Module Replacement (HMR):
+
+```bash
+npm run dev
+```
+
+### Build
+
+To create a production-ready build in the `dist` folder:
+
+```bash
+npm run build
+```
+
+### Preview Build
+
+To preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## 🌐 Environment Configuration
+
+The project uses environment variables for API configuration. Ensure a `.env` file is present in the root directory (refer to `.env.example` if available).
+
+## 📄 License
+
+Internal Project - All Rights Reserved.
