@@ -76,7 +76,7 @@ function OffersPage() {
 
   const handleClaimOffer = async () => {
     if (!selectedOffer || claiming) return;
-    
+
     if (selectedOffer.Eligible?.toUpperCase() !== 'Y') {
       showSnackbar('You are not eligible for this offer.', 'error');
       return;
@@ -149,7 +149,7 @@ function OffersPage() {
             <div className="offer-modal" style={{ background: '#fff', width: '100%', maxWidth: '500px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 25px 50px rgba(0,0,0,0.5)' }}>
               <div className="modal-header" style={{ background: '#1a2d3b', color: '#fff', padding: '15px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ margin: 0, fontSize: '15px', fontWeight: '800', color: '#fff', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{selectedOffer.Title}</h3>
-                <button className="close-btn" style={{ background: 'none', border: 'none', color: '#fff', fontSize: '28px', cursor: 'pointer', lineHeight: '1' }} onClick={() => setSelectedOffer(null)}>×</button>
+                <button style={{ background: 'none', border: 'none', color: '#fff', fontSize: '28px', cursor: 'pointer', lineHeight: '1' }} onClick={() => setSelectedOffer(null)}>×</button>
               </div>
               <div className="modal-body" style={{ padding: '0', maxHeight: '70vh', overflowY: 'auto' }}>
                 {detailLoading ? (
@@ -159,7 +159,7 @@ function OffersPage() {
                 ) : (
                   <>
                     <div className="modal-banner" style={{ width: '100%', background: '#eee' }}>
-                       {selectedOffer.Banner && (
+                      {selectedOffer.Banner && (
                         <img src={selectedOffer.Banner.startsWith('data:') ? selectedOffer.Banner : `data:image/png;base64,${selectedOffer.Banner}`} alt={selectedOffer.Title} style={{ width: '100%', display: 'block' }} />
                       )}
                     </div>
@@ -171,7 +171,7 @@ function OffersPage() {
                     </div>
                     <div className="offer-description" style={{ padding: '20px', fontSize: '13px', lineHeight: '1.6', color: '#333' }} dangerouslySetInnerHTML={{ __html: selectedOffer.Description || 'No details available.' }} />
                     <div className="modal-actions" style={{ padding: '20px', borderTop: '1px solid #eee' }}>
-                      <button 
+                      <button
                         className={`btn-claim ${selectedOffer.Eligible?.toUpperCase() === 'Y' ? '' : 'disabled'}`}
                         style={{ width: '100%', background: selectedOffer.Eligible?.toUpperCase() === 'Y' ? '#ffb400' : '#eee', color: selectedOffer.Eligible?.toUpperCase() === 'Y' ? '#000' : '#999', border: 'none', padding: '15px', borderRadius: '4px', fontWeight: 'bold', fontSize: '14px', cursor: selectedOffer.Eligible?.toUpperCase() === 'Y' ? 'pointer' : 'not-allowed', textTransform: 'uppercase' }}
                         disabled={claiming || selectedOffer.Eligible?.toUpperCase() !== 'Y'}
